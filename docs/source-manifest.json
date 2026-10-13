@@ -1,0 +1,53 @@
+{
+  "archived_on": "2026-10-14",
+  "files": [
+    {
+      "source_name": "XP_operator_research_lecture.tex",
+      "repository_path": "drafts/lecture/XP_operator_research_lecture.tex",
+      "size_bytes": 229321,
+      "sha256": "060adec20017a5b11cbdb7b320ee54c4b3611266bc180acfcf82035367020818"
+    },
+    {
+      "source_name": "XP_operator_research_lecture.pdf",
+      "repository_path": "drafts/lecture/XP_operator_research_lecture.pdf",
+      "size_bytes": 773787,
+      "sha256": "451cbc077a759d587578e47b3ffa6001cd522c93ce51632f874cef7e016f9556"
+    },
+    {
+      "source_name": "详细汇报.tex",
+      "repository_path": "drafts/linear/linear_difference_report.tex",
+      "size_bytes": 95169,
+      "sha256": "fab0f7af2f5c2a132fdad190d5a0353aab791182d88b5756c0af110218c9ea70"
+    },
+    {
+      "source_name": "详细汇报.pdf",
+      "repository_path": "drafts/linear/linear_difference_report.pdf",
+      "size_bytes": 390557,
+      "sha256": "8213d4479fc8a71d91b51bdabc65457be3e6ef86ce737aa576f5495fe107660d"
+    },
+    {
+      "source_name": "草稿.tex",
+      "repository_path": "drafts/general/XP_operator_draft.tex",
+      "size_bytes": 73370,
+      "sha256": "133cb0a36ada66d1ec4c562630792923b1d07712f4e1dc8a99d204944e38c748"
+    },
+    {
+      "source_name": "草稿.pdf",
+      "repository_path": "drafts/general/XP_operator_draft.pdf",
+      "size_bytes": 342984,
+      "sha256": "bdabd83e5400afb3d0c1e40d10f4f132e020d9ccb087f441474f9d3082777dab"
+    },
+    {
+      "source_name": "X-算子的性质.pdf",
+      "repository_path": "drafts/entire/entire_defect_classification.pdf",
+      "size_bytes": 570610,
+      "sha256": "691c68baade9c99338ac3efa44715592bf0ff1326b5a92a4321f340ee39c4127"
+    },
+    {
+      "source_name": "X-算子的性质(1).pdf",
+      "repository_path": "drafts/entire/entire_defect_classification.pdf",
+      "size_bytes": 570610,
+      "sha256": "691c68baade9c99338ac3efa44715592bf0ff1326b5a92a4321f340ee39c4127"
+    }
+  ]
+}

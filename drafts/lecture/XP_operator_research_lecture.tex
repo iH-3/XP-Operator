@@ -1,0 +1,5486 @@
+% !TeX program = xelatex
+% Encoding: UTF-8. Self-contained source; no external images or bibliography.
+% Compile with XeLaTeX three times, or latexmk -xelatex.
+% Consolidated on 2026-10-13 from the project's current drafts.
+\documentclass[11pt,a4paper,oneside,openany]{book}
+\usepackage{fontspec}
+\IfFileExists{xeCJK.sty}{
+  \usepackage{xeCJK}
+  \setmainfont{Latin Modern Roman}
+  \IfFontExistsTF{Noto Sans CJK SC}{
+    \setCJKmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{Noto Sans CJK SC}
+  }{\IfFontExistsTF{FandolSong-Regular.otf}{
+    \setCJKmainfont[BoldFont=FandolSong-Bold.otf,ItalicFont=FandolKai-Regular.otf]{FandolSong-Regular.otf}
+  }{\setCJKmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{SimSun}}}
+}{
+  \IfFontExistsTF{Noto Sans CJK SC}{
+    \setmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{Noto Sans CJK SC}
+  }{\IfFontExistsTF{FandolSong-Regular.otf}{
+    \setmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{FandolSong-Regular.otf}
+  }{\IfFontExistsTF{SimSun}{
+    \setmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{SimSun}
+  }{\setmainfont[AutoFakeBold=2,AutoFakeSlant=.15]{NotoSansCJKsc-Regular.otf}}}}
+  \XeTeXlinebreaklocale "zh"
+  \XeTeXlinebreakskip=0pt plus .15em
+}
+\usepackage[left=24mm,right=24mm,top=24mm,bottom=24mm,headheight=16pt,headsep=7mm,footskip=11mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,array,longtable,fancyhdr,enumitem,needspace,titlesec}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{xurl}
+\usepackage[unicode=true,colorlinks=true,linkcolor=MidnightBlue,citecolor=MidnightBlue,urlcolor=MidnightBlue,bookmarksnumbered,bookmarksdepth=2,hypertexnames=false]{hyperref}
+\usepackage{bookmark}
+\hypersetup{pdftitle={XP-算子初步研究讲义},pdfauthor={XP-算子项目},pdfsubject={紧线性差、自然函数方程与Cauchy相关集}}
+\urlstyle{same}
+\newtheoremstyle{lecture}{7pt}{5pt}{\normalfont}{}{\bfseries}{。}{.4em}{}
+\theoremstyle{lecture}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{remark}[theorem]{说明}
+\renewcommand{\proofname}{\normalfont\bfseries 证明}
+\renewcommand{\contentsname}{目录}
+\renewcommand{\bibname}{参考文献}
+\newcommand{\K}{\mathbb K}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Fp}{\mathbb F_p}
+\newcommand{\Circle}{\mathbb R/\mathbb Z}
+\newcommand{\cfrak}{\mathfrak c}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\Ann}{\operatorname{Ann}}
+\newcommand{\D}{\mathcal D}
+\newcommand{\T}{\mathcal T}
+\newcommand{\calA}{\mathcal A}
+\newcommand{\calM}{\mathcal M}
+\newcommand{\calN}{\mathcal N}
+\newcommand{\Sol}{\operatorname{Sol}}
+\newcommand{\Uc}{\mathscr U_c}
+\newcommand{\Wc}{\mathscr W_c}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\rk}{\operatorname{dim}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\excle}{\mathrel{\le_{\mathrm{exc}}}}
+\newcommand{\exceq}{\mathrel{=_{\mathrm{exc}}}}
+\newcommand{\bN}{\overline N}
+\newcommand{\TT}{\mathcal T}
+\newcommand{\En}{\mathcal E_n}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\e}{e}
+\newcommand{\Pow}{\mathcal P}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{.22em}
+\setlength{\emergencystretch}{3em}
+\linespread{1.10}
+\renewcommand{\arraystretch}{1.2}
+\setlist[enumerate]{itemsep=3pt,topsep=5pt,leftmargin=2.3em}
+\setlist[itemize]{itemsep=3pt,topsep=5pt,leftmargin=2em}
+\allowdisplaybreaks[1]
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+\titleformat{\chapter}[display]{\Huge\bfseries\color{MidnightBlue}}{\large 第\thechapter 章}{8pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+\titleformat{\section}{\Large\bfseries\color{MidnightBlue}}{\thesection}{.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{.6em}{}
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small XP-算子初步研究讲义}
+\fancyhead[R]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\begin{document}
+\frontmatter
+\begin{titlepage}
+\vspace*{18mm}
+{\large\color{MidnightBlue} XP-算子项目\par}
+\vspace{14mm}
+{\Huge\bfseries XP-算子\par}
+\vspace{4mm}
+{\Huge\bfseries 初步研究讲义\par}
+\vspace{12mm}
+{\Large 紧线性差、自然函数方程\par}
+\vspace{2mm}
+{\Large 与 Cauchy 相关集\par}
+\vspace{13mm}
+\noindent\rule{\textwidth}{.6pt}
+\vspace{6mm}
+\noindent 本讲义整合项目已有草稿，按一般框架、线性理论、代数几何、
+无正则性条件的乘法关系及整函数分类组织内容。
+保留主要结论的完整证明，统一术语、假设、编号与交叉引用。
+\vfill
+{\large 2026年10月13日\quad 整合初稿\par}
+\vspace{4mm}
+{\small 单文件 UTF-8 源码；XeLaTeX 编译。\par}
+\end{titlepage}
+\chapter*{前言与阅读导引}
+\addcontentsline{toc}{chapter}{前言与阅读导引}
+\markboth{前言与阅读导引}{}
+本项目把函数方程的成立位置看作函数本身所确定的集合。
+给定 $P:W^V\times V^n\to W$，研究对象是
+\[
+ X_P(f)=\{v\in V^n:P(f,v)=0\}.
+\]
+由此可以同时讨论全域函数方程、处处不成立的反函数问题，以及相关集的几何、拓扑和刚性。
+本讲义围绕两种方法组织：线性差由有限关系与对偶空间控制；
+Cauchy 相关集则结合函数方程、代数几何、群结构与复分析。
+
+\section*{内容与阅读路线}
+第1章给出定义和入门例题。第2--5章构成线性理论主线：
+紧性的等价刻画、非齐次存在唯一性、自然性的精确定义、有限模板及秩二低支撑分类。
+第6章研究加法 Cauchy 缺陷的代数零集。
+第7--8章研究乘法 Cauchy 关系在任意函数类中的解、相关域拓扑、仿射族刚性与一致点子群。
+第9--11章转入整函数类，给出极端零集分类、非平凡零集的四类关系、一元证明及高维拼合。
+第12章列出结论边界和后续问题。
+
+第一次阅读可按第1、2、3、6、7、9章的顺序理解框架和主要结果；
+第4--5章适合继续研究自然线性方程，第8章和第10--11章分别提供群论与解析分类的完整论证。
+第9章先陈述分类总表，其非平凡部分的证明在第10--11章完成。
+
+\section*{统一约定}
+\begin{enumerate}
+\item \textbf{线性差}专指对函数变量的 $K$-线性算子；仅可加者称为\textbf{加性差}。
+算子对函数变量线性，不意味着未知函数对自变量线性。
+\item \textbf{紧}采用本项目的有限取值可分解定义，不指泛函分析中的紧算子。
+有限依赖在非线性情形下还需无交互项条件。
+\item 除明确说明外，函数是任意集合映射，不附加连续性、可测性或解析性。
+第9--11章另行要求整函数；第6章另行要求多项式。
+\item 使用选择公理，允许选取 Hamel 基、补空间和线性延拓。
+星号 $E^*$ 表示完整代数对偶；$K^{(I)}$ 表示有限支集直和，$K^I$ 表示直积。
+\item $\N=\{0,1,2,\ldots\}$。相关集默认按集合相等讨论；涉及重数时明确使用零除子。
+空集不称为不可约集；“区域”指非空开连通集。
+\end{enumerate}
+
+\section*{所需基础与证明层次}
+前八章主要使用线性代数、群与模、张量积、初等代数几何及基本拓扑。
+整函数部分使用小 Picard 定理、Weierstrass 准备与局部因子分解、
+解析曲线芽参数化，以及 Nevanlinna 的一、二主定理和对数导数估计。
+这些标准工具明确列出并附文献；项目中的分类论证保留在正文。
+“初步”表示本讲义是可继续修订的研究整理，并不把第12章的问题视作已解决结论。
+
+\clearpage
+\begingroup\small\setlength{\parskip}{0pt}\tableofcontents\endgroup
+\clearpage
+\chapter*{主要记号}
+\addcontentsline{toc}{chapter}{主要记号}
+\markboth{主要记号}{}
+\begin{longtable}{@{}p{.23\textwidth}p{.69\textwidth}@{}}
+\toprule 记号 & 含义 \\\midrule
+\endhead
+$W^V$ & 全部函数 $V\to W$；无默认正则性。\\
+$X_P(f)$ & $P(f,v)=0$ 的参数集合，即 $f$ 的 $P$-域。\\
+$Q=P-h$ & 非齐次全域问题 $P(f)=h$ 所对应的缺陷。\\
+$\T$ & 线性差诱导的函数空间线性映射。\\
+$K^{(I)},K^I$ & 有限支集直和与全体函数直积。\\
+$r_v,L$ & 方程的行向量与全部行向量的线性包。\\
+$\Delta_h f(x)$ & $f(x+h)-f(x)$。\\
+$c_\lambda$ & 完全线性自然模板的有限支集系数。\\
+$\Uc,\Wc$ & 控制加性项与二次广义项的参数代数商。\\
+$D_f,X_D(f)$ & 加法缺陷 $f(x+y)-f(x)-f(y)$ 及其零集。\\
+$M_f,X_M(f)$ & 乘法缺陷 $f(x+y)-f(x)f(y)$ 及其零集。\\
+$P_f,X(f)$ & 第8--11章对乘法缺陷及其零集的简记。\\
+$E=Z(f-g)$ & 实仿射族的一致点子群。\\
+$\Circle$ & 圆群；与线性算子 $\T$ 区分。\\
+$C_{p^\infty},\Z_p$ & Prüfer $p$ 群与 $p$ 进整数加法群。\\
+$\OO(\C^n),\En$ & 整函数环；$\En=\{ce^L:c\in\C,\ L\text{ 复线性}\}$。\\
+$T(r,F),\bN(r,a;F)$ & Nevanlinna 特征函数与约化计数函数；只用于解析部分。\\
+\bottomrule
+\end{longtable}
+\mainmatter
+
+
+\chapter{基本框架与入门例题}\label{ch:framework}
+先区分“求函数”与“求相关集”两类视角。以下例题展示同一框架如何容纳线性、乘法及复合关系。
+\section{基本对象、问题类型与线性性的层次}
+设 $R,S$ 为交换环，$V,W$ 分别为 $R,S$-模，$n\ge1$，并令
+\[
+ I=V,\qquad J=V^n,\qquad W^I=\{f:I\to W\}.
+\]
+对映射 $P:W^I\times J\to W$，定义
+\[
+ X_P(f)=\{v\in J:P(f,v)=0\}.
+\]
+它称为 $f$ 的 $P$-域，也沿用讨论中的 $P$-Area 一词；这里的“域”不指代数意义的域。
+由此得到集合值映射 $X_P:W^V\to\Pow(V^n)$，称为 $P$ 相关算子；$\Pow(V^n)$ 为幂集。
+
+
+\begin{definition}[三类问题与本讲义的非齐次问题]
+$P$-函数问题要求 $X_P(f)=J$；反 $P$-函数问题要求 $X_P(f)=\varnothing$；
+$P$-域问题要求对给定 $f$ 求 $X_P(f)$。
+给定 $h:J\to W$，令 $Q(f,v)=P(f,v)-h(v)$。本讲义所说的 $Q$-问题均指
+\begin{equation}\label{lin:eq:inhom}
+ P(f,v)=h(v)\qquad(v\in J),
+\end{equation}
+即全域 $Q$-函数问题。要求 $X_Q(f)$ 恰为某个指定真子集，是另一个实现问题。
+\end{definition}
+
+\begin{definition}[加性差与线性差：修订后的约定]
+若对全部 $f,g,v$ 有
+\[
+ P(f+g,v)=P(f,v)+P(g,v),
+\]
+则称 $P$ 为\textbf{加性差}。
+当 $R=S=K$ 为域时，若此外对每个 $a\in K$ 还满足
+\[
+ P(af,v)=aP(f,v),
+\]
+则称 $P$ 为\textbf{线性差}，必要时强调为 $K$-线性差。
+本讲义统一采用这一修订，不再用“线性差”指仅满足可加性的对象。
+\end{definition}
+可加性使 $P(0,v)=0$。特征零时，可加映射自动为 $\Q$-线性；
+特征 $p$ 时自动为 $\mathbb F_p$-线性。一般并不自动为 $K$-线性。
+例如 $K=\C$ 时 $P(f,v)=\overline{f(0)}$ 可加，却不是复线性的。
+
+\begin{proposition}[一般非齐次方程的纤维]
+若 $P$ 为 $K$-线性差，令
+\[
+ \T:W^I\to W^J,\qquad (\T f)(v)=P(f,v).
+\]
+则方程\eqref{lin:eq:inhom}可解当且仅当 $h\in\im\T$；有一个解 $f_0$ 时，全部解为
+\begin{equation}\label{lin:eq:torsor}
+ \Sol(h)=f_0+\ker\T.
+\end{equation}
+对某个可解的 $h$ 解唯一，当且仅当 $\ker\T=0$；这也等价于每个可解的右端均有唯一解。
+每个右端恰有一解，当且仅当 $\T$ 为同构。
+\end{proposition}
+\begin{proof}
+$\T f=h=\T f_0$ 当且仅当 $\T(f-f_0)=0$，得到\eqref{lin:eq:torsor}。
+存在性、唯一性和全体右端的结论分别就是像、核及双射的定义。
+\end{proof}
+若只假设可加性，同一证明在加法群层次成立，在素域层次给出仿射空间。
+即便 $V,W$ 有限维，$W^V$ 通常仍是巨大的函数空间；不能对 $V,W$ 的有限维数直接套用一个有限矩阵的秩公式。
+
+\section{常值、周期与差分方程}
+以下每个例子都明确指定 $P$；所列“全部解”均指满足 $X_P(f)=V^n$ 的全部函数。除另有说明外，不附加连续性、可测性等条件。
+
+\begin{example}[常值函数]
+保留一般的交换环与模 $R,S,V,W$，取 $n=2$，定义
+\[
+ P(f,x,y)=f(x)-f(y).
+\]
+全部解恰为常值函数：
+\[
+ \boxed{f(x)=c\quad(x\in V),\qquad c\in W.}
+\]
+\end{example}
+\begin{proof}
+令 $y=0_V$ 即得 $f(x)=f(0_V)$。反之，任意常值函数都满足条件。
+\end{proof}
+
+\begin{example}[整数上的周期函数]
+取 $R=\mathbb Z$、$V=\mathbb Z$，$W$ 为任意 $S$-模。固定正整数 $m$，取 $n=1$，定义
+\[
+ P(f,k)=f(k+m)-f(k).
+\]
+全部解由任意 $m$ 个参数 $c_0,\ldots,c_{m-1}\in W$ 给出：
+\[
+ \boxed{f(k)=c_r\quad\text{当 }k\equiv r\pmod m,\quad 0\le r<m.}
+\]
+等价地，全部解恰为经商映射 $\mathbb Z\to\mathbb Z/m\mathbb Z$ 分解的集合映射。
+\end{example}
+\begin{proof}
+方程给出 $f(k+tm)=f(k)$，其中 $t\in\mathbb Z$ 任意。因此函数在每个同余类上为常值，各同余类上的值可以独立选取。反向验证直接成立。
+\end{proof}
+这里 $m$ 是一个周期，不要求它是最小正周期。
+
+\begin{example}[一阶差分方程]
+仍取 $R=\mathbb Z$、$V=\mathbb Z$，$W$ 为任意 $S$-模。固定 $c\in W$，取 $n=1$，定义
+\[
+ P(f,k)=f(k+1)-f(k)-c.
+\]
+全部解为
+\[
+ \boxed{f(k)=b+kc\quad(k\in\mathbb Z),\qquad b\in W,}
+\]
+其中 $kc$ 表示 $W$ 的加法群中的整数倍。
+\end{example}
+\begin{proof}
+取 $b=f(0)$。由 $f(k+1)=f(k)+c$ 向正、负两个方向递推，分别得到所有整数处的公式。反之，代入即可验证。
+\end{proof}
+
+
+\section{乘法方程}
+\begin{example}[有理数上的乘法函数]
+取 $R=S=V=W=\mathbb Q$、$n=2$，定义
+\[
+ P(f,x,y)=f(xy)-f(x)f(y).
+\]
+全部解包括 $f\equiv0$、$f\equiv1$，以及下列函数：任取
+\[
+ \varepsilon\in\{1,-1\},\qquad a_p\in\mathbb Q^\times\quad(p\text{ 遍历所有素数}),
+\]
+令 $f(0)=0$，并对 $x\ne0$ 定义
+\[
+ \boxed{
+ f(x)=\varepsilon^{\delta(x)}\prod_{p}a_p^{v_p(|x|)},\qquad
+ \delta(x)=\begin{cases}0,&x>0,\\1,&x<0.\end{cases}}
+\]
+这里 $\mathbb Q^\times=\mathbb Q\setminus\{0\}$，乘积中只有有限项不等于 $1$。
+\end{example}
+\begin{proof}
+由 $f(1)=f(1)^2$，若 $f(1)=0$，则 $f(x)=f(x)f(1)=0$。以下设 $f(1)=1$。又由 $f(0)=f(0)^2$，知 $f(0)\in\{0,1\}$；若 $f(0)=1$，则
+\[
+ 1=f(0x)=f(0)f(x)=f(x),
+\]
+故 $f\equiv1$。
+
+剩下的情形为 $f(0)=0$、$f(1)=1$。对任意 $x\ne0$，
+\[
+ f(x)f(x^{-1})=1,
+\]
+所以 $f(x)\ne0$。令 $\varepsilon=f(-1)$，则 $\varepsilon^2=1$；令 $a_p=f(p)$，则 $a_p\in\mathbb Q^\times$。每个非零有理数都有唯一分解
+\[
+ x=(-1)^{\delta(x)}\prod_p p^{v_p(|x|)}.
+\]
+反复使用乘法性及逆元关系，得到所列公式。
+
+反之，任取上述参数，由
+\[
+ v_p(|xy|)=v_p(|x|)+v_p(|y|),\qquad
+ \delta(xy)\equiv\delta(x)+\delta(y)\pmod2
+\]
+及 $\varepsilon^2=1$，可验证非零 $x,y$ 时的乘法性。当一个变量为零时，等式两边都为零。故这些函数全部为解。
+\end{proof}
+
+例如，$f(x)=x$、$f(x)=|x|$，以及 $f(0)=0$、$f(x)=1$（$x\ne0$）都属于这一类。与指数型方程相比，本例涉及 $\mathbb Q^\times$ 的乘法群，各素数处的非零有理函数值可以独立指定。
+
+
+\section{复合方程与无解情形}
+\begin{example}[幂等映射]
+取任意交换环 $R=S$ 与模 $V=W$，令 $n=1$，定义
+\[
+ P(f,x)=f(f(x))-f(x).
+\]
+全部解恰为到某个非空子集 $A\subseteq V$ 的集合论收缩：
+\[
+ \boxed{f:V\to A,\qquad f(a)=a\quad(a\in A).}
+\]
+这里 $A$ 不要求为子模，$f$ 也不要求线性。
+\end{example}
+\begin{proof}
+若 $f\circ f=f$，令 $A=f(V)$。任取 $a=f(x)\in A$，都有 $f(a)=f(f(x))=f(x)=a$。反之，对任意满足所列条件的映射，$f(x)\in A$，故 $f(f(x))=f(x)$。
+\end{proof}
+全部解可由如下数据给出：任选非空 $A\subseteq V$，固定 $A$ 中各点，并将 $V\setminus A$ 中每一点任意映到 $A$。对任意解都有 $f(V)=\{x:f(x)=x\}$。
+
+\begin{example}[对合映射]
+仍取 $R=S$、$V=W$、$n=1$，定义
+\[
+ P(f,x)=f(f(x))-x.
+\]
+全部解恰为 $V$ 上的对合：将底层集合 $V$ 分拆为单点集与二元集，在每个单点集上固定该点，在每个二元集中交换两点。
+\end{example}
+\begin{proof}
+若 $f\circ f=\operatorname{id}_V$，则 $f$ 是双射且 $f^{-1}=f$。若 $f(x)=x$，得到一个固定点；否则 $x$ 与 $f(x)$ 互换，组成二元轨道。不同轨道不交。反之，由这种分拆定义的映射作用两次后回到原点，故满足方程。
+\end{proof}
+例如在 $V=\mathbb Q^d$ 中，任意 $a\in V$ 都给出对合 $f(x)=a-x$；上述集合分拆描述还包括所有非线性对合。
+
+\begin{example}[因对称性不相容而无解]
+取 $R=S=V=W=\mathbb Q$、$n=2$，定义
+\[
+ P(f,x,y)=f(x+y)-f(x)-f(y)-x.
+\]
+该 $P$-函数问题无解。
+\end{example}
+\begin{proof}
+若存在解，则交换 $x,y$ 后分别有
+\[
+ f(x+y)-f(x)-f(y)=x,\qquad
+ f(x+y)-f(x)-f(y)=y.
+\]
+两式迫使任意 $x,y\in\mathbb Q$ 都相等，取 $x=0,y=1$ 即得矛盾。
+\end{proof}
+
+
+\chapter{紧性与非齐次存在理论}\label{ch:compact}
+本章的核心是把紧标量线性差转化为自由向量空间上的行关系。有限维值域可沿用代数对偶；无限维算子系数必须保留延拓障碍。
+\section{紧算子的完整等价刻画}\label{lin:sec:compact}
+本节只需要 $W$ 是阿贝尔群，$I\ne\varnothing$。对 $x\in I,w\in W$，记
+\[
+ (\delta_xw)(y)=\begin{cases}w,&y=x,\\0,&y\ne x.\end{cases}
+\]
+\begin{definition}[项目中的紧性]
+$P$ 紧，是指对每个 $v\in J$，存在有限集 $F_v\subseteq I$ 及映射 $U_{x,v}:W\to W$，使
+\begin{equation}\label{lin:eq:compact}
+ P(f,v)=\sum_{x\in F_v}U_{x,v}(f(x))\qquad(f\in W^I).
+\end{equation}
+有限集与局部映射可以依赖 $v$；不要求一个统一的有限集合适用于全部 $v$。
+\end{definition}
+
+\begin{theorem}[紧性、有限依赖与无交互项]\label{lin:thm:compact}
+固定 $v$，记 $T(f)=P(f,v)$、$c=T(0)$。以下条件等价：
+\begin{enumerate}
+\item $T$ 具有\eqref{lin:eq:compact}的形式。
+\item 存在有限集 $F\subseteq I$，$T$ 只依赖 $f|_F$，且对支集不交的 $f,g$ 有
+\begin{equation}\label{lin:eq:orthadd}
+ T(f+g)=T(f)+T(g)-c.
+\end{equation}
+\item $W$ 取离散拓扑、$W^I$ 取乘积拓扑时，$T$ 在 $0$ 处连续，且满足\eqref{lin:eq:orthadd}。
+\item 存在唯一的有限集 $E$ 和唯一的一族非零映射 $A_x:W\to W$，满足 $A_x(0)=0$，且
+\begin{equation}\label{lin:eq:canonical}
+ T(f)=c+\sum_{x\in E}A_x(f(x)).
+\end{equation}
+\end{enumerate}
+这里允许 $E=\varnothing$。规范局部映射为
+\begin{equation}\label{lin:eq:Ax}
+ A_x(w)=T(\delta_xw)-c,
+\end{equation}
+并将恒零的项删去。对这类 $T$，在 $0$ 连续也等价于处处连续。
+\end{theorem}
+\begin{proof}
+(1)$\Rightarrow$(2)：有限依赖显然。若 $\supp f\cap\supp g=\varnothing$，则每个坐标至少有一个取值为零，故
+\[
+ U_x(f(x)+g(x))=U_x(f(x))+U_x(g(x))-U_x(0).
+\]
+求和并用 $c=\sum_xU_x(0)$ 得\eqref{lin:eq:orthadd}。
+
+(2)$\Rightarrow$(4)：记 $f_F$ 为 $f$ 在 $F$ 上的截断。有限依赖给出 $T(f)=T(f_F)$。
+对有限和 $f_F=\sum_{x\in F}\delta_xf(x)$ 逐次用\eqref{lin:eq:orthadd}，得到
+\[
+ T(f)=c+\sum_{x\in F}\bigl(T(\delta_xf(x))-c\bigr).
+\]
+按\eqref{lin:eq:Ax}定义 $A_x$，删去恒零项即得规范式。任一满足 $A_x(0)=0$ 的分解，在 $\delta_xw$ 处代入后都必须满足\eqref{lin:eq:Ax}，故唯一。
+
+(4)$\Rightarrow$(1)：若 $E\ne\varnothing$，把常数 $c$ 加入其中一项；若 $E=\varnothing$，任选 $x_0\in I$，令 $U_{x_0}\equiv c$ 即可。
+
+(2)$\Rightarrow$(3)：固定有限个坐标的取值后输出不变，故 $T$ 处处连续。
+反之，(3)意味着存在有限 $F$，只要 $g|_F=0$ 就有 $T(g)=c$。
+将任意 $f$ 分解成支集不交的 $f_F+f_{I\setminus F}$，得到
+\[
+ T(f)=T(f_F)+T(f_{I\setminus F})-c=T(f_F).
+\]
+这就是有限依赖，再结合假设中的\eqref{lin:eq:orthadd}得到(2)。
+\end{proof}
+
+\begin{remark}[不能删去无交互项条件]
+有限依赖和连续性本身均不足以推出上述紧性。
+例如 $W=\R$，取不同的 $a,b\in I$，令 $T(f)=f(a)f(b)$。
+它只依赖两个坐标且连续，但
+$T(\delta_a1+\delta_b1)=1$，而两项单独输入的输出都为零，因此不满足\eqref{lin:eq:orthadd}。
+\end{remark}
+
+\begin{corollary}[加性差与线性差的紧性]\label{lin:cor:lincompact}
+若 $T:W^I\to W$ 可加，则以下条件等价：项目紧性；有限坐标依赖；离散乘积拓扑下在零点连续。
+此时规范式中 $c=0$，且每个 $A_x$ 可加。若 $T$ 还是 $K$-线性的，则每个 $A_x\in\End_K(W)$。
+\end{corollary}
+\begin{proof}
+可加性自动给出\eqref{lin:eq:orthadd}，且 $T(0)=0$。
+由 $A_x(w)=T(\delta_xw)$ 及 $\delta_x$ 的线性性立即得到相应的线性结论。
+\end{proof}
+
+\begin{corollary}[局部线性性无须另作假设]\label{lin:cor:autolocal}
+按修订后的定义，任何紧线性差都具有唯一的归一化表示
+\[
+ P(f,v)=\sum_{x\in F_v}T_{v,x}f(x),\qquad
+ T_{v,x}\in\End_K(W),\quad T_{v,x}\ne0,
+\]
+其中 $F_v$ 有限，且 $T_{v,x}(w)=P(\delta_xw,v)$。
+因此研究紧线性差时，无须再附加“存在一组线性的局部映射”这一假设。
+\end{corollary}
+\begin{proof}
+规范分解的常数项为 $P(0,v)=0$；对 $w$ 的加性和齐次性均从 $P$ 继承。
+唯一性来自定理\ref{lin:thm:compact}。原始非归一化分解中的局部项可能带互相抵消的常数，故这里的结论针对归一化表示。
+\end{proof}
+
+\section{一般标量线性差：紧性之外的完整判据}\label{lin:sec:noncompact}
+本节只假设 $W=K$ 且 $P$ 为线性差，\textbf{暂不假设紧性}。
+记 $E=K^I,F=K^J$，仍以 $\T:E\to F$ 表示 $P$，并令
+\[
+ \T^*:F^*\to E^*,\qquad \T^*(\Lambda)=\Lambda\circ\T,
+\]
+其中星号表示\textbf{完整代数对偶}。
+
+\begin{theorem}[一般线性差的对偶存在唯一性]\label{lin:thm:fullalgebraic}
+方程 $\T f=h$ 可解，当且仅当
+\begin{equation}\label{lin:eq:fullcompat}
+ \Lambda\in F^*,\quad \Lambda\circ\T=0
+ \quad\Longrightarrow\quad \Lambda(h)=0.
+\end{equation}
+非空解集仍为 $f_0+\ker\T$。此外，每个右端的解都至多一个当且仅当 $\T^*$ 满射；每个右端可解当且仅当 $\T^*$ 单射。
+\end{theorem}
+\begin{proof}
+若 $h=\T f$，必要性显然。若 $h\notin\im\T$，则商向量空间 $F/\im\T$ 中 $h$ 的像非零。
+在含该向量的一组基上定义一个取值非零的泛函，再拉回到 $F$，就得到消灭 $\im\T$ 却不消灭 $h$ 的 $\Lambda$，违反\eqref{lin:eq:fullcompat}。
+
+若 $\T$ 单射，对任意 $\ell\in E^*$，先在 $\im\T$ 上定义 $\Lambda(\T f)=\ell(f)$，再延拓到 $F$，故 $\T^*$ 满射。
+反之，若 $0\ne f\in\ker\T$，取 $\ell(f)\ne0$，则 $\ell$ 不可能属于 $\im\T^*$。
+最后，$\ker\T^*$ 正是消灭 $\im\T$ 的泛函，故其为零当且仅当 $\im\T=F$。
+\end{proof}
+
+\begin{example}[有限关系相容仍不足：标量值反例]\label{lin:ex:noncompact}
+取 $K=V=\Q,n=1$，枚举 $\Q=\{q_1,q_2,\ldots\}$。
+函数 $\delta_{q_j}1$ 与常值函数 $\mathbf1$ 构成线性无关族，将其延拓为 $\Q^{\Q}$ 的 Hamel 基。
+令 $\ell_j$ 为对应于基向量 $\delta_{q_j}1$ 的坐标泛函，并定义
+\[
+ P(f,q_j)=\ell_j(f),\qquad h(q_j)=1.
+\]
+任意有限子系统可由相应的有限和 $f=\sum_{j\in F}\delta_{q_j}1$ 解出，且泛函族 $(\ell_j)$ 线性无关。
+但任意函数作为 Hamel 基的线性组合只用有限项，故序列 $(\ell_j(f))_{j\ge1}$ 有限支集，不可能处处等于 $1$。
+所以全局方程不可解。
+
+每个 $\ell_j$ 都非有限取值型：若它是有限个点值的线性组合，对所有 $\delta_{q_k}1$ 代入会迫使它等于 $f\mapsto f(q_j)$；然而 $\ell_j(\mathbf1)=0$ 而 $\mathbf1(q_j)=1$，矛盾。
+\end{example}
+这里完整对偶判据没有失效。事实上 $\im\T=\Q^{(\Q)}$，在商 $\Q^{\Q}/\Q^{(\Q)}$ 中检测常值函数的泛函提供了障碍；该泛函不可能是有限个坐标评价的线性组合。
+下一节的紧性恰好使所有存在性障碍都能由有限关系检测。
+
+\section{标量值紧线性差：关系空间控制全部解}\label{lin:sec:scalar}
+设 $W=K$，$P$ 为紧的 $K$-线性差。由推论\ref{lin:cor:autolocal}，存在唯一系数 $a(v,x)$，每个固定 $v$ 只有有限个 $a(v,x)$ 非零，且
+\begin{equation}\label{lin:eq:rowfinite}
+ P(f,v)=\sum_{x\in I}a(v,x)f(x).
+\end{equation}
+令
+\[
+ D_I=K^{(I)}=\bigoplus_{x\in I}Ke_x,\qquad
+ D_J=K^{(J)}=\bigoplus_{v\in J}Ke_v.
+\]
+定义行向量、关系映射与行空间
+\begin{equation}\label{lin:eq:A}
+ r_v=\sum_xa(v,x)e_x,\qquad
+ A:D_J\to D_I,\ A(e_v)=r_v,\qquad L=\im A.
+\end{equation}
+每个函数 $f:I\to K$ 唯一对应线性泛函
+$\ell_f:D_I\to K$，其中 $\ell_f(e_x)=f(x)$。
+因此 $K^I=D_I^*$，且 $\T=A^*$。
+
+\begin{theorem}[存在性的四个等价条件]\label{lin:thm:scalar}
+对 $h:J\to K$，以下等价：
+\begin{enumerate}
+\item 存在 $f:I\to K$ 使 $P(f,v)=h(v)$ 对全部 $v$ 成立。
+\item 每个有限子方程组都可解。
+\item 对任意有限族 $v_1,\ldots,v_s$ 与 $c_1,\ldots,c_s\in K$，都有
+\begin{equation}\label{lin:eq:compat}
+ \sum_{i=1}^s c_ir_{v_i}=0
+ \quad\Longrightarrow\quad
+ \sum_{i=1}^s c_ih(v_i)=0.
+\end{equation}
+\item $\ell_h|_{\ker A}=0$，其中 $\ell_h(e_v)=h(v)$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1)$\Rightarrow$(2)显然。若有限关系 $\sum_i c_ir_{v_i}=0$ 成立，取相关有限方程的一组解，将等式乘以 $c_i$ 相加，便得到\eqref{lin:eq:compat}，故(2)$\Rightarrow$(3)。
+由于 $D_J$ 的每个元素都是有限和，(3)与(4)完全相同。
+
+由(3)，可在 $L$ 上定义
+\[
+ \varphi_h\!\left(\sum_i c_ir_{v_i}\right)=\sum_i c_ih(v_i).
+\]
+两个表达式的差是一条有限关系，所以定义良好且线性。
+取 $L$ 的一组基并延拓为 $D_I$ 的基，在新增基向量上任意指定值，便将 $\varphi_h$ 延拓为 $\ell:D_I\to K$。
+令 $f(x)=\ell(e_x)$，则 $P(f,v)=\ell(r_v)=h(v)$，得到(1)。
+\end{proof}
+
+\begin{theorem}[解空间、唯一性及任意右端可解]\label{lin:thm:scalarstructure}
+记 $C=D_I/L$。若 $f_0$ 为一组解，则
+\begin{equation}\label{lin:eq:scalarstructure}
+ \Sol(h)=f_0+C^*,\qquad \ker\T\cong C^*.
+\end{equation}
+具体地，$C^*$ 通过商映射拉回到 $D_I^*$。此外：
+\begin{enumerate}
+\item 可解右端的解唯一，当且仅当 $L=D_I$，等价于每个 $e_x$ 都是有限个行向量的线性组合。
+\item 每个 $h$ 都可解，当且仅当 $A$ 单射，等价于行族 $(r_v)_{v\in J}$ 线性无关。
+\item 每个 $h$ 恰有一解，当且仅当行族 $(r_v)$ 是 $D_I$ 的一组基。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+齐次解对应恰好消灭 $L$ 的泛函，等价于 $C$ 上的任意泛函。
+非零向量空间总存在非零线性泛函：把一个非零向量纳入基并在该向量上指定值 $1$。
+所以 $C^*=0$ 当且仅当 $C=0$，得到(1)。
+由定理\ref{lin:thm:scalar}，所有 $h$ 可解等价于 $D_J$ 上所有泛函都消灭 $\ker A$，亦即 $\ker A=0$，得到(2)。结合两项得到(3)。
+\end{proof}
+
+\begin{corollary}[有限矛盾证书与有限恢复公式]
+不可解时，存在一条有限关系\eqref{lin:eq:compat}，其左侧为零而右侧非零。
+若解唯一，对每个 $x$ 均可选有限表达式 $e_x=\sum_i c_ir_{v_i}$，于是
+\[
+ f(x)=\sum_i c_i h(v_i).
+\]
+不同表达式给出的值因相容性而相同。
+\end{corollary}
+\begin{proof}
+若无解，定理\ref{lin:thm:scalar}的相容条件必失败，故存在所述有限关系。
+若解唯一，定理\ref{lin:thm:scalarstructure}给出每个 $e_x$ 的有限行表示；
+将解对应的泛函作用于该表示，即得恢复公式。
+两个表示相减是一条有限行关系，所以相容性保证恢复值与表示无关。
+\end{proof}
+
+\begin{remark}[无限维数不能作形式减法]
+若 $C$ 的一组基为 $B$，那么 $C^*\cong K^B$，全部自由参数是一族任意标量。
+当 $|B|=d<\infty$ 时，齐次解空间维数为 $d$；当 $B$ 无限时，不可把 $K^B$ 当成直和 $K^{(B)}$，也不可写成未经解释的“未知数个数减秩”。
+有限参数结构由商空间 $C$，而非由底层 $V$ 的维数直接决定。
+\end{remark}
+
+\begin{proposition}[精确序列与像的闭性]
+存在精确序列
+\[
+ 0\longrightarrow C^*\longrightarrow K^I
+ \xrightarrow{\T}K^J\xrightarrow{\rho}(\ker A)^*
+ \longrightarrow0,
+\]
+其中 $\rho(h)=\ell_h|_{\ker A}$。
+赋予 $K$ 离散拓扑后，$\im\T$ 是 $K^J$ 中的闭子空间。
+\end{proposition}
+\begin{proof}
+各处精确性来自前述延拓论证；$\rho$ 满射是因为 $\ker A$ 上的泛函可延拓到 $D_J$。
+像由所有有限关系对应的方程 $\sum_i c_ih(v_i)=0$ 的交定义，每个此类方程的零集闭，故像闭。
+\end{proof}
+
+\section{有限维向量值情形的对偶判据}\label{lin:sec:vectorfinite}
+设 $0<\dim_KW=m<\infty$，并写
+\[
+ P(f,v)=\sum_x T_{v,x}f(x),\qquad T_{v,x}\in\End_K(W),
+\]
+每行仍只有有限个非零项。令
+\[
+ E_I=\bigoplus_{x\in I}W^*,\qquad E_J=\bigoplus_{v\in J}W^*.
+\]
+用 $i_x(\lambda)$ 表示位于 $x$ 坐标的 $\lambda\in W^*$，定义
+\begin{equation}\label{lin:eq:Bdual}
+ B:E_J\to E_I,\qquad
+ B(i_v(\lambda))=\sum_x i_x(\lambda\circ T_{v,x}).
+\end{equation}
+有限维性给出自然同构 $E_I^*\cong W^I$、$E_J^*\cong W^J$，且 $\T=B^*$。
+
+\begin{theorem}[向量值存在唯一性]\label{lin:thm:vectorfinite}
+上述方程可解，当且仅当对任意有限族 $v_i\in J,\lambda_i\in W^*$，有
+\begin{equation}\label{lin:eq:veccompat}
+ \sum_i\lambda_i\circ T_{v_i,x}=0\quad(\forall x\in I)
+ \quad\Longrightarrow\quad
+ \sum_i\lambda_i(h(v_i))=0.
+\end{equation}
+它也等价于每个有限子方程组可解。若可解，则
+\[
+ \Sol(h)=f_0+(E_I/\im B)^*.
+\]
+解唯一当且仅当 $B$ 满射；每个右端可解当且仅当 $B$ 单射。
+\end{theorem}
+\begin{proof}
+在配对 $\langle f,i_x(\lambda)\rangle=\lambda(f(x))$ 下，直接计算得 $\T=B^*$。
+条件\eqref{lin:eq:veccompat}正是对应于 $h$ 的泛函消灭 $\ker B$。
+同标量情形一样，先在 $\im B$ 上定义泛函，再延拓到 $E_I$；这里必须用 $W^{**}=W$ 才能把所得泛函解释为 $W$-值函数。
+
+有限子方程可解蕴含\eqref{lin:eq:veccompat}，因为每条关系只涉及有限个方程。
+全局可解则显然蕴含有限可解。商空间、单射与满射的论证均与定理\ref{lin:thm:scalarstructure}相同。
+\end{proof}
+
+\begin{remark}[标量系数与有限维值域是两种不同的充分条件]
+若所有 $T_{v,x}=a(v,x)\id_W$，则即便 $W$ 无限维，定理\ref{lin:thm:scalar}的证明仍可直接使用：
+把 $\varphi_h:L\to W$ 延拓为 $D_I\to W$ 即可。
+此时相容性是 $\sum_i c_ir_{v_i}=0\Rightarrow\sum_i c_i h(v_i)=0$，齐次解为
+$\Hom_K(D_I/L,W)$。下一节的困难来自一般算子系数与无限维值域同时出现。
+\end{remark}
+
+\section{无限维值域：延拓障碍及明确反例}\label{lin:sec:infinite}
+\begin{example}[有限可解而全局不可解]\label{lin:ex:infinite}
+取 $V=\Q$、$n=1$、$K=\Q$、$W=\bigoplus_{j\ge1}\Q u_j$。
+令 $\pi_j:W\to W$ 为 $\pi_j(\sum_k a_ku_k)=a_ju_1$。
+在互异的参数 $v_j=j$ 处置
+\[
+ P(f,v_j)=\pi_j(f(0)),\qquad h(v_j)=u_1,
+\]
+其他参数处置 $P(f,v)=h(v)=0$。
+该 $P$ 为紧的 $K$-线性差，每行甚至只取一个函数值。
+任意有限子方程只要求 $f(0)$ 的有限个坐标等于 $1$，因而可解。
+全部方程却要求 $f(0)=\sum_{j\ge1}u_j$，这不是 $W$ 的元素，故不可解。
+\end{example}
+该例说明不能在定理\ref{lin:thm:vectorfinite}中删去有限维性。
+若一般地使用 $W^*$ 作上述对偶延拓，只能先得到 $W^{**}$-值函数；
+还需要保证各取值属于自然嵌入 $W\hookrightarrow W^{**}$ 的像。
+
+\begin{theorem}[任意维值域的模同态判据]\label{lin:thm:module}
+设 $W\ne0$，$\calA=\End_K(W)$，以复合作为乘法，并把 $W$ 视为自然左 $\calA$-模。
+令
+\[
+ \calM=\bigoplus_{x\in I}\calA e_x,\qquad
+ \calN=\bigoplus_{v\in J}\calA e_v,
+\]
+定义左模同态
+\[
+ B_{\calA}:\calN\to\calM,\quad B_{\calA}(e_v)=\sum_x T_{v,x}e_x,
+ \qquad\psi_h(e_v)=h(v).
+\]
+则 $P(f)=h$ 可解当且仅当下列两项同时成立：
+\begin{enumerate}
+\item $\psi_h(\ker B_{\calA})=0$，即对有限个 $a_i\in\calA$，
+\[
+ \sum_i a_iT_{v_i,x}=0\ (\forall x)\quad\Longrightarrow\quad
+ \sum_i a_i h(v_i)=0;
+\]
+\item 由第一项诱导的左模同态
+\[
+ \bar\psi_h:\im B_{\calA}\to W,\qquad
+ \bar\psi_h(B_{\calA}u)=\psi_h(u)
+\]
+可延拓为 $\calM\to W$ 的左模同态。
+\end{enumerate}
+有解时，齐次解空间自然为
+\[
+ \Hom_{\calA}(\coker B_{\calA},W).
+\]
+\end{theorem}
+\begin{proof}
+每个 $f:I\to W$ 唯一确定左模同态
+$\phi_f:\calM\to W$，其中 $\phi_f(e_x)=f(x)$。
+因此
+\[
+ (\phi_f B_{\calA})(e_v)=\sum_xT_{v,x}f(x)=P(f,v).
+\]
+所求方程等价于 $\psi_h=\phi_fB_{\calA}$。
+先经像分解再延拓，恰好就是两项条件。差解满足 $\phi B_{\calA}=0$，因而恰好经余核分解。
+\end{proof}
+这里使用\textbf{左}模，所以相容式中的乘积顺序是 $a_iT_{v_i,x}$，不能交换。
+在例\ref{lin:ex:infinite}中，任何有限算子关系都满足第一项：取相关有限子系统的一个解即可验证。
+因此该例也明确展示第二项可能失败，不能无证明地删去延拓条件。
+
+\subsection{双对偶中的形式解与真实取值障碍}
+继续使用 $E_I=\bigoplus_xW^*$、$E_J=\bigoplus_vW^*$ 和式\eqref{lin:eq:Bdual}的 $B$，
+但本小节允许 $W$ 无限维。记自然嵌入为 $j:W\hookrightarrow W^{**}$。
+
+\begin{theorem}[有限相容性的双对偶解释]\label{lin:thm:bidual}
+对任意维 $W$，以下三个条件等价：
+\begin{enumerate}
+\item 每个有限子方程组 $\sum_xT_{v,x}f(x)=h(v)$ 都有 $W$-值解；
+\item 式\eqref{lin:eq:veccompat}的全部有限对偶关系成立；
+\item 存在 $\widehat f:I\to W^{**}$，使
+\begin{equation}\label{lin:eq:bidualsolution}
+ \sum_xT_{v,x}^{**}\widehat f(x)=j(h(v))\qquad(v\in J).
+\end{equation}
+\end{enumerate}
+原来的 $W$-值问题有解，当且仅当可在第三项中选到 $\widehat f(x)\in j(W)$ 对所有 $x$ 成立。
+\end{theorem}
+\begin{proof}
+第一项蕴含第二项，因为每条关系只涉及有限个方程。
+反过来，固定有限参数集 $F\subset J$，令 $S\subset I$ 为这些行的支集并。
+有限子系统是线性映射
+$T_F:W^S\to W^F$ 的一个纤维。
+若 $h|_F\notin\im T_F$，线性泛函分离给出 $\Lambda\in(W^F)^*$，消灭该像却不消灭 $h|_F$。
+因为 $F$ 有限，$\Lambda$ 唯一可写成 $\sum_{v\in F}\lambda_v(w_v)$，其中 $\lambda_v\in W^*$。
+消灭像恰表示 $\sum_{v\in F}\lambda_v\circ T_{v,x}=0$ 对全部 $x$ 成立，这与第二项矛盾。
+
+第二项表示由 $h$ 给出的泛函 $\ell_h(i_v\lambda)=\lambda(h(v))$ 消灭 $\ker B$。
+因此它先下降为 $\im B$ 上的泛函，再延拓为 $\ell\in E_I^*$。
+自然识别 $E_I^*=(W^{**})^I$，令 $\widehat f(x)(\lambda)=\ell(i_x\lambda)$，
+则 $\ell B=\ell_h$ 正好是\eqref{lin:eq:bidualsolution}。
+反过来，任何这样的形式解作用到有限关系上，都给出第二项。
+
+若各 $\widehat f(x)$ 都属于 $j(W)$，由 $j$ 的单射性和 $T^{**}j=jT$，可唯一写成 $j(f(x))$ 并得到原方程。
+原方程的解经 $j$ 嵌入又显然给出这种形式解。
+\end{proof}
+
+这说明有限维性的具体作用是 $j(W)=W^{**}$。
+在无限维反例\ref{lin:ex:infinite}中，形式解允许在全部坐标上取值 $1$，但该取值不能由 $W$ 的有限支集向量实现。
+模同态延拓表述与这里的双对偶表述描述的是同一个全局取值障碍。
+
+
+\chapter{模型方程与自然性}\label{ch:natural}
+先求解基本模型，再区分值域相容、群等变、固定空间自同态相容及跨空间拉回自然性。最后一种条件给出统一的有限模板。
+\section{模型方程：非齐次 Cauchy、Jensen 与差分多项式}\label{lin:sec:models}
+\subsection{非齐次 Cauchy 方程的完整相容条件}
+设 $V,W$ 为 $\Q$-向量空间，维数不必有限。记
+\[
+ Df(x,y)=f(x+y)-f(x)-f(y).
+\]
+\begin{theorem}[对称二余循环判据]\label{lin:thm:cocycle}
+方程 $Df=h$ 有解，当且仅当
+\begin{align}
+ h(x,y)&=h(y,x),\label{lin:eq:sym}\\
+ h(x,y)+h(x+y,z)&=h(y,z)+h(x,y+z)\label{lin:eq:cocycle}
+\end{align}
+对全部变量成立。有解时，全部解为
+\[
+ f_0+\Hom_{\Q}(V,W).
+\]
+若 $\dim_{\Q}V=d<\infty$、$\dim_{\Q}W=m<\infty$，则解仿射空间的维数为 $dm$。
+\end{theorem}
+\begin{proof}
+必要性由展开 $Df$ 得到。证明充分性。
+在\eqref{lin:eq:cocycle}中令 $z=0$，得 $h(x+y,0)=h(y,0)$，故 $h(x,0)$ 为常值 $c=h(0,0)$。
+置 $h_0=h-c$，则 $h_0(x,0)=h_0(0,x)=0$，且仍满足两式。
+
+在集合 $E=W\times V$ 上定义加法
+\[
+ (u,x)+(w,y)=(u+w+h_0(x,y),x+y).
+\]
+对称性给出交换律，\eqref{lin:eq:cocycle}给出结合律；$(0,0)$ 为零元，
+$(-u-h_0(x,-x),-x)$ 为 $(u,x)$ 的逆元，故 $E$ 是阿贝尔群。
+对每个正整数 $k$，设
+\[
+ b_k(x)=\sum_{j=1}^{k-1}h_0(jx,x),
+\]
+则归纳得 $k(u,x)=(ku+b_k(x),kx)$。
+给定 $(w,y)$，只能取 $x=y/k$，再唯一取 $u=(w-b_k(x))/k$，便有 $k(u,x)=(w,y)$。
+所以 $E$ 唯一可除，因而具有唯一的 $\Q$-向量空间结构。
+
+投影 $E\to V$ 是满射群同态，因唯一可除性也是 $\Q$-线性映射。
+选取一组基的提升，得到线性截面 $s:V\to E$，写为 $s(x)=(g(x),x)$。
+等式 $s(x+y)=s(x)+s(y)$ 给出
+$g(x+y)=g(x)+g(y)+h_0(x,y)$，即 $Dg=h_0$。
+令 $f=g-c$，因为常值 $-c$ 的缺陷是 $c$，所以 $Df=h_0+c=h$。
+最后，两个解之差可加，也即 $\Q$-线性；有限维结论由基的像可任意指定得到。
+\end{proof}
+上述证明同样适用于任意特征零域上的向量空间，但所得自由项一般仅为底层 $\Q$-线性映射。
+不能在没有额外假设时将其换成 $\Hom_K(V,W)$。
+指定一组 $\Q$-基上的函数值，可以从每个非空解仿射空间中选出唯一解。
+
+\subsection{Jensen 方程与二次方程}
+\begin{proposition}[有理向量空间上的两类齐次模型]
+在 $V=\Q^d,W=\Q^m$ 上：
+\begin{enumerate}
+\item $2f((x+y)/2)-f(x)-f(y)=0$ 的全部解为 $f(x)=A(x)+b$，其中 $A$ 为 $\Q$-线性映射。
+\item $f(x+y)+f(x-y)-2f(x)-2f(y)=0$ 的全部解为 $f(x)=B(x,x)$，其中 $B:V\times V\to W$ 为对称 $\Q$-双线性映射。
+\end{enumerate}
+解空间维数分别为 $m(d+1)$ 与 $m d(d+1)/2$。
+\end{proposition}
+\begin{proof}
+第一项令 $g=f-f(0)$，先取 $y=0$ 得 $2g(x/2)=g(x)$，再代回得 $g(x+y)=g(x)+g(y)$。
+
+第二项依次取 $x=y=0$、$x=0$、$y=x$，得到 $f(0)=0$、$f(-x)=f(x)$ 和 $f(2x)=4f(x)$。
+定义
+\[
+ B(x,y)=\frac{f(x+y)-f(x-y)}4
+       =\frac{f(x+y)-f(x)-f(y)}2.
+\]
+后一式表明对称性。分别对 $(x+y,z)$ 与 $(x-y,z)$ 应用原式并相减，得到
+$B(x+z,y)+B(x-z,y)=2B(x,y)$。
+由第一项且 $B(0,y)=0$，$B$ 对第一个变量线性；对称性给出双线性。
+又 $B(x,x)=f(x)$。反向代入直接成立。维数按基上的独立参数计数。
+\end{proof}
+
+\subsection{高阶混合差分与普通多项式}
+定义 $\Delta_hf(x)=f(x+h)-f(x)$。
+\begin{theorem}[有理有限维情形的差分分类]\label{lin:thm:polydifference}
+设 $V=\Q^d,W=\Q^s$，$m\ge0$。以下等价：
+\[
+ \Delta_{h_1}\cdots\Delta_{h_{m+1}}f(x)=0
+ \qquad(x,h_1,\ldots,h_{m+1}\in V);
+\]
+$f$ 的每个坐标是总次数不超过 $m$ 的普通有理系数多项式。
+解空间维数为 $s\binom{d+m}{m}$。
+\end{theorem}
+\begin{proof}
+一个差分使多项式总次数至少下降一次，故多项式必满足方程。
+反过来，只需处理标量值。在整数格上，记 $e_i$ 为标准基、$\Delta_i=\Delta_{e_i}$。
+对 $\alpha\in\N^d$ 置 $c_\alpha=(\Delta_1^{\alpha_1}\cdots\Delta_d^{\alpha_d}f)(0)$。
+若 $|\alpha|>m$，混合差分假设给出 $c_\alpha=0$。
+由移位算子 $T_i=1+\Delta_i$ 的二项式展开，对所有 $k\in\N^d$ 有
+\[
+ f(k)=\sum_{|\alpha|\le m}c_\alpha
+       \prod_{i=1}^d\binom{k_i}{\alpha_i}=:p(k).
+\]
+右边是总次数不超过 $m$ 的多项式。沿各坐标轴，方程 $\Delta_i^{m+1}f=0$ 是首尾系数非零的线性递推，已知非负整数处的值后可向负方向唯一递推，故 $f=p$ 于 $\Z^d$。
+
+对每个正整数 $N$，把同样的论证用于格 $N^{-1}\Z^d$，得到一个总次数不超过 $m$ 的多项式 $p_N$ 与 $f$ 在该格上一致。
+在共同子格 $\Z^d$ 上有 $p_N=p$。多项式若在 $\Z^d$ 上为零，逐个变量使用一元多项式只有有限个根的事实，即知其恒零。
+因此 $p_N=p$。每个有理点属于某个这样的格，所以 $f=p$ 于 $\Q^d$。
+总次数不超过 $m$ 的单项式数为 $\binom{d+m}{m}$，得到维数公式。
+\end{proof}
+\begin{remark}
+当定义域换成 $\R^d$ 而不加正则性时，普通实多项式分类不成立；
+例如任意不连续加性函数都满足二阶差分为零。
+一般应使用底层 $\Q$-结构上的广义多项式。本讲义只在已证明的有理有限维范围内使用上述普通多项式结论。
+\end{remark}
+
+\section{自然性之一：值域相容与群等变}\label{lin:sec:natural}
+“自然性”不是一个无需定义的单一条件。本节至第\ref{lin:sec:universal}节依次说明值域相容、群等变、固定空间自同态相容及跨空间拉回自然性。
+
+\subsection{与所有值域线性自映射交换}
+\begin{proposition}[值域自然性强制标量系数]\label{lin:prop:commutant}
+设 $W\ne0$，$P$ 为紧的 $K$-线性差。若对所有 $B\in\End_K(W)$ 有
+\[
+ P(B\circ f,v)=B(P(f,v)),
+\]
+则每个局部算子 $T_{v,x}$ 都是标量倍数 $a(v,x)\id_W$。
+逆命题亦成立，且不要求 $W$ 有限维。
+\end{proposition}
+\begin{proof}
+取只在 $x$ 处非零的 $f$，得到 $T_{v,x}B=BT_{v,x}$。
+以下证明任何与全部自同态交换的 $T$ 都是标量。
+固定 $u\ne0$，取 $\lambda\in W^*$ 使 $\lambda(u)=1$，令 $p(w)=\lambda(w)u$。
+因为 $Tp=pT$，所以 $Tu=pTu\in Ku$，写为 $Tu=au$。
+对任意 $w$ 取线性映射 $B$ 使 $Bu=w$，则 $Tw=TBu=BTu=aw$，故 $T=a\id_W$。
+反向显然。
+\end{proof}
+这是一条使无限维值域重新落入标量系数理论的自然条件，见第\ref{lin:sec:vectorfinite}节末的说明。
+
+\subsection{固定群作用下的行向量}
+设群 $G$ 作用在集合 $I,J$ 上，并在 $D_I$ 上定义 $g e_x=e_{gx}$。
+\begin{proposition}[等变性与行关系]
+对标量值紧线性差，条件
+\begin{equation}\label{lin:eq:equiv}
+ P(f\circ g^{-1},gv)=P(f,v)\qquad(g\in G)
+\end{equation}
+等价于
+\[
+ r_{gv}=g r_v.
+\]
+此时 $L=\Span\{r_v\}$ 是 $K[G]$-子模，$D_I/L$ 也自然成为 $K[G]$-模。
+\end{proposition}
+\begin{proof}
+左边展开为 $\sum_xa(gv,x)f(g^{-1}x)=\sum_ya(gv,gy)f(y)$。
+对所有 $f$ 相等，当且仅当 $a(gv,gy)=a(v,y)$，这正是行向量的等变式。
+行空间的稳定性随即成立。
+\end{proof}
+因此，等变性把任意行空间变成一个带群作用的关系空间。但固定一个空间上的群等变性，仍弱于第\ref{lin:sec:universal}节对全部线性映射的自然性。
+
+\subsection{非齐次右端的对称性与对称解}
+采用函数上的作用 $g\cdot f=f\circ g^{-1}$，输出函数同样定义作用。
+\begin{proposition}[解空间的仿射群作用]\label{lin:prop:affinesolutions}
+在式\eqref{lin:eq:equiv}成立时，
+\[
+ g\cdot\Sol(h)=\Sol(g\cdot h).
+\]
+所以右端的稳定子 $H=\{g:g\cdot h=h\}$ 作用在非空解仿射空间上。
+若解唯一，则该解必为 $H$-不变函数。
+\end{proposition}
+\begin{proof}
+等变性等价于 $\T(g\cdot f)=g\cdot\T(f)$，因此 $\T(f)=h$ 蕴含 $\T(g\cdot f)=g\cdot h$；用 $g^{-1}$ 得到集合相等。
+唯一解的每个 $H$-平移仍是解，故必等于自身。
+\end{proof}
+
+\begin{proposition}[对称解的精确障碍与有限群平均]\label{lin:prop:symmetric}
+若 $f_0\in\Sol(h)$，记 $Z=\ker\T$，并对 $g\in H$ 定义
+$c(g)=g\cdot f_0-f_0$。
+则 $c(g)\in Z$，且
+\[
+ c(gk)=g\cdot c(k)+c(g).
+\]
+存在 $H$-不变解，当且仅当存在 $u\in Z$ 使
+\[
+ c(g)=u-g\cdot u\qquad(g\in H).
+\]
+特别地，若 $H$ 有限且 $|H|$ 在 $K$ 中非零，任意可解的 $H$-不变右端都有 $H$-不变解。
+\end{proposition}
+\begin{proof}
+$\T(c(g))=g\cdot h-h=0$，而将 $gk\cdot f_0-f_0$ 分成
+$g\cdot(k\cdot f_0-f_0)+(g\cdot f_0-f_0)$ 得到所示恒等式。
+全部解为 $f_0+u$；它不变等价于 $c(g)+g\cdot u-u=0$，即所述条件。
+有限群情形可以直接取
+$f_{\mathrm{av}}=|H|^{-1}\sum_{g\in H}g\cdot f_0$。
+线性性给出 $\T(f_{\mathrm{av}})=h$，重新排列求和项给出不变性。
+\end{proof}
+上述 $c$ 是解仿射空间对应的一余循环；更换基点 $f_0$ 只使它增加一个余边界。
+这里的恒等式及等价条件已经给出了所需的全部内容，不依赖上同调术语。
+
+\begin{example}[特征整除群阶时平均结论会失败]
+取 $K=V=\mathbb F_p$，平移群 $H=(\mathbb F_p,+)$，并令
+$P(f,v)=\sum_{x\in\mathbb F_p}f(x)$、$h(v)=1$。
+这是平移等变的紧线性差，$f=\delta_0 1$ 是解。
+但平移不变函数只能为常数，而常数函数的输出为 $p c=0$，所以不存在平移不变解。
+\end{example}
+
+\subsection{平移等变性与群代数}
+令 $G=(V,+)$，$J=V^n$ 采用对角平移。
+将 $D_V$ 识别为群代数 $K[V]$，其基记作 $[x]$，乘法为 $[x][y]=[x+y]$。
+\begin{theorem}[平移等变紧算子的群代数表述]\label{lin:thm:translation}
+若 $P$ 满足平移等变性，则它由一族有限群代数元素
+\[
+ b_d=r_{(0,d_2,\ldots,d_n)},\qquad d\in V^{n-1},
+\]
+唯一确定，且
+\[
+ r_{(v_1,\ldots,v_n)}=[v_1]b_{(v_2-v_1,\ldots,v_n-v_1)}.
+\]
+行空间恰是理想
+\[
+ L=(b_d:d\in V^{n-1})\subseteq K[V],
+\]
+齐次解自然为 $(K[V]/L)^*$。
+特别地，$n=1$ 时恰为固定有限模板的卷积型算子
+\[
+ P(f,v)=\sum_{a\in F}c_a f(v+a).
+\]
+\end{theorem}
+\begin{proof}
+对每个元组减去首坐标，应用行等变式即得公式。
+所有行正是所有 $[v]b_d$，其 $K$-线性包等于所示理想。
+齐次解结论来自第\ref{lin:sec:scalar}节。$n=1$ 时只剩一个基准行 $b$，其有限支集给出卷积模板。
+\end{proof}
+
+\begin{example}[周期与高阶差分]
+周期方程 $f(x+a)-f(x)=0$ 对应理想 $([a]-[0])$。
+商向量空间自然具有 $V/\Z a$ 的陪集基，因此解恰为各陪集上的任意常值。
+更一般地，令增广理想
+\[
+ \mathfrak a=\ker\bigl(K[V]\to K,\ \sum c_x[x]\mapsto\sum c_x\bigr).
+\]
+$\mathfrak a$ 由所有 $[h]-[0]$ 生成，
+$(m+1)$ 阶混合差分的行正是
+\[
+ [x]\prod_{i=1}^{m+1}([h_i]-[0]),
+\]
+其行理想为 $\mathfrak a^{m+1}$。故广义多项式空间为 $(K[V]/\mathfrak a^{m+1})^*$。
+当 $K=\Q,V=\Q^d$ 时，第\ref{lin:sec:models}节给出它的普通多项式解释和维数。
+\end{example}
+
+\section{固定空间上的线性群与自同态自然性}\label{lin:sec:fixednatural}
+本节设 $K$ 为无限域，$0<\dim_KV=d<\infty$，$W=K$。
+先仅要求 $\mathrm{GL}(V)$-等变性，不要求在不同维数的空间间相容。
+给定元组 $v=(v_1,\ldots,v_n)$，定义
+\[
+ a_v:K^n\to V,\quad a_v(\lambda)=\sum_i\lambda_iv_i,
+ \qquad N_v=\ker a_v,\quad S_v=\im a_v.
+\]
+商映射诱导同构 $\bar a_v:K^n/N_v\to S_v$。
+
+\begin{lemma}[有限支集必须位于输入张成空间]\label{lin:lem:supportspan}
+若 $P$ 紧且对 $\mathrm{GL}(V)$ 等变，则
+\[
+ \supp r_v\subseteq S_v.
+\]
+\end{lemma}
+\begin{proof}
+元组的稳定子由逐点固定 $S_v$ 的可逆线性变换组成；等变性使 $r_v$ 在此稳定子下不变。
+若 $S_v=V$，结论显然。否则取补空间 $V=S_v\oplus U$。
+任意 $x=s+u\notin S_v$ 满足 $u\ne0$。
+令变换在 $S_v$ 上为恒等、在 $U$ 上乘以任意 $t\in K^\times$，得到无穷多个不同点 $s+tu$。
+若 $x$ 处系数非零，整个无穷轨道上的系数均相同且非零，与行的有限支集矛盾。
+\end{proof}
+
+\begin{theorem}[固定空间的线性群等变分类]\label{lin:thm:glclassification}
+上述 $\mathrm{GL}(V)$-等变紧线性差，与下列数据一一对应：
+对每个余维不超过 $d$ 的子空间 $N\le K^n$，任意选取有限支集元素
+\[
+ b_N\in K^{(K^n/N)}.
+\]
+对应的行向量是
+\begin{equation}\label{lin:eq:glclassification}
+ r_v=(\bar a_v)_*b_{N_v},
+\end{equation}
+其中 $\bar a_v$ 的值看作 $V$ 的元素。不同 $N$ 的数据可独立选取。
+\end{theorem}
+\begin{proof}
+两元组 $v,w$ 属于同一线性群轨道，当且仅当 $N_v=N_w$。
+必要性显然；充分性由 $a_v(\lambda)\mapsto a_w(\lambda)$ 给出 $S_v\to S_w$ 的同构，再延拓为 $V$ 的自同构。
+由引理\ref{lin:lem:supportspan}，每个 $r_v$ 可沿 $\bar a_v$ 唯一拉回到 $K^{(K^n/N_v)}$。
+同一轨道中的拉回相同，因为行向量满足 $r_{gv}=g_*r_v$，且稳定子逐点固定其支集。
+所以得到唯一的 $b_N$。
+反过来，任意这些数据通过\eqref{lin:eq:glclassification}给出行有限算子；核空间在可逆变换下不变，公式直接保证等变性。
+\end{proof}
+
+\begin{remark}[为什么要求无限域]
+在有限域和有限维 $V$ 上，所有轨道均有限。
+例如 $P(f,v)=\sum_{x\in V}f(x)$ 对线性群等变，但在零元组处支集可以是整个 $V$，不包含于 $S_v=0$。
+因此上述支集论证及其分类不能直接用于有限域；对全部空间及全部线性映射自然的分类则没有这一限制。
+\end{remark}
+
+\begin{theorem}[对全部线性自映射相容]\label{lin:thm:endclassification}
+在定理\ref{lin:thm:glclassification}中进一步要求，对所有 $A\in\End_K(V)$ 有
+\begin{equation}\label{lin:eq:endnaturality}
+ P(f\circ A,v)=P(f,Av).
+\end{equation}
+则这等价于：每当 $N\subseteq N'$ 且 $\operatorname{codim}N\le d$，都有
+\begin{equation}\label{lin:eq:quotientcompat}
+ b_{N'}=(q_{N,N'})_*b_N,
+ \qquad q_{N,N'}:K^n/N\to K^n/N'.
+\end{equation}
+特别地，若 $d\ge n$，全部数据由单个有限模板 $b_0\in K^{(K^n)}$ 唯一决定，因而
+\[
+ P(f,v)=\sum_{\lambda\in K^n}c_\lambda f\left(\sum_i\lambda_iv_i\right).
+\]
+\end{theorem}
+\begin{proof}
+式\eqref{lin:eq:endnaturality}对全部 $f$ 成立，当且仅当 $r_{Av}=A_*r_v$。
+总有 $N_v\subseteq N_{Av}$，且在两个商空间之间 $A$ 诱导的映射正是自然商映射，故\eqref{lin:eq:quotientcompat}足以保证该行等式。
+
+反过来，给定 $N\subseteq N'$，分别选取核为这两个空间的元组 $v,w$。
+由包含关系，规则 $a_v(\lambda)\mapsto a_w(\lambda)$ 在 $S_v$ 上良定义且线性。
+将其延拓到 $V$ 的自同态 $A$，便有 $Av=w$。
+此时行等式恰好给出\eqref{lin:eq:quotientcompat}。
+若 $d\ge n$，可以取 $N=0$，所以 $b_N$ 都是 $b_0$ 的商推前；唯一性和公式立即成立。
+\end{proof}
+
+当 $d<n$ 时，条件\eqref{lin:eq:quotientcompat}仍是完整的相容数据描述，但不能在此描述中凭空使用一个未出现的满秩元组来取 $b_0$。
+下一节的跨空间自然性通过允许使用通用空间 $K^n$，消除了这一维数限制。
+
+\section{自然性之二：对全部线性映射自然的分类}\label{lin:sec:universal}
+本节研究一整族算子 $P_V:K^V\times V^n\to K$，其中 $V$ 遍历全部 $K$-向量空间。
+每个 $P_V$ 均为紧的 $K$-线性差。要求对任意线性映射 $A:V\to V'$、函数 $f:V'\to K$ 和元组 $v\in V^n$，有
+\begin{equation}\label{lin:eq:functorial}
+ P_V(f\circ A,v)=P_{V'}(f,Av).
+\end{equation}
+
+\begin{theorem}[线性拉回自然性的有限模板分类]\label{lin:thm:universal}
+满足\eqref{lin:eq:functorial}的算子族与有限支集系数族 $(c_\lambda)_{\lambda\in K^n}$ 一一对应，公式为
+\begin{equation}\label{lin:eq:universal}
+ P_V(f,v_1,\ldots,v_n)
+ =\sum_{\lambda\in K^n}c_\lambda
+ f(\lambda_1v_1+\cdots+\lambda_nv_n).
+\end{equation}
+此处有限支集模板不依赖 $V$ 和 $v$。
+\end{theorem}
+\begin{proof}
+在通用空间 $U=K^n$ 中取标准元组 $(e_1,\ldots,e_n)$。
+紧线性性给出唯一有限行
+$r=\sum_{\lambda\in K^n}c_\lambda[\lambda]\in K^{(K^n)}$。
+对任意 $v$，存在线性映射 $A:U\to V$，$A(e_i)=v_i$。
+在\eqref{lin:eq:functorial}中使用此 $A$，得到
+\[
+ P_V(f,v)=P_U(f\circ A,e_1,\ldots,e_n)
+ =\sum_\lambda c_\lambda f(A\lambda),
+\]
+这就是所示公式。通用元组处的行唯一，故系数唯一。
+反过来，线性映射保持所有线性组合，故任意所示模板都满足自然性。
+\end{proof}
+
+\begin{corollary}[任意维值域的自然模板]\label{lin:cor:operatornatural}
+固定任意 $K$-向量空间 $W$。若紧线性差族
+$P_V:W^V\times V^n\to W$ 对全部线性映射满足式\eqref{lin:eq:functorial}，
+则存在唯一有限支集算子族 $C_\lambda\in\End_K(W)$，使
+\[
+ P_V(f,v)=\sum_{\lambda\in K^n}C_\lambda
+ \left(f\left(\sum_i\lambda_iv_i\right)\right).
+\]
+若此外与 $W$ 的全部线性自映射交换，且 $W\ne0$，则每个 $C_\lambda=c_\lambda\id_W$，回到标量系数模板。
+\end{corollary}
+\begin{proof}
+在通用空间 $K^n$ 的标准元组处应用推论\ref{lin:cor:autolocal}，得到有限族线性局部映射。
+再沿 $e_i\mapsto v_i$ 拉回，逐字重复定理\ref{lin:thm:universal}的证明即可。
+值域相容时，在通用元组处逐坐标测试，得到 $C_\lambda$ 与全部自同态交换，再用命题\ref{lin:prop:commutant}。
+\end{proof}
+
+\begin{corollary}[额外的平移与对称性条件]\label{lin:cor:affine}
+在定理\ref{lin:thm:universal}的假设下：
+\begin{enumerate}
+\item 若还要求对所有空间的平移满足\eqref{lin:eq:equiv}，则恰好只有
+\[
+ \lambda_1+\cdots+\lambda_n=1
+\]
+处允许 $c_\lambda\ne0$。也就是说，只能对仿射组合取值。
+\item 对常值函数 $f\equiv b$ 有 $P_V(f,v)=b\sum_\lambda c_\lambda$。
+因此消灭所有常数等价于 $\sum_\lambda c_\lambda=0$。
+\item 对元组的任意置换不变，等价于模板系数在相应坐标置换下不变。
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+第一项取 $V=K^{n+1}$、$v_i=e_i$、平移量 $t=e_{n+1}$。
+平移前的行再整体平移，支点为 $(\lambda,1)$；在平移后的元组上应用公式，支点为 $(\lambda,\sum_i\lambda_i)$。
+比较基向量系数，非零项必须满足坐标和为 $1$。充分性由仿射组合与平移交换直接得到。
+第二项直接代入。第三项在通用元组处比较有限支集系数即可。
+\end{proof}
+
+\begin{example}[Cauchy 与 Jensen 的不同自然性]
+Cauchy 差的模板为
+$[(1,1)]-[(1,0)]-[(0,1)]$，故对全部线性映射自然。
+它\textbf{不}满足对两个输入同时平移的等变性，也不消灭非零常值函数。
+Jensen 差的模板为
+$2[(1/2,1/2)]-[(1,0)]-[(0,1)]$（要求 $\operatorname{char}K\ne2$），
+每个支点坐标和均为 $1$、系数总和为零，因此还具有平移等变性并消灭常数。
+这说明不能把仿射自然性未经检查地加到所有 Cauchy 型关系上。
+\end{example}
+
+\begin{remark}[固定空间的线性群等变性较弱]
+例如在任意非零 $V$ 上定义
+$P(f,v)=b(v)f(0)$，其中 $b(0)=0$、$b(v)=1$ 对 $v\ne0$。
+它是紧线性差，并对 $\mathrm{GL}(V)$ 等变。
+但若将 $P$ 按此公式定义于所有空间，对零线性映射 $A:V\to V'$，
+在 $v\ne0$ 处左边为 $f(0)$、右边为 $0$，故不满足\eqref{lin:eq:functorial}。
+因此定理\ref{lin:thm:universal}的“全部线性映射”假设不能换成仅有线性自同构。
+\end{remark}
+
+
+\chapter{自然模板的矩、群代数与有限域模型}\label{ch:templates}
+多项式类内的矩判据与任意函数的核分类是不同问题。本章分别给出多项式恢复、一元伸缩解法、单射性的一维检测及有限域上的全函数模型。
+\section{自然模板的矩与多项式解空间}\label{lin:sec:moments}
+本节设 $\operatorname{char}K=0$，$W=K$，并使用有限模板
+\[
+ P_V(f,v)=\sum_{\lambda\in F}c_\lambda f\left(\sum_i\lambda_iv_i\right),
+ \qquad F\subset K^n\text{ 有限}.
+\]
+对多重指标 $\alpha=(\alpha_1,\ldots,\alpha_n)\in\N^n$，定义模板的矩
+\[
+ \mu_\alpha=\sum_{\lambda\in F}c_\lambda\lambda_1^{\alpha_1}\cdots\lambda_n^{\alpha_n}.
+\]
+其中零次幂按 $t^0=1$ 理解，包括 $t=0$。令
+\begin{equation}\label{lin:eq:symbol}
+ \sigma_m(t_1,\ldots,t_n)=\sum_{\lambda\in F}c_\lambda
+ (\lambda_1t_1+\cdots+\lambda_nt_n)^m
+ =\sum_{|\alpha|=m}\binom m\alpha\mu_\alpha t^\alpha.
+\end{equation}
+
+\begin{theorem}[每个齐次次数上的消灭或单射二分]\label{lin:thm:moment}
+设 $0<\dim_KV=d<\infty$，记 $H_m(V)$ 为 $V$ 上 $m$ 次齐次多项式空间。
+则下列条件等价：
+\begin{enumerate}
+\item $P_V$ 消灭 $H_m(V)$ 中的全部多项式；
+\item 对全部 $|\alpha|=m$ 有 $\mu_\alpha=0$；
+\item $\sigma_m=0$。
+\end{enumerate}
+若这三项不成立，则 $P_V$ 在 $H_m(V)$ 上是单射。
+因此对任意 $M\ge0$，
+\begin{equation}\label{lin:eq:polykernel}
+ \ker P_V\cap K[V]_{\le M}
+ =\bigoplus_{\substack{0\le m\le M\\\sigma_m=0}}H_m(V),
+\end{equation}
+其维数为 $\sum_{0\le m\le M,\ \sigma_m=0}\binom{d+m-1}{m}$。
+\end{theorem}
+\begin{proof}
+特征零时多项式展开式\eqref{lin:eq:symbol}的多项式系数 $\binom m\alpha$ 非零，故第二、三项等价。
+当 $m\ge1$ 时，把 $p\in H_m(V)$ 写成对称 $m$-线性形式的对角值 $p(x)=B(x,\ldots,x)$；具体可取
+\[
+ B(x_1,\ldots,x_m)=\frac1{m!}\sum_{S\subseteq\{1,\ldots,m\}}
+ (-1)^{m-|S|}p\left(\sum_{i\in S}x_i\right).
+\]
+对每个齐次单项式展开时，容斥只保留每个 $x_i$ 都出现一次的项，因而该式对称且多线性，并在对角线上恢复 $p$。
+多线性展开得
+\[
+ P_V(p,v)=\sum_{|\alpha|=m}\binom m\alpha\mu_\alpha
+ B(\underbrace{v_1,\ldots,v_1}_{\alpha_1},\ldots,
+   \underbrace{v_n,\ldots,v_n}_{\alpha_n}).
+\]
+所以第二项蕴含第一项。$m=0$ 时直接用常数函数验证同一结论。
+
+若 $\sigma_m\ne0$，由于 $K$ 无限，可取 $t\in K^n$ 使 $\sigma_m(t)\ne0$。
+对每个 $x\in V$，齐次性给出
+\begin{equation}\label{lin:eq:homorecovery}
+ P_V(p,t_1x,\ldots,t_nx)=\sigma_m(t)p(x).
+\end{equation}
+因此 $P_V(p)=0$ 强制 $p=0$，说明单射性，也说明不能消灭非零的 $H_m(V)$。
+
+最后把 $p=\sum_{m=0}^M p_m$ 按次数分解。
+若 $P_V(p)=0$，将输入元组同时乘以任意 $s\in K$，得到
+$\sum_m s^mP_V(p_m,v)=0$。
+无限域上一元多项式系数唯一，故每个 $P_V(p_m,v)=0$。
+应用前述二分即得\eqref{lin:eq:polykernel}，维数由齐次单项式计数给出。
+\end{proof}
+
+\begin{corollary}[非齐次多项式解的恢复与检验]\label{lin:cor:polyrecover}
+若要求 $f\in K[V]_{\le M}$，则可解右端 $h$ 必须是在元组变量中总次数不超过 $M$ 的多项式。
+写其齐次分解为 $h=\sum_{m=0}^M h_m$。
+对每个 $\sigma_m=0$，必须有 $h_m=0$，此时 $f_m\in H_m(V)$ 任意。
+对每个 $\sigma_m\ne0$，选取 $t$ 使 $\sigma_m(t)\ne0$，唯一候选为
+\[
+ f_m(x)=\frac{h_m(t_1x,\ldots,t_nx)}{\sigma_m(t)}.
+\]
+方程可解当且仅当这些候选逐个满足 $P_V(f_m)=h_m$。
+\end{corollary}
+\begin{proof}
+必要性与候选公式来自次数保持和\eqref{lin:eq:homorecovery}。
+若各次候选均通过代入检验，将它们与任意被消灭次数的齐次项相加便得到解。
+\end{proof}
+这里的最终代入检验不能省去：仅在全部变量共线的元组上恢复候选，并不自动保证对一般元组的方程成立。
+
+\begin{proposition}[有限模板的最低非零矩有界]\label{lin:prop:momentbound}
+若模板非零，合并重合支点并删去零系数后共有 $s$ 个支点，则存在 $|\alpha|\le s-1$ 使 $\mu_\alpha\ne0$。
+因此非零有限模板不能消灭所有多项式。
+\end{proposition}
+\begin{proof}
+固定一个系数非零的支点 $\lambda_0$。
+对每个其余支点 $\lambda$，选取一个坐标 $i$ 使 $\lambda_i\ne(\lambda_0)_i$，并取仿射一次多项式
+$L_\lambda(z)=(z_i-\lambda_i)/((\lambda_0)_i-\lambda_i)$。
+乘积 $q=\prod_{\lambda\ne\lambda_0}L_\lambda$ 次数至多 $s-1$，在 $\lambda_0$ 处为 $1$，在其余支点处为 $0$。
+故 $\sum_\lambda c_\lambda q(\lambda)=c_{\lambda_0}\ne0$。
+把 $q$ 展开为单项式线性组合，便有至少一个相应的矩非零。
+\end{proof}
+
+\begin{example}[Cauchy、Jensen 与差分的次数结构]
+Cauchy 差的符号为 $\sigma_m(t,u)=(t+u)^m-t^m-u^m$。
+其中 $\sigma_0=-1$、$\sigma_1=0$，而 $m\ge2$ 时混合项非零，所以多项式核恰为一次齐次多项式。
+Jensen 差的符号为 $2((t+u)/2)^m-t^m-u^m$；它恰在 $m=0,1$ 时为零，所以多项式核恰为仿射函数。
+
+对 $r\ge1$，重复步长差分
+\[
+ \Delta_h^r f(x)=\sum_{k=0}^r(-1)^{r-k}\binom rk f(x+kh)
+\]
+有 $r+1$ 个模板支点 $(1,k)$。
+其次数小于 $r$ 的矩全为零，而
+$\mu_{(m-r,r)}=\sum_k(-1)^{r-k}\binom rk k^r=r!\ne0$ 对每个 $m\ge r$ 成立。
+该恒等式来自一元 $r$ 阶差分将 $t^r$ 化为常数 $r!$。
+故其多项式核恰为次数小于 $r$ 的多项式，且命题\ref{lin:prop:momentbound}的界可达到。
+\end{example}
+上述结论只是在多项式函数类内部的分类。对任意函数求全局核时，不得据此排除不连续加性函数等非多项式解。
+
+\section{一元自然算子：乘法群代数与完整解判据}\label{lin:sec:dilation}
+现在取 $n=1$、$V\ne0$、$W=K$，考虑自然模板
+\begin{equation}\label{lin:eq:dilation}
+ P(f,v)=\sum_{\lambda\in K}c_\lambda f(\lambda v),
+\end{equation}
+系数有限支集。本节的群代数判据适用于任意域。
+记
+\[
+ s=\sum_{\lambda\in K}c_\lambda,\qquad
+ \mathcal R=K[K^\times],\qquad
+ b=\sum_{\lambda\in K^\times}c_\lambda[\lambda]\in\mathcal R.
+\]
+每条一维子空间 $L\subseteq V$ 选非零代表 $u_L$。
+
+\begin{theorem}[按射影直线分解非齐次问题]\label{lin:thm:dilationsolve}
+方程 $P(f)=h$ 有解，当且仅当可选择 $z\in K$，使 $sz=h(0)$，并且对每条 $L$，函数
+\[
+ k_L(t)=h(tu_L)-c_0z\qquad(t\in K^\times)
+\]
+对应的线性泛函 $\ell_{k_L}:\mathcal R\to K$ 消灭
+\[
+ \operatorname{Ann}_{\mathcal R}(b)=\{a\in\mathcal R:ba=0\}.
+\]
+固定这样的 $z=f(0)$ 后，各条 $L$ 上的解相互独立；每一条上的自由解空间为 $(\mathcal R/b\mathcal R)^*$。
+\end{theorem}
+\begin{proof}
+原点方程为 $sf(0)=h(0)$。
+对 $v=tu_L\ne0$，置 $g_L(t)=f(tu_L)$，方程变为
+\[
+ \sum_{\lambda\ne0}c_\lambda g_L(\lambda t)=k_L(t).
+\]
+将 $g_L$ 识别为 $\mathcal R$ 上的线性泛函，此算子就是乘法映射
+$M_b:\mathcal R\to\mathcal R,\ a\mapsto ba$ 的代数对偶。
+第\ref{lin:sec:scalar}节的关系空间判据给出相容条件 $\ell_{k_L}|_{\ker M_b}=0$，自由解为余核的对偶。
+所有非零向量恰好属于一条这样的 $L$，且式\eqref{lin:eq:dilation}不混合不同 $L$，所以这些解可以独立拼接。
+\end{proof}
+
+\begin{corollary}[一元自然算子的整体存在唯一性]\label{lin:cor:dilationbij}
+对式\eqref{lin:eq:dilation}有：
+\begin{enumerate}
+\item 算子 $\T:K^V\to K^V$ 单射，当且仅当 $s\ne0$ 且 $b$ 为 $\mathcal R$ 中的单位；在这种情形下它自动为双射。
+\item 每个 $h$ 都可解，当且仅当 $s\ne0$ 且 $M_b$ 单射，即 $b$ 的零化子为零。
+\item 因此，至多一解与对任意右端恰有一解，对这类一元自然算子等价。
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+若 $s=0$，所有常值函数都在核中，且非零 $h(0)$ 无法实现，所以单射和满射都不成立。
+设 $s\ne0$。齐次解的原点值必须为零；其余自由项为各条 $L$ 上的 $(\mathcal R/b\mathcal R)^*$。
+因此核为零当且仅当 $b\mathcal R=\mathcal R$，这又等价于 $b$ 为单位；此时每条直线上的乘法映射可逆，所以所有右端均可唯一求解。
+任意右端可解则等价于 $M_b^*$ 满射，按代数对偶判据等价于 $M_b$ 单射。
+\end{proof}
+
+\begin{example}[反射模板的显式分类]
+设 $\operatorname{char}K\ne2$，考虑 $P(f,v)=f(v)-a f(-v)$。
+若 $a^2\ne1$，则任意右端均有唯一解
+\[
+ f(v)=\frac{h(v)+a h(-v)}{1-a^2}.
+\]
+这由原方程与在 $-v$ 处的方程联立得到，代入也可直接验证。
+若 $a=1$，可解当且仅当 $h(-v)=-h(v)$，全部解为 $h/2$ 加任意偶函数。
+若 $a=-1$，可解当且仅当 $h(-v)=h(v)$，全部解为 $h/2$ 加任意奇函数。
+\end{example}
+
+\begin{example}[任意右端可解而不唯一]
+在特征零域上取 $P(f,v)=f(2v)-2f(v)$。
+原点处强制 $f(0)=-h(0)$。
+在非零向量集合上按 $v\sim2^k v$ 分成轨道，每条轨道选一个代表 $u$，任意指定 $f(u)$，然后用
+\[
+ f(2^{k+1}u)=2f(2^ku)+h(2^ku)
+\]
+向正、负两个方向递推。
+特征零保证轨道没有周期，因此得到全部解。任意 $h$ 均可解，每条非零轨道各有一个自由参数。
+\end{example}
+
+
+
+\section{一般自然模板的单射性与有限域模型}\label{lin:sec:generalideal}
+本节仍取标量值 $W=K$，并固定完全线性自然模板
+\[
+ P_V(f,v)=\sum_{\lambda\in K^n}c_\lambda
+ f\!\left(\sum_i\lambda_i v_i\right),\qquad
+ s=\sum_\lambda c_\lambda.
+\]
+模板有限支集，但域 $K$ 及空间 $V$ 不要求有限。
+以下关于非零解和单射性的统一判据均假设 $V\ne0$。
+
+\subsection{单射性只需检验一维空间}
+\begin{theorem}[一维检测原则]\label{lin:thm:onedetect}
+对任意非零 $K$-空间 $V$，
+\[
+ \T_V\text{ 单射}\quad\Longleftrightarrow\quad\T_K\text{ 单射}.
+\]
+若 $s=0$，二者都不单射。
+\end{theorem}
+\begin{proof}
+若 $\T_K$ 单射，设 $f\in\ker\T_V$。对每个 $u\in V$，线性映射
+$A_u:K\to V,\ t\mapsto tu$ 的拉回自然性给出
+$f\circ A_u\in\ker\T_K$，所以 $f(u)=0$，从而 $f=0$。
+
+反过来，若 $0\ne g\in\ker\T_K$，选择一个满射线性泛函
+$\ell:V\to K$。自然性给出 $g\circ\ell\in\ker\T_V$，而满射性保证它非零。
+最后 $s=0$ 时任意常值函数都属于齐次核。
+\end{proof}
+
+令 $\mathscr R=K[K^\times]$。对 $t=(t_1,\ldots,t_n)\in K^n$，定义
+\[
+ b_t=\sum_{\lambda\cdot t\ne0}c_\lambda[\lambda\cdot t],
+ \qquad
+ I_c=(b_t:t\in K^n)\subseteq\mathscr R.
+\]
+其中相同的 $\lambda\cdot t$ 所对应的系数要合并。由
+$b_{at}=[a]b_t$（$a\ne0$），这些 $b_t$ 的线性包已经是理想 $I_c$。
+
+\begin{theorem}[乘法群代数的理想判据]\label{lin:thm:generalideal}
+在一维空间 $K$ 上有自然的向量空间同构
+\[
+ \ker\T_K\cong \{k\in K:sk=0\}\oplus(\mathscr R/I_c)^*.
+\]
+因此对任何 $V\ne0$，
+\begin{equation}\label{lin:eq:generalinject}
+ \T_V\text{ 单射}
+ \quad\Longleftrightarrow\quad s\ne0\ \text{且}\ I_c=\mathscr R.
+\end{equation}
+\end{theorem}
+\begin{proof}
+齐次解在零元组处满足 $sf(0)=0$。写 $f=k+g$，其中
+$k=f(0)$、$g(0)=0$。因为 $sk=0$，有 $\T_Kf=0$ 当且仅当
+$\T_Kg=0$。将 $g|_{K^\times}$ 识别为 $\mathscr R$ 上的线性泛函，
+$\T_Kg(t)=0$ 正是该泛函消灭 $b_t$ 的条件，故等价于消灭 $I_c$。
+这给出分解。非零向量空间有非零对偶，再应用定理\ref{lin:thm:onedetect}，得到单射性判据。
+\end{proof}
+
+\begin{remark}
+式\eqref{lin:eq:generalinject}是所有非零维数上的单射性判据；
+当 $n\ge2$ 时，它并未声称 $\ker\T_V$ 可以按射影直线独立指定。
+不同方向的输入会出现在同一个方程中，通常产生额外耦合。
+第\ref{lin:sec:dilation}节的逐直线独立分解只适用于一元伸缩模板。
+\end{remark}
+
+\subsection{有限域上的字符判据}
+设 $K=\mathbb F_q$。其乘法群循环，阶为 $q-1$，并且 $q-1$ 在 $K$ 中非零。
+对 $1\le d\le q-1$，定义函数
+\[
+ E_d(t)=\sum_\lambda c_\lambda(\lambda\cdot t)^d
+ \qquad(t\in K^n).
+\]
+这里 $0^d=0$，不使用 $0^0$。
+
+\begin{proposition}[有限域的一维齐次核]\label{lin:prop:finitechars}
+有
+\[
+ \ker\T_K
+ =
+ \Span_K\!\left(
+ \{1:s=0\}\ \cup\
+ \{\,x\mapsto x^d:1\le d\le q-1,\ E_d\equiv0\,\}
+ \right),
+\]
+且显示出的函数构成一组基。因此
+\[
+ \dim_K\ker\T_K=\mathbf1_{s=0}
+ +\#\{d\in\{1,\ldots,q-1\}:E_d\equiv0\}.
+\]
+对任意 $V\ne0$，$\T_V$ 单射当且仅当 $s\ne0$ 且每个 $E_d$ 都不是零函数。
+\end{proposition}
+\begin{proof}
+取 $K^\times$ 的生成元 $\omega$，则
+\[
+ \mathscr R\cong K[z]/(z^{q-1}-1).
+\]
+多项式 $z^{q-1}-1$ 的根恰为 $K^\times$，且全为单根。
+因此通过在这些根处取值，有
+$\mathscr R\cong\prod_{d=1}^{q-1}K$。
+各坐标可写为群代数字符
+$[\lambda]\mapsto\lambda^d$；$d=q-1$ 是平凡字符。
+理想 $I_c$ 在第 $d$ 个坐标为零，当且仅当所有 $b_t$ 在该字符下取值为零，
+即 $E_d(t)=0$ 对全部 $t$ 成立。
+该坐标上的对偶函数恰为 $x^d$ 在 $K^\times$ 上的限制，并在 $0$ 处补零。
+再加上前一定理中的常数项即得结论。
+这些函数也就是不同的约化单项式 $1,x,\ldots,x^{q-1}$ 的一部分，故线性无关。
+\end{proof}
+
+\subsection{有限维有限域的全部函数解：约化单项式模型}
+设 $V=K^d$，$d\ge1$。每个函数 $f:K^d\to K$ 唯一写成
+\[
+ f(x)=\sum_{\beta\in\{0,\ldots,q-1\}^d}a_\beta x^\beta.
+\]
+存在性可由逐坐标 Lagrange 插值得到；唯一性来自逐变量使用
+“次数小于 $q$ 的非零多项式至多有其次数个根”。
+
+为避免把正特征的二项式系数当成非零数，保留如下完整系数。
+对非负整数矩阵 $\Gamma=(\gamma_{i\ell})\in\N^{n\times d}$，置
+\[
+ \beta_\ell(\Gamma)=\sum_{i=1}^n\gamma_{i\ell},\qquad
+ \rho_i(\Gamma)=\sum_{\ell=1}^d\gamma_{i\ell},\qquad
+ \mu_\rho=\sum_\lambda c_\lambda\prod_i\lambda_i^{\rho_i}.
+\]
+在 $\mu_0$ 中约定 $0^0=1$，从而 $\mu_0=s$。
+
+\begin{theorem}[有限域全核的有限系数判据]\label{lin:thm:finitefull}
+单项式 $x^\beta$ 属于 $\ker\T_V$，当且仅当对每个满足
+$\beta(\Gamma)=\beta$ 的矩阵 $\Gamma$，都有
+\begin{equation}\label{lin:eq:finitecoef}
+ \left(\prod_{\ell=1}^d
+ \binom{\beta_\ell}{\gamma_{1\ell},\ldots,\gamma_{n\ell}}\right)
+ \mu_{\rho(\Gamma)}=0\quad\text{于 }K.
+\end{equation}
+全部通过该判据的约化单项式构成 $\ker\T_V$ 的一组基。
+\end{theorem}
+\begin{proof}
+将输入元组写成 $v_i=(v_{i1},\ldots,v_{id})$。多项式展开给出
+\[
+ \T_V(x^\beta)(v)
+ =
+ \sum_{\beta(\Gamma)=\beta}
+ \left(\prod_{\ell=1}^d
+ \binom{\beta_\ell}{\gamma_{1\ell},\ldots,\gamma_{n\ell}}\right)
+ \mu_{\rho(\Gamma)}
+ \prod_{i,\ell}v_{i\ell}^{\gamma_{i\ell}}.
+\]
+每个 $\gamma_{i\ell}\le\beta_\ell\le q-1$，所以右边已是约化多项式。
+它表示零函数当且仅当全部系数为零，得到判据。
+若 $\beta\ne\beta'$，对应输出单项式在某一列的总次数不同，故没有重合项。
+因此不同 $\beta$ 的非零输出之间不可能抵消；核正是显示出的单项式张成空间。
+\end{proof}
+
+非齐次方程可直接列成 $q^{nd}\times q^d$ 的取值矩阵系统；
+也可用上述系数展开建立等价系统，逐个输出单项式比较系数。
+其有限矩阵求解给出相容条件、一个特解和核的基。
+有限域上的“多项式表示全部函数”依赖约化次数约定，不能移植到特征零域来排除任意函数解。
+
+
+\chapter{秩二低支撑方程的全部解}\label{ch:lowrank}
+本章统一限定特征零、模板秩二、总支撑至多四点。方向消元给出广义次数上界，张量代数商给出全部自由度，并用导子与范数算例说明一般解的范围。
+\section{特征零的秩二低支撑模板与方向消元}\label{lin:sec:lowrank}
+从本节到第\ref{lin:sec:normexample}节，除特别说明外统一假设
+\[
+ \operatorname{char}K=0,\qquad W=K,\qquad V\ne0.
+\]
+自然模板的系数支集记作 $\Lambda\subset K^n$，所有重合支点已经合并，
+零系数已经删去。
+
+\subsection{模板秩的约化与非齐次右端}
+若 $\Span_K\Lambda$ 的维数为 $d_0$，取其一组基
+$p_1,\ldots,p_{d_0}\in K^n$，写
+$\lambda=\sum_j a_{\lambda j}p_j$，并令
+\[
+ x_j=\sum_i(p_j)_i v_i.
+\]
+于是原方程通过满射线性映射
+\[
+ \pi:V^n\longrightarrow V^{d_0},\qquad v\longmapsto(x_1,\ldots,x_{d_0})
+\]
+分解。满射性来自系数矩阵满行秩，因而有一个 $K$-线性右逆。
+齐次问题与约化后的问题等价。
+对非齐次问题，必须且只需先要求 $h=\widetilde h\circ\pi$，
+再求解约化方程 $P_{\mathrm{red}}f=\widetilde h$。
+若 $h$ 在某条 $\pi$ 的纤维上不恒定，原方程立即不可解。
+
+秩零模板只含可能的原点项，即 $P(f,v)=c_0f(0)$；
+秩一经上述约化归入第\ref{lin:sec:dilation}节。
+以下固定秩为二并要求总支撑不超过四点。
+
+写成
+\begin{equation}\label{lin:eq:ranktwo}
+ P(f,x,y)=c_0f(0)+\sum_{j=1}^m c_jf(a_jx+b_jy),
+ \qquad x,y\in V,
+\end{equation}
+其中 $c_j\ne0$，$(a_j,b_j)\ne(0,0)$ 两两不同并张成 $K^2$，且
+\[
+ m+\mathbf1_{c_0\ne0}\le4.
+\]
+记
+\[
+ s=c_0+\sum_{j=1}^m c_j,\qquad
+ r=\#\{K(a_j,b_j):1\le j\le m\}.
+\]
+这里 $r$ 是过原点的方向数，必有 $2\le r\le4$。
+原点支撑计入总支撑数，但不计入 $r$。
+
+\begin{center}
+\begin{tabular}{p{.40\linewidth}p{.50\linewidth}}
+\toprule
+非零支撑的方向分布 & 全部齐次解的可能形式\\
+\midrule
+两个方向，其中至少一个只有一点 & 常值函数 $k$，且 $sk=0$\\
+两个方向，每个恰有两点 & 常数加由两个伸缩律控制的函数\\
+三个方向 & 常数加 $\Q$-线性函数\\
+四个方向 & 常数加 $\Q$-线性函数加对称 $\Q$-双线性型的对角值\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{单点方向的差分消元}
+\begin{theorem}[方向数控制差分次数]\label{lin:thm:singleton}
+对式\eqref{lin:eq:ranktwo}，不必先假设支撑至多四点。
+若共有 $r\ge2$ 个非零方向，且其中一个方向只有一个支撑点，
+则每个齐次解都满足
+\begin{equation}\label{lin:eq:directiondifference}
+ \Delta_{h_1}\cdots\Delta_{h_{r-1}}f(z)=0
+ \qquad(z,h_1,\ldots,h_{r-1}\in V).
+\end{equation}
+\end{theorem}
+\begin{proof}
+把同一方向上的项合并为一个函数，原方程可写成
+\[
+ c_0f(0)+\sum_{\nu=1}^rF_\nu(L_\nu(x,y))=0,
+\]
+其中 $L_\nu$ 为两两不成比例的非零线性形式。
+对单点方向可写 $F_1(z)=cf(tz)$，其中 $c,t\in K^\times$。
+
+对每个 $\nu=2,\ldots,r$，任给 $h_\nu\in V$。
+$L_1,L_\nu$ 的系数矩阵可逆，故存在 $\eta_\nu\in V^2$ 使
+$L_\nu(\eta_\nu)=0$、$L_1(\eta_\nu)=h_\nu$。
+对参数 $(x,y)$ 依次施加平移差分
+$\Delta_{\eta_2}\cdots\Delta_{\eta_r}$。
+第 $\nu$ 个方向的项被 $\Delta_{\eta_\nu}$ 消去；
+所有差分彼此交换，常数项也被消去，故最后仅剩
+\[
+ \Delta_{h_2}\cdots\Delta_{h_r}F_1(L_1(x,y))=0.
+\]
+$L_1$ 满射，$t$ 非零，且各 $h_\nu$ 任意；除以 $c$ 并重新命名步长即得结论。
+\end{proof}
+
+该证明解释了单点方向的作用：重复方向只能先合并成未知函数，
+只有单点方向能在消元结束后直接恢复原来的 $f$。
+相关复数域线性函数方程对孤立方向的研究可参见\cite{KissVarga}；
+这里的差分证明独立成立，并不使用该文的其他分类结果。
+
+\begin{lemma}[零至二次广义多项式的唯一分解]\label{lin:lem:lowdegree}
+对 $\Q$-向量空间 $V$ 和特征零值域 $K$：
+\begin{enumerate}
+\item 一阶差分恒零，当且仅当 $f$ 为常数；
+\item 二阶混合差分恒零，当且仅当 $f=k+A$，$A:V\to K$ 为 $\Q$-线性映射；
+\item 三阶混合差分恒零，当且仅当
+\[
+ f(x)=k+A(x)+B(x,x),
+\]
+其中 $A$ 为 $\Q$-线性映射，$B$ 为对称 $\Q$-双线性映射。
+\end{enumerate}
+上述分解均唯一。
+\end{lemma}
+\begin{proof}
+第一项直接令基点为零。第二项取 $k=f(0)$，
+在零点处写出 $\Delta_u\Delta_vf(0)=0$，就得到 $f-k$ 可加，
+而可加映射在 $\Q$-向量空间间自动为 $\Q$-线性。
+
+证明第三项。令 $g=f-f(0)$ 并定义
+\[
+ B(u,v)=\frac12\Delta_u\Delta_vg(0)
+ =\frac12\bigl(g(u+v)-g(u)-g(v)\bigr).
+\]
+三阶差分为零使二阶差分与基点无关。
+利用 $\Delta_{u+v}=\Delta_u+T_u\Delta_v$，其中 $T_u$ 是平移算子，得到
+\[
+ \Delta_{u+v}\Delta_wg(0)
+ =\Delta_u\Delta_wg(0)+\Delta_v\Delta_wg(u)
+ =\Delta_u\Delta_wg(0)+\Delta_v\Delta_wg(0).
+\]
+因此 $B$ 对第一变量可加；对称性给出第二变量可加，进而对两变量 $\Q$-线性。
+令 $A(x)=g(x)-B(x,x)$。由
+\[
+ g(u+v)-g(u)-g(v)=2B(u,v)
+\]
+及双线性展开，$A$ 可加。反向直接差分验证。
+唯一性可从
+\[
+ k=f(0),\qquad
+ A(x)=\frac{f(x)-f(-x)}2,\qquad
+ B(x,x)=\frac{f(x)+f(-x)}2-f(0)
+\]
+以及对称双线性型的极化公式得到。
+\end{proof}
+
+\begin{corollary}[四点范围内的次数上界]\label{lin:cor:degreebound}
+在总支撑不超过四点、秩二的假设下：
+若 $r=2$ 且有单点方向，全部解恰为满足 $sk=0$ 的常数；
+若 $r=3$，全部解至多为常数加加性项；
+若 $r=4$，全部解至多再含一个二次广义多项式项。
+\end{corollary}
+\begin{proof}
+$r=3$ 或 $4$ 时，由抽屉原理必有单点方向。
+结合定理\ref{lin:thm:singleton}和引理\ref{lin:lem:lowdegree}即可。
+$r=2$ 时差分结论直接迫使常数，代入给出 $sk=0$。
+\end{proof}
+
+\section{三个、四个方向的精确核与二方向例外}\label{lin:sec:kernelclassification}
+\subsection{加性项与二次项的充要条件}
+定义
+\[
+ \begin{split}
+ \mathcal A_c(V)=\{A\in\Hom_{\Q}(V,K):\
+ &\sum_j c_jA(a_jx)=0,\\
+ &\sum_j c_jA(b_jx)=0\quad(\forall x\in V)\}.
+ \end{split}
+\]
+定义 $\mathcal B_c(V)$ 为所有对称 $\Q$-双线性型
+$B:V\times V\to K$ 中满足
+\begin{equation}\label{lin:eq:quadraticconstraints}
+ \begin{aligned}
+ \sum_jc_jB(a_ju,a_jv)&=0,\\
+ \sum_jc_jB(b_ju,b_jv)&=0,\\
+ \sum_jc_jB(a_ju,b_jv)&=0
+ \end{aligned}
+ \qquad(u,v\in V)
+\end{equation}
+者。
+
+\begin{theorem}[三个、四个方向的完整齐次解]\label{lin:thm:exactlowkernel}
+在式\eqref{lin:eq:ranktwo}及四点支撑假设下：
+\begin{align}
+ r=3:\quad
+ \ker\T_V&=\{\,k+A:sk=0,\ A\in\mathcal A_c(V)\,\};
+ \label{lin:eq:threekernel}\\
+ r=4:\quad
+ \ker\T_V&=\{\,x\mapsto k+A(x)+B(x,x):
+ sk=0,\ A\in\mathcal A_c(V),\ B\in\mathcal B_c(V)\,\}.
+ \label{lin:eq:fourkernel}
+\end{align}
+各参数唯一。
+\end{theorem}
+\begin{proof}
+次数上界由推论\ref{lin:cor:degreebound}给出。
+先将 $(x,y)$ 同时乘以任意 $t\in\Q$。
+常数、加性与二次部分分别产生 $t^0,t^1,t^2$ 项。
+一元多项式对全部有理数为零，故各次项分别为零，不会跨次数抵消。
+
+常数项给出 $sk=0$。加性项展开为
+$\sum_jc_jA(a_jx)+\sum_jc_jA(b_jy)$；
+分别取 $y=0$、$x=0$ 得到 $\mathcal A_c(V)$ 的两个条件，且它们显然充分。
+
+二次项展开为
+\[
+ \sum_jc_jB(a_jx,a_jx)
+ +2\sum_jc_jB(a_jx,b_jy)
+ +\sum_jc_jB(b_jy,b_jy).
+\]
+先令一个变量为零，对所得对角恒等式极化，得到
+\eqref{lin:eq:quadraticconstraints}的前两行。
+减去纯项后得到第三行。反过来三行条件使上式为零。
+唯一性来自引理\ref{lin:lem:lowdegree}。
+\end{proof}
+
+这里的 $K$-线性是指 $\mathcal A_c(V)$、$\mathcal B_c(V)$ 本身的参数空间结构；
+它们的成员对输入变量一般只具有 $\Q$-线性或 $\Q$-双线性。
+
+\subsection{两个方向、每个方向恰有两个点}
+在四点支撑范围内，没有单点方向恰好意味着非零支撑为两个二点组，
+此时不能再出现非零的原点系数 $c_0$。
+适当选择两方向上的参数后，方程写成
+\begin{equation}\label{lin:eq:twopairs}
+ af(x)+bf(tx)+cf(y)+df(uy)=0,
+\end{equation}
+其中 $a,b,c,d\in K^\times$，$t,u\in K^\times\setminus\{1\}$。
+令
+\[
+ s=a+b+c+d,\qquad \alpha=-a/b,\qquad\beta=-c/d,\qquad
+ H=\langle t,u\rangle\le K^\times.
+\]
+
+\begin{theorem}[二点组的轨道与字符分类]\label{lin:thm:orbit}
+式\eqref{lin:eq:twopairs}的全部解是 $f=k+g$，其中
+\[
+ sk=0,\qquad g(0)=0,\qquad
+ g(tx)=\alpha g(x),\quad g(ux)=\beta g(x).
+\]
+在 $V\ne0$ 时，非零 $g$ 存在当且仅当
+\begin{equation}\label{lin:eq:charactercondition}
+ t^m u^n=1\quad\Longrightarrow\quad
+ \alpha^m\beta^n=1
+ \qquad(m,n\in\Z).
+\end{equation}
+若该条件成立，它定义唯一的群同态
+\[
+ \chi:H\to K^\times,\qquad
+ \chi(t^mu^n)=\alpha^m\beta^n.
+\]
+从每个 $H$ 在 $V\setminus\{0\}$ 上的乘法轨道选一个代表 $z$，
+任意指定 $g(z)\in K$，并令
+\[
+ g(hz)=\chi(h)g(z)\qquad(h\in H),
+\]
+就得到全部解，且这些轨道参数唯一。
+若条件失败，则只能有 $g=0$。
+\end{theorem}
+\begin{proof}
+零元组给出 $sf(0)=0$。减去 $k=f(0)$ 后，$g(0)=0$ 且仍满足原方程。
+分别令 $y=0$、$x=0$，便得到两个伸缩律；反向相加即得原方程。
+由于 $t,u,\alpha,\beta$ 全非零，伸缩律可对任意整数次幂迭代。
+若 $g(z)\ne0$，乘法关系 $t^mu^n=1$ 给出
+$g(z)=\alpha^m\beta^n g(z)$，所以\eqref{lin:eq:charactercondition}必要。
+条件成立时 $\chi$ 定义良好。若 $hz=h'z$ 且 $z\ne0$，
+则 $(h-h')z=0$，因而 $h=h'$；乘法作用自由。
+故每条轨道上的延拓没有歧义，并给出充分性与完整参数化。
+\end{proof}
+
+\begin{example}[确有非广义多项式的齐次解]\label{lin:ex:nongeneral}
+取 $K=V=\Q$，考虑
+\[
+ f(2x)-2f(x)+f(3y)-3f(y)=0.
+\]
+令 $H=\{2^m3^n:m,n\in\Z\}$，定义
+\[
+ f(x)=
+ \begin{cases}
+ x,&x\in H,\\
+ 0,&x\notin H.
+ \end{cases}
+\]
+则 $f(0)=0$，$f(2x)=2f(x)$、$f(3x)=3f(x)$，所以它确为解。
+若 $f$ 是任意有限次数广义多项式，第\ref{lin:sec:models}节的有理一维差分分类表明它是普通多项式。
+普通多项式满足 $f(2x)=2f(x)$ 只能含一次项，故必为 $ax$。
+但 $f(1)=1$、$f(5)=0$，矛盾。
+因此支撑张成二维本身不足以推出广义多项式性。
+\end{example}
+
+\subsection{三方向三项方程的半线性分类}
+考虑
+\begin{equation}\label{lin:eq:threepoint}
+ u f(x)+v f(y)+w f(ax+by)+c_0f(0)=0,
+\end{equation}
+其中 $u,v,w,a,b\ne0$，$c_0$ 可为零。
+三个非零方向两两不同。令
+\[
+ s=u+v+w+c_0,\qquad
+ \alpha=-u/w,\qquad \beta=-v/w,\qquad F=\Q(a,b).
+\]
+由前述分类，解为 $f=k+A$，其中 $sk=0$、$A$ 可加，且
+\[
+ A(ax)=\alpha A(x),\qquad A(bx)=\beta A(x).
+\]
+
+\begin{theorem}[伸缩关系诱导域嵌入]\label{lin:thm:semilinear}
+在 $V\ne0$ 时，式\eqref{lin:eq:threepoint}存在非零加性项，当且仅当赋值
+$a\mapsto\alpha$、$b\mapsto\beta$ 延拓为域嵌入
+$\sigma:F\hookrightarrow K$。
+若存在，该嵌入唯一，全部加性项恰为满足
+\[
+ A(rx)=\sigma(r)A(x)\qquad(r\in F,\ x\in V)
+\]
+的 $\sigma$-半线性映射。
+选取 $V$ 的 $F$-基 $(e_\eta)_{\eta\in E}$，任意指定 $z_\eta\in K$，公式
+\[
+ A\!\left(\sum_\eta r_\eta e_\eta\right)
+ =\sum_\eta\sigma(r_\eta)z_\eta
+\]
+给出全部解。
+\end{theorem}
+\begin{proof}
+若 $A\ne0$，可加性和两条伸缩律给出
+\[
+ A(p(a,b)x)=p(\alpha,\beta)A(x)
+ \qquad(p\in\Q[X,Y],\ x\in V).
+\]
+若 $p(a,b)=0$，选 $A(x)\ne0$ 得 $p(\alpha,\beta)=0$。
+反过来，若 $p(\alpha,\beta)=0$ 而 $p(a,b)\ne0$，
+乘以 $p(a,b)$ 是 $V$ 的双射，上式就迫使 $A=0$，矛盾。
+故两个赋值具有完全相同的有理多项式关系。
+由此先得到 $\Q[a,b]\to K$ 的单射环同态；
+每个非零分母的像非零，所以它唯一延拓到其分式域 $F$。
+多项式伸缩律再作用于分母的逆，得到全部 $F$-半线性关系。
+反过来，在任意 $F$-基上按所示公式指定值，即得到满足伸缩律的加性映射；
+因为 $V\ne0$，至少可以把一个基向量的值指定为 $1$。
+\end{proof}
+
+
+\section{加性与二次成分的张量代数参数化}\label{lin:sec:tensor}
+继续使用式\eqref{lin:eq:ranktwo}，定义有限生成域
+\[
+ F=\Q(a_1,b_1,\ldots,a_m,b_m)\subseteq K.
+\]
+系数 $c_j$ 属于第一个张量因子 $K$，不必属于 $F$。
+下文中的商是交换 $K$-代数商，而商的星号始终是 $K$-线性对偶；
+并不要求相应泛函保持乘法。
+
+\subsection{加性成分：一个代数商}
+定义
+\[
+ \mathscr S_1=K\otimes_{\Q}F,\qquad
+ u_1=\sum_jc_j\otimes a_j,\qquad
+ u_2=\sum_jc_j\otimes b_j,\qquad
+ \Uc=\mathscr S_1/(u_1,u_2).
+\]
+选取 $V$ 的 $F$-基 $(e_\eta)_{\eta\in E}$。
+
+\begin{theorem}[加性项的无冗余参数化]\label{lin:thm:addtensor}
+有 $K$-线性同构
+\begin{equation}\label{lin:eq:addtensor}
+ \mathcal A_c(V)\cong\prod_{\eta\in E}\Uc^*.
+\end{equation}
+具体地，对任意 $\varphi_\eta\in\Uc^*$，令
+\[
+ A\!\left(\sum_\eta t_\eta e_\eta\right)
+ =\sum_\eta\varphi_\eta\!\left(\overline{1\otimes t_\eta}\right).
+\]
+这给出全部允许的加性项，参数唯一。
+\end{theorem}
+\begin{proof}
+先固定一个基方向。一个 $\Q$-线性映射 $a:F\to K$ 唯一对应
+$K$-线性泛函
+\[
+ \widetilde a:\mathscr S_1\to K,\qquad
+ \widetilde a(k\otimes t)=k\,a(t).
+\]
+其满足 $\sum_jc_ja(a_jt)=0$ 对所有 $t\in F$，
+当且仅当 $\widetilde a(u_1(1\otimes t))=0$ 对所有 $t$。
+$\mathscr S_1$ 是所有 $k\otimes t$ 的线性包，故该条件正是
+$\widetilde a$ 消灭整个理想 $(u_1)$。
+第二条伸缩关系同理，合起来等价于消灭 $(u_1,u_2)$，
+即唯一来自 $\Uc$ 上的泛函。
+任意加性映射在不同 $F$-基方向上可以独立给定，
+而每个向量只涉及有限个基向量，所以所示求和有意义。
+反过来限制到每个基方向恢复唯一的 $\varphi_\eta$，得到同构。
+\end{proof}
+
+\begin{corollary}\label{lin:cor:addnonzero}
+在 $V\ne0$ 时，
+\[
+ \mathcal A_c(V)=0\quad\Longleftrightarrow\quad\Uc=0.
+\]
+\end{corollary}
+\begin{proof}
+若商为零，参数化中所有泛函为零。
+若商非零，选择一个非零泛函，并把它指定在至少一个 $F$-基方向上即可。
+泛函不可能在全部 $1\otimes t$ 的像上为零，因为这些像张成整个商。
+\end{proof}
+
+\subsection{二次成分：带交换对合的代数商}
+定义
+\[
+ \mathscr S_2=K\otimes_{\Q}F\otimes_{\Q}F
+\]
+以及
+\[
+ \begin{aligned}
+ v_{11}&=\sum_jc_j\otimes a_j\otimes a_j,&
+ v_{22}&=\sum_jc_j\otimes b_j\otimes b_j,\\
+ v_{12}&=\sum_jc_j\otimes a_j\otimes b_j,&
+ v_{21}&=\sum_jc_j\otimes b_j\otimes a_j.
+ \end{aligned}
+\]
+令
+\[
+ \Wc=\mathscr S_2/(v_{11},v_{22},v_{12},v_{21}).
+\]
+交换后两个因子的映射固定 $v_{11},v_{22}$，并交换 $v_{12},v_{21}$，
+因而在 $\Wc$ 上诱导一个 $K$-线性代数对合 $\iota$。
+
+\begin{theorem}[二次项的无冗余参数化]\label{lin:thm:bitensor}
+对每对基指标 $\eta,\zeta$ 选择 $\psi_{\eta\zeta}\in\Wc^*$，
+要求
+\begin{equation}\label{lin:eq:psisym}
+ \psi_{\zeta\eta}=\psi_{\eta\zeta}\circ\iota.
+\end{equation}
+则公式
+\begin{equation}\label{lin:eq:bitensor}
+ B\!\left(\sum_\eta t_\eta e_\eta,\sum_\zeta u_\zeta e_\zeta\right)
+ =
+ \sum_{\eta,\zeta}
+ \psi_{\eta\zeta}\!\left(\overline{1\otimes t_\eta\otimes u_\zeta}\right)
+\end{equation}
+给出全部 $\mathcal B_c(V)$，且参数唯一。
+\end{theorem}
+\begin{proof}
+先固定两个基方向。
+$\Q$-双线性映射 $b:F\times F\to K$ 唯一对应
+$\mathscr S_2$ 上的 $K$-线性泛函
+\[
+ \widetilde b(k\otimes t\otimes u)=k\,b(t,u).
+\]
+例如第一条约束对该基块表示
+$\sum_jc_jb(a_jt,a_ju)=0$ 对所有 $t,u$；
+它等价于 $\widetilde b$ 消灭 $v_{11}$ 的全部倍数。
+其余约束同理给出 $v_{22},v_{12}$。
+将混合约束的两输入交换并使用 $B$ 的对称性，又得到
+$\sum_jc_jB(b_ju,a_jv)=0$，所以还要消灭 $v_{21}$ 的全部倍数。
+因此每个基块恰对应 $\Wc^*$ 的一个元素。
+对称性正好等价于\eqref{lin:eq:psisym}，再按两个变量的基展开即得公式。
+反向依次验证双线性、对称性和四个理想条件，完成证明。
+\end{proof}
+
+\begin{corollary}\label{lin:cor:binonzero}
+在 $V\ne0$ 时，
+\[
+ \mathcal B_c(V)=0\quad\Longleftrightarrow\quad\Wc=0.
+\]
+\end{corollary}
+\begin{proof}
+只需证明商非零时存在非零对称型。
+因商为含幺代数且非零，$\overline1\ne0$。
+取 $\psi\in\Wc^*$ 使 $\psi(\overline1)=1$，并令
+$\psi_+=(\psi+\psi\circ\iota)/2$。
+则 $\psi_+\circ\iota=\psi_+$，且 $\psi_+(\overline1)=1$。
+把它用于一个对角基块，其余基块置零，式\eqref{lin:eq:bitensor}
+就给出一个非零对称双线性型。
+\end{proof}
+
+\begin{corollary}[三、四方向的单射性]\label{lin:cor:tensorinject}
+对 $V\ne0$，
+\[
+ \begin{aligned}
+ r=3:\quad\T_V\text{ 单射}
+ &\Longleftrightarrow s\ne0,\ \Uc=0,\\
+ r=4:\quad\T_V\text{ 单射}
+ &\Longleftrightarrow s\ne0,\ \Uc=0,\ \Wc=0.
+ \end{aligned}
+\]
+\end{corollary}
+\begin{proof}
+常数、一次广义项和二次广义项的分解唯一。
+分别应用定理\ref{lin:thm:exactlowkernel}和前两个非零性判据即可。
+对称双线性型非零时其对角函数也非零，因为特征零允许极化。
+\end{proof}
+
+这将第\ref{lin:sec:generalideal}节的乘法群代数理想判据，
+在当前低支撑范围内转化为两个明确的参数代数商。
+它们给出的是全部函数解的结构，并非只描述普通多项式解。
+
+\section{代数参数的有限矩阵与有理矩判据}\label{lin:sec:algebraic}
+\subsection{有限维参数代数}
+若全部 $a_j,b_j$ 都代数于 $\Q$，则 $F$ 是数域。
+记 $d_F=[F:\Q]$，于是
+\[
+ \dim_K\mathscr S_1=d_F,\qquad
+ \dim_K\mathscr S_2=d_F^2.
+\]
+选取 $F$ 的 $\Q$-基及乘法表，就能构造这些代数的矩阵模型。
+对于其中的元素 $z$，以 $M_z$ 表示乘以 $z$ 的 $K$-线性算子。
+
+\begin{proposition}[商维数的秩公式]\label{lin:prop:matrixquotient}
+有
+\[
+ \begin{aligned}
+ u:=\dim_K\Uc
+ &=d_F-\rank\begin{bmatrix}M_{u_1}&M_{u_2}\end{bmatrix},\\
+ w:=\dim_K\Wc
+ &=d_F^2-\rank
+ \begin{bmatrix}M_{v_{11}}&M_{v_{22}}&M_{v_{12}}&M_{v_{21}}\end{bmatrix}.
+ \end{aligned}
+\]
+\end{proposition}
+\begin{proof}
+有限维交换代数中，由 $z_1,\ldots,z_k$ 生成的理想，
+作为向量空间恰为 $\sum_i\im M_{z_i}$。
+它是横向拼接矩阵 $[M_{z_1}\ \cdots\ M_{z_k}]$ 的像。
+商的维数等于整个代数维数减去这个像的维数，得到两式。
+\end{proof}
+
+令 $w_+=\dim_K\Wc^\iota$。
+对合矩阵也可从交换两个 $F$-因子的线性映射直接求出；
+由于 $2$ 可逆，$\Wc$ 分解为正、负特征子空间。
+
+\begin{theorem}[有限基方向时的全核维数]\label{lin:thm:dimension}
+若另有 $e=\dim_FV<\infty$，则
+\[
+ \begin{aligned}
+ r=3:\qquad
+ \dim_K\ker\T_V
+ &=\mathbf1_{s=0}+eu,\\
+ r=4:\qquad
+ \dim_K\ker\T_V
+ &=\mathbf1_{s=0}+eu+e w_+ +\binom e2w.
+ \end{aligned}
+\]
+\end{theorem}
+\begin{proof}
+加性项由 $e$ 个互相独立的 $\Uc^*$ 参数化，维数为 $eu$。
+二次项中，每个对角基块要求 $\psi=\psi\circ\iota$，
+其参数空间维数为 $w_+$。
+每对不同基指标只需任取一个泛函，另一个由对称性决定，故贡献 $w$。
+共有 $e$ 个对角块和 $\binom e2$ 个非对角块。
+加上可能存在的一维常数空间即得结论。
+\end{proof}
+
+若 $e$ 无限，应保留定理\ref{lin:thm:addtensor}、\ref{lin:thm:bitensor}
+中的直积参数化，不把这些有限维秩公式解释成无限基数的形式减法。
+尤其即使 $V$ 对 $K$ 有限维，$\dim_FV$ 仍可能无限。
+
+\begin{remark}[代数参数与超越参数的区别]
+特征零数域扩张可分。取包含 $K$ 的代数闭包 $\Omega$，
+以一个本原元的最小多项式分解可得
+$\Omega\otimes_{\Q}F\cong\Omega^{d_F}$，
+进而 $\Omega\otimes_K\mathscr S_2\cong\Omega^{d_F^2}$。
+这些有限乘积代数的理想和商都按坐标分解，商中没有非零幂零元。
+由于域扩张保持向量空间嵌入，$\Uc$、$\Wc$ 也没有非零幂零元。
+这里用的是域的代数可分性；当参数超越时，商可能含幂零元，
+第\ref{lin:sec:derivexample}节将给出明确例子。
+\end{remark}
+
+\subsection{有理参数：六个矩决定低支撑全核}
+若所有 $a_j,b_j\in\Q$，定义
+\[
+ M_{pq}=\sum_jc_j a_j^p b_j^q\qquad(p+q>0).
+\]
+对幂指数为零的因子约定为 $1$。
+因为此时 $F=\Q$，有 $\mathscr S_1=\mathscr S_2=K$。
+
+\begin{proposition}[有理参数的完全简化]\label{lin:prop:rationalmoments}
+有
+\[
+ \mathcal A_c(V)=
+ \begin{cases}
+ \Hom_{\Q}(V,K),&M_{10}=M_{01}=0,\\
+ 0,&\text{否则},
+ \end{cases}
+\]
+以及
+\[
+ \mathcal B_c(V)=
+ \begin{cases}
+ \operatorname{SymBil}_{\Q}(V,K),
+   &M_{20}=M_{11}=M_{02}=0,\\
+ 0,&\text{否则}.
+ \end{cases}
+\]
+因此在三个、四个方向情形，全部函数的齐次核由
+$s,M_{10},M_{01},M_{20},M_{11},M_{02}$ 决定，
+其中 $r=3$ 时不需要二次矩。
+\end{proposition}
+\begin{proof}
+$\Q$-齐次性给出
+$\sum_jc_jA(a_jx)=M_{10}A(x)$，
+另一条同理。
+双线性条件分别成为
+$M_{20}B(u,v)=M_{02}B(u,v)=M_{11}B(u,v)=0$。
+域中的任一非零标量都可逆，故任一相应矩非零就迫使整项为零；
+矩全零则不再有约束。
+\end{proof}
+
+\begin{example}[二次方程的六矩检验]
+对
+\[
+ f(x+y)+f(x-y)-2f(x)-2f(y)=0
+\]
+有 $s=-2$、$M_{01}=-2$，所以没有常数项或加性项；
+而
+$M_{20}=M_{11}=M_{02}=0$。
+四个支撑方向互异，故全部函数解恰为
+$f(x)=B(x,x)$，$B$ 为任意对称 $\Q$-双线性型。
+\end{example}
+
+\section{超越参数算例：恒等映射与形式导子}\label{lin:sec:derivexample}
+取 $K=V=\Q(\tau)$，其中 $\tau$ 超越于 $\Q$。
+考虑完全线性自然的紧线性差
+\begin{equation}\label{lin:eq:derivoperator}
+ P(f,x,y)=
+ \tau^2f(x)+\tau^2f(y)
+ -2\tau f(\tau(x+y))+f(\tau^2(x+y)).
+\end{equation}
+其支撑为 $(1,0),(0,1),(\tau,\tau),(\tau^2,\tau^2)$，
+有四个点、三个方向，模板秩为二。
+
+\begin{theorem}[导子算例的全部解]\label{lin:thm:derivkernel}
+以 $\partial=d/d\tau$ 表示有理函数域上的形式导子。
+则
+\[
+ \ker\T_K=\{\,x\mapsto ax+b\,\partial x:a,b\in K\,\}.
+\]
+特别地 $\dim_K\ker\T_K=2$。
+\end{theorem}
+\begin{proof}
+三方向分类表明 $f=k+A$，其中 $A$ 可加。
+这里
+$s=2\tau^2-2\tau+1\ne0$，故 $k=0$。
+利用 $A$ 的可加性，齐次方程等价于
+\begin{equation}\label{lin:eq:derivrelation}
+ A(\tau^2x)-2\tau A(\tau x)+\tau^2A(x)=0
+ \qquad(x\in K).
+\end{equation}
+定义 $C(x)=A(\tau x)-\tau A(x)$。
+式\eqref{lin:eq:derivrelation}给出 $C(\tau x)=\tau C(x)$。
+$C$ 同时为 $\Q$-线性，所以与乘以任意 $\Q[\tau]$ 元素的操作交换。
+若 $p(\tau)\ne0$，把 $x$ 换成 $x/p(\tau)$ 得
+$C(x/p(\tau))=C(x)/p(\tau)$。
+因此 $C$ 是 $K$-线性映射，必有 $C(x)=bx$，其中 $b=C(1)$。
+
+形式导子由通常的多项式微分和商法则定义，满足
+$\partial(\tau x)-\tau\partial x=x$。
+所以 $A_0=A-b\partial$ 与乘以 $\tau$ 交换。
+重复前述分母论证，$A_0$ 为 $K$-线性，从而 $A_0(x)=ax$。
+反过来 $x\mapsto x$ 和 $\partial$ 均满足\eqref{lin:eq:derivrelation}，
+故所有显示函数都是解。
+二者在 $1,\tau$ 处的取值矩阵为
+$\begin{pmatrix}1&0\\ \tau&1\end{pmatrix}$，行列式为 $1$，故参数唯一。
+\end{proof}
+
+这里没有假设未知函数连续或可微。
+$\partial$ 作用于输入元素本身的有理函数表达式，是一个确定的域导子。
+
+\subsection{代数商中的二重结构}
+把第二个张量因子中的 $\tau$ 记为 $z$。
+则 $\mathscr S_1=K\otimes_{\Q}\Q(\tau)$
+可视为 $K[z]$ 对所有非零 $\Q[z]$ 多项式作局部化。
+两个加性约束的生成元相同，都等于
+\[
+ z^2-2\tau z+\tau^2=(z-\tau)^2.
+\]
+因此
+\begin{equation}\label{lin:eq:dualnumbers}
+ \Uc\cong K[\varepsilon]/(\varepsilon^2),\qquad z\longmapsto\tau+\varepsilon.
+\end{equation}
+确实，对每个非零 $q\in\Q[z]$，$q(\tau)\ne0$，
+所以 $q(\tau+\varepsilon)$ 在该商中为单位，局部化不再改变商。
+由形式 Taylor 公式，
+\[
+ 1\otimes r(\tau)\longmapsto r(\tau)+\partial r(\tau)\,\varepsilon
+ \qquad(r\in\Q(\tau)).
+\]
+两个坐标泛函分别对应恒等映射和形式导子。
+这说明不能仅用域嵌入描述所有超越参数的加性解；
+商中的非零幂零元记录了导数项。
+域自同构、微分算子与线性函数方程的关系可参见\cite{KissLaczkovich}；
+本算例的完整性已由上面的直接证明给出。
+
+\subsection{非齐次自由度与两个初值}
+若 $\T_Kf_0=h$，则所有解为
+\[
+ f=f_0+ax+b\,\partial x.
+\]
+若指定 $f(1)=p$、$f(\tau)=q$，唯一参数为
+\[
+ a=p-f_0(1),\qquad
+ b=q-f_0(\tau)-\tau\bigl(p-f_0(1)\bigr).
+\]
+因此任意两个这样的初值都能在一个非空解仿射空间中选出唯一解。
+这不表示任意 $h$ 都可解；$h$ 本身仍须满足有限关系判据。
+
+\section{代数参数算例：共轭嵌入与范数}\label{lin:sec:normexample}
+取 $K=V=\Q(\alpha)$，$\alpha^2=2$，并记非平凡共轭为
+$\sigma(\alpha)=-\alpha$。
+考虑
+\begin{equation}\label{lin:eq:normoperator}
+ \begin{split}
+ P(f,x,y)={}&f(x+(1+\alpha)y)-f(x+y)\\
+ &-f(x+\alpha y)+f(x).
+ \end{split}
+\end{equation}
+四个支撑 $(1,1+\alpha),(1,1),(1,\alpha),(1,0)$
+方向两两不同，故全部齐次解至多为二次广义多项式。
+
+\begin{theorem}[共轭与范数算例的全部解]\label{lin:thm:normkernel}
+有
+\[
+ \ker\T_K
+ =\{\,x\mapsto k+ax+b\sigma(x)+c\,x\sigma(x):
+ k,a,b,c\in K\,\},
+\]
+且四个参数唯一，$\dim_K\ker\T_K=4$。
+\end{theorem}
+\begin{proof}
+按定理\ref{lin:thm:exactlowkernel}写成 $f=k+A+B(x,x)$。
+系数总和为零，故常数项自由。
+对任意加性 $A$，用
+$A((1+\alpha)y)=A(y)+A(\alpha y)$
+即可直接验证它满足齐次方程。
+
+对二次部分逐项展开，所有含 $x$ 的项抵消，剩余
+$2B(y,\alpha y)$。
+因此其充要条件是
+\[
+ B(y,\alpha y)=0\qquad(y\in K).
+\]
+在 $\Q$-基 $1,\alpha$ 下置
+$B(1,1)=u$、$B(1,\alpha)=v$、$B(\alpha,\alpha)=w$。
+对 $y=r+t\alpha$，$r,t\in\Q$，
+\[
+ B(y,\alpha y)=v r^2+(2u+w)rt+2v t^2.
+\]
+恒为零当且仅当 $v=0$、$w=-2u$。
+故 $B(y,y)=u(r^2-2t^2)=u\,y\sigma(y)$。
+
+任意 $\Q$-线性映射 $A:K\to K$ 由 $A(1),A(\alpha)$ 决定，
+唯一写成 $ax+b\sigma(x)$，其中
+\[
+ a=\frac12\left(A(1)+\frac{A(\alpha)}{\alpha}\right),\qquad
+ b=\frac12\left(A(1)-\frac{A(\alpha)}{\alpha}\right).
+\]
+由广义次数分解的唯一性，常数、加性与二次参数互不混淆。
+反向代入已经包含在上述计算中，故得到全部解。
+\end{proof}
+
+范数项 $x\sigma(x)$ 不是普通的 $K$-二次单项式 $cx^2$：
+若二者恒等，由 $x=1$ 得 $c=1$，而 $x=\alpha$ 给出 $-2=2$，矛盾。
+它是底层 $\Q$-结构上的二次广义多项式。
+
+\subsection{张量代数的交叉检验}
+这里 $F=K$、$e=\dim_FV=1$。
+$\mathscr S_1$ 按两个嵌入 $\id,\sigma$ 分解为 $K\times K$。
+两个加性生成元均为零，所以 $\Uc\cong K^2$，$u=2$。
+
+$\mathscr S_2$ 按嵌入对 $(\rho,\theta)$ 分解为四个 $K$-因子。
+$v_{11},v_{12},v_{21}$ 为零，而 $v_{22}$ 在 $(\rho,\theta)$ 处的值是
+\[
+ (1+\rho(\alpha))(1+\theta(\alpha))
+ -1-\rho(\alpha)\theta(\alpha)
+ =\rho(\alpha)+\theta(\alpha).
+\]
+同嵌入的两个坐标分别为 $2\alpha,-2\alpha$，被理想消去；
+异嵌入的两个坐标为零，保留在商中。
+于是 $\Wc\cong K^2$，对合交换两个坐标，故 $w=2$、$w_+=1$。
+定理\ref{lin:thm:dimension}给出
+$1+2+1=4$，与直接求解完全一致。
+
+\subsection{四个初值与自然性的边界}
+对基函数 $1,x,\sigma(x),x\sigma(x)$，
+在 $0,1,-1,\alpha$ 四点的取值矩阵为
+\[
+ \begin{pmatrix}
+ 1&0&0&0\\
+ 1&1&1&1\\
+ 1&-1&-1&1\\
+ 1&\alpha&-\alpha&-2
+ \end{pmatrix},
+ \qquad\det=4\alpha\ne0.
+\]
+故若存在特解 $f_0$，任意指定这四点的函数值都可唯一消除全部自由参数。
+
+式\eqref{lin:eq:normoperator}属于完全线性自然模板；
+但四个支点的坐标和分别为 $2+\alpha,2,1+\alpha,1$，
+并非全部为 $1$。
+由推论\ref{lin:cor:affine}，该族不具有对两个参数同时平移的仿射自然性。
+这两种自然性要求不能混用。
+
+\section{回到非齐次问题：存在性、全部解与初值}\label{lin:sec:inhomfinal}
+\subsection{秩二模板的精确相容判据}
+对式\eqref{lin:eq:ranktwo}，在自由向量空间 $D_V=K^{(V)}$ 中定义
+\[
+ r_{x,y}=c_0[0]+\sum_{j=1}^m c_j[a_jx+b_jy],\qquad
+ L_c(V)=\Span_K\{r_{x,y}:x,y\in V\}.
+\]
+若某些实际取值点重合，必须先在该行中合并它们的系数；
+这是行向量的定义本身，并非额外假设。
+
+\begin{theorem}[本讲义范围内的非齐次解结构]\label{lin:thm:inhomfinal}
+给定任意 $h:V^2\to K$，方程 $P(f,x,y)=h(x,y)$ 有解，
+当且仅当每条有限行关系都由 $h$ 保持，即
+\[
+ \sum_{\ell=1}^N d_\ell r_{x_\ell,y_\ell}=0
+ \quad\Longrightarrow\quad
+ \sum_{\ell=1}^N d_\ell h(x_\ell,y_\ell)=0.
+\]
+若有一个解 $f_0$，全部解为 $f_0+\ker\T_V$，
+其中 $\ker\T_V$ 恰按第\ref{lin:sec:kernelclassification}节的四类分类给出。
+不相容时必有一条有限关系作为不可解证书。
+\end{theorem}
+\begin{proof}
+相容性允许定义
+$\varphi_h(\sum d_\ell r_{x_\ell,y_\ell})
+=\sum d_\ell h(x_\ell,y_\ell)$。
+将这个 $L_c(V)$ 上的泛函延拓到 $D_V$，
+并令 $f(x)$ 为延拓泛函在 $[x]$ 上的值，即得特解。
+反向把任一解作用到有限行关系上就得到相容性。
+全部解是一个特解加齐次核，核的分类已在前文逐一证明。
+若条件不成立，其失败按定义就由某条有限关系见证。
+\end{proof}
+
+该定理是对任意右端的完整存在性判据，
+但并不声称一般模板的全部行关系已化为有限张列表。
+两个参数代数商 $\Uc,\Wc$ 直接控制的是齐次自由度；
+非齐次存在性仍由上述行关系决定。
+若模板由原来的 $n$ 个参数约化而来，还须先检查
+第\ref{lin:sec:lowrank}节的右端纤维条件。
+
+\subsection{有限维齐次核总可以用同样多的点值消除}
+\begin{proposition}[最少初值数]\label{lin:prop:initialvalues}
+设某一标量值线性函数方程的齐次核 $Z\subseteq K^V$
+满足 $\dim_KZ=d<\infty$。
+则存在互异的点 $x_1,\ldots,x_d\in V$，使
+\[
+ Z\longrightarrow K^d,\qquad
+ g\longmapsto(g(x_1),\ldots,g(x_d))
+\]
+为同构。
+因此对每个可解右端，任意给定这 $d$ 个点值都选出唯一解。
+少于 $d$ 个点值不能消除全部齐次自由度。
+\end{proposition}
+\begin{proof}
+所有点值泛函在 $Z$ 上分离向量：若 $g(x)=0$ 对每个 $x$ 成立，则 $g=0$。
+若它们的线性包不是 $Z^*$，有限维对偶性将给出一个非零 $g$
+被所有这些泛函消灭，矛盾。
+因此可从点值泛函中选取 $Z^*$ 的一组基；
+相应的 $d$ 个点就是所求点，取值映射为同构。
+在解仿射空间 $f_0+Z$ 上，指定值只是在这个同构中指定一个向量，
+所以任意值都能且只能实现一次。
+从 $d$ 维空间到 $K^m$ 的线性映射在 $m<d$ 时不可能单射，给出最少性。
+\end{proof}
+
+\subsection{退化空间}
+若 $V=0$、$W=K$ 且 $n\ge1$，定义域及参数域都只有一个点。
+任何标量自然模板都退化为
+\[
+ s f(0)=h(0,\ldots,0).
+\]
+$s\ne0$ 时对每个右端唯一可解；
+$s=0$ 时仅零右端可解，且 $f(0)$ 任意。
+所以定理\ref{lin:thm:orbit}、\ref{lin:thm:semilinear}
+关于非零解的存在条件，以及 $\Uc,\Wc$ 的非零检测，
+均明确要求 $V\ne0$。
+若值域本身为零空间，则只有一个函数及一个右端，解总唯一。
+
+
+\chapter{加法 Cauchy 相关集的代数几何}\label{ch:addgeom}
+本章从全域方程转向多项式缺陷的零集。始终区分方程本身、约化零集、实点正则和复化后的光滑性。
+\section{加法 Cauchy 相关集：二次型与复不可约性}\label{geo:sec:geometry}
+从本节起，$D_f(x,y)=f(x+y)-f(x)-f(y)$，$X_D(f)=Z(D_f)$。
+加上线性函数不改变 $D_f$；乘以非零标量不改变 $X_D(f)$。
+
+\subsection{复二次多项式的秩分类}
+\begin{theorem}[二次型相关集]\label{geo:thm:quadratic}
+设 $f:\C^d\to\C$ 为
+$f(z)=z^{\mathsf T}Az+b^{\mathsf T}z+c$，其中 $A=A^{\mathsf T}$，$r=\rank A$。
+则
+\[
+ D_f(x,y)=2x^{\mathsf T}Ay-c.
+\]
+作可逆线性变换后，相关集同构于
+\[
+ \left\{(u,v)\in\C^r\times\C^r:\sum_{i=1}^r u_iv_i=c/2\right\}
+ \times\C^{2(d-r)}.
+\]
+若 $r=0$，它在 $c=0$ 时为全部空间，否则为空；若 $r\ge1$，它是非空超曲面，并有：
+\begin{enumerate}
+\item $c\ne0$ 时光滑且不可约；
+\item $c=0,r=1$ 时为两个不同超平面之并；
+\item $c=0,r\ge2$ 时不可约，奇点集为 $\ker A\times\ker A$。
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+展开二次式得第一式；双线性配对的秩标准形给出第二式。
+若 $c\ne0$，关于 $u$ 的系数是 $v_1,\ldots,v_r$，常数项是非零常数 $-c/2$，它们在 $\C[v]$ 中的最大公因子为 $1$。
+该多项式在 $\C(v)[u]$ 中是非零一次式，故不可约，由 Gauss 引理知在原多项式环中亦不可约。
+若 $c=0,r\ge2$，系数 $v_1,\ldots,v_r$ 的最大公因子仍为 $1$，同理不可约。
+若 $r=1,c=0$，方程就是 $u_1v_1=0$。
+梯度为 $(2Ay,2Ax)$，因此只有 $Ax=Ay=0$ 才可能为奇点；这些点在 $c=0$ 时全部落在零集上，在 $c\ne0$ 时均不在零集上。
+\end{proof}
+
+\subsection{复一元多项式的不可约性完整判据}
+\begin{theorem}[非空不可约相关集的分类]\label{geo:thm:irreducible}
+设 $f\in\C[z]$。$X_D(f)$ 是非空不可约代数集，当且仅当以下之一成立：
+\begin{enumerate}
+\item $f(z)=az$，此时 $X_D(f)=\C^2$；
+\item $\deg f\ge2$ 且 $f(0)\ne0$，此时 $D_f$ 本身不可约，$X_D(f)$ 是不可约曲线。
+\end{enumerate}
+若 $\deg f\le1$ 且 $f(0)\ne0$，相关集为空；若 $\deg f\ge2$ 且 $f(0)=0$，相关集可约并包含两坐标轴。
+\end{theorem}
+\begin{proof}
+一次及常数情形直接计算 $D_f=-f(0)$。
+设 $d=\deg f\ge2$。若 $f(0)=0$，则 $D_f(x,0)=D_f(0,y)=0$，所以 $xy\mid D_f$。
+两坐标轴都是其不同不可约分支，因此相关集可约。
+
+若 $f(0)=c\ne0$，假设 $D_f=GH$ 为两个非常数多项式之积。
+限制到 $y=0$，得到 $G(x,0)H(x,0)=-c$，因此两者均为非零常数；限制到 $x=0$ 亦然。
+同一因子的两条轴上常数相同，均等于该因子在原点的值，故
+\[
+ G=G(0,0)+xyG_1,\qquad H=H(0,0)+xyH_1.
+\]
+因为两个因子非常数，其最高齐次部分均被 $xy$ 整除，故 $D_f$ 的最高齐次部分应被 $x^2y^2$ 整除。
+但该最高齐次部分是
+\[
+ a_d\bigl((x+y)^d-x^d-y^d\bigr),
+\]
+其中 $x^{d-1}y$ 的系数为 $d a_d\ne0$，矛盾。故 $D_f$ 不可约。
+非恒定复二元多项式有零点，所以相关集非空。
+\end{proof}
+
+\begin{example}[次数七的重因子]
+对 $f(z)=z^7$，
+\[
+ D_f(x,y)=7xy(x+y)(x^2+xy+y^2)^2.
+\]
+因此在讨论作为集合的相关集时，必须区分定义多项式与其无重因子部分。
+\end{example}
+
+\section{哪些复代数集能成为加法 Cauchy 相关集}\label{geo:sec:realization}
+\begin{theorem}[缺陷多项式的微分判据]\label{geo:thm:diffcriterion}
+给定 $F\in\C[x,y]$，存在 $f\in\C[z]$ 使 $F=D_f$，当且仅当
+\begin{align}
+ F(x,0)=F(0,y)&=F(0,0),\label{geo:eq:axes}\\
+ F_{xxy}&=F_{xyy}.\label{geo:eq:pde}
+\end{align}
+$f$ 在加上线性项 $az$ 的意义下唯一，且可由 $F$ 显式恢复。
+\end{theorem}
+\begin{proof}
+若 $F=D_f$，则轴上均为 $-f(0)$，且 $F_{xy}=f''(x+y)$，故必要。
+反过来，令 $H=F_{xy}$。\eqref{geo:eq:pde}给出 $H_x=H_y$。
+在变量 $s=x+y,t=x-y$ 下，这等价于 $H$ 不依赖 $t$，即 $H=q(x+y)$，其中 $q$ 为一元多项式。
+取唯一满足 $f_0''=q$、$f_0(0)=f_0'(0)=0$ 的多项式 $f_0$。
+则 $(F-D_{f_0})_{xy}=0$，故 $F-D_{f_0}=a(x)+b(y)$。
+它在两轴上的限制均为常数 $k=F(0,0)$，从而自身恒等于 $k$。
+令 $f=f_0-k$ 即有 $D_f=D_{f_0}+k=F$。
+若 $D_f=D_g$，则 $(f-g)''=0$，再由缺陷为零知常数项也为零，因此 $f-g=az$。
+\end{proof}
+
+\begin{lemma}[不可约因子的重数最多为二]\label{geo:lem:multiplicity}
+若 $\deg f\ge2$，则 $D_f$ 的每个不可约因子重数至多为 $2$。
+\end{lemma}
+\begin{proof}
+若不可约 $q$ 满足 $q^3\mid D_f$，二次微分后仍有 $q\mid(D_f)_{xy}=f''(x+y)$。
+在 $\C$ 上，$f''(x+y)$ 的不可约因子只能是 $x+y-a$，故 $q$ 与此线性式相伴。
+然而若 $(x+y-a)^2\mid D_f$，则 $(D_f)_x=f'(x+y)-f'(x)$ 限制在 $y=a-x$ 上应恒零，给出 $f'(a)-f'(x)\equiv0$。
+这迫使 $f'$ 为常数，与 $\deg f\ge2$ 矛盾。
+\end{proof}
+
+\begin{theorem}[代数集的可实现性判据]\label{geo:thm:realization}
+空集和 $\C^2$ 都可实现。对非空真代数集 $Y\subsetneq\C^2$，存在多项式 $f$ 使 $Y=X_D(f)$，当且仅当：
+\begin{enumerate}
+\item $Y$ 为纯一维代数集，写成无重因子方程 $Y=Z(q)$，其中 $q=q_1\cdots q_s$、$q_j$ 两两不相伴且不可约；
+\item 可选择 $\varepsilon_j\in\{1,2\}$，使
+\[
+ F=\prod_{j=1}^s q_j^{\varepsilon_j}
+\]
+满足\eqref{geo:eq:axes}和\eqref{geo:eq:pde}。
+\end{enumerate}
+对非空真\textbf{不可约}曲线 $Y=Z(q)$，判据进一步简化为：
+$Y$ 与两坐标轴均不相交，并且 $q_{xxy}=q_{xyy}$。
+\end{theorem}
+\begin{proof}
+取 $f\equiv1$ 得空集，取 $f=0$ 得全部空间。
+非空真相关集由非恒定 $D_f$ 定义，故为纯一维。
+复多项式环中唯一分解和零点定理表明，若 $Z(D_f)=Z(q)$，则
+$D_f=c\prod_jq_j^{\varepsilon_j}$，$c\ne0$、$\varepsilon_j\ge1$。
+由引理\ref{geo:lem:multiplicity}，每个指数不超过二；除以常数 $c$ 不改变两项线性判据，故得到必要性。
+反之，定理\ref{geo:thm:diffcriterion}给出 $F=D_f$，其零集恰为 $Y$。
+
+若 $Y$ 不可约，定理\ref{geo:thm:irreducible}说明实现它的 $D_f$ 本身不可约且 $f(0)\ne0$，从而 $q$ 与 $D_f$ 相伴，且曲线避开两轴。
+反过来，避开 $y=0$ 表明一元多项式 $q(x,0)$ 无根，故为非零常数；另一条轴同理，两个常数均为 $q(0,0)$。
+于是轴条件成立，再用微分判据即得实现。
+\end{proof}
+判据使用无重因子方程的任意非零常数倍均等价。
+例 $xy-1=0$ 可以实现，例 $x+y-1=0$ 因与轴相交不能作为非空不可约的 $X_D(f)$。
+
+\section{实二次、三次相关集及两种光滑要求}\label{geo:sec:real}
+\subsection{二次与三次多项式}
+对 $f(t)=at^2+bt+c$，有 $D_f=2axy-c$。
+当 $a\ne0,c\ne0$ 时为光滑实双曲线；$a\ne0,c=0$ 时为坐标轴之并；
+$a=0$ 时按 $c=0$ 或 $c\ne0$ 分别为全部平面或空集。
+
+\begin{proposition}[三次曲线的奇点和可约性]\label{geo:prop:cubic}
+设 $f(t)=at^3+bt^2+ct+d$，$a\ne0$，令 $A=3a$、$B=2b$。
+则
+\[
+ D_f(x,y)=xy(A(x+y)+B)-d.
+\]
+当 $d=0$ 时，它是三条互异直线 $x=0,y=0,A(x+y)+B=0$ 的并。
+当 $d\ne0$ 时，它在 $\C$ 上不可约，且有奇点当且仅当
+\[
+ B\ne0,\qquad d=\frac{B^3}{27A^2}
+ =\frac{8b^3}{243a^2}.
+\]
+该情形唯一奇点为 $x=y=-B/(3A)=-2b/(9a)$，它是实孤立双点。
+其他 $d\ne0$ 情形均为光滑的几何不可约实代数曲线。
+\end{proposition}
+\begin{proof}
+直接展开得公式；$d=0$ 的分解显然，$d\ne0$ 的不可约性来自定理\ref{geo:thm:irreducible}。
+对 $F=xy(A(x+y)+B)-d$ 有
+\[
+ F_x=y(2Ax+Ay+B),\qquad F_y=x(Ax+2Ay+B).
+\]
+$F=0,d\ne0$ 时 $x,y$ 均非零，故梯度为零迫使
+$2Ax+Ay+B=Ax+2Ay+B=0$，解得 $x=y=-B/(3A)$。
+代回得到 $d=B^3/(27A^2)$，并因 $d\ne0$ 得 $B\ne0$。
+此时 Hessian 矩阵为
+\[
+ -\frac{B}{3}\begin{pmatrix}2&1\\1&2\end{pmatrix},
+\]
+它非退化且实定号，故局部零集只有该孤立点，而复切锥为两条不同的共轭直线。
+\end{proof}
+
+\subsection{一般实多项式：实点正则与代数簇光滑}
+设 $f\in\R[t]$ 且 $\deg f\ge2,f(0)\ne0$。
+由定理\ref{geo:thm:irreducible}，$F=D_f$ 在 $\C[x,y]$ 中不可约。
+因此它在 $\R$ 上几何不可约，且已是约化方程。
+\begin{proposition}[可直接检验的光滑判据]\label{geo:prop:smooth}
+曲线的奇点恰由下列方程组描述：
+\begin{equation}\label{geo:eq:singularsystem}
+ \begin{cases}
+ f(x+y)=f(x)+f(y),\\
+ f'(x+y)=f'(x)=f'(y).
+ \end{cases}
+\end{equation}
+所有\textbf{实点}均代数正则，当且仅当该方程组无实解。
+曲线 $\operatorname{Spec}\R[x,y]/(F)$ 在 $\R$ 上光滑，当且仅当该方程组无复解。
+前一条件使非空实点集成为光滑的一维实流形，后一条件更强。
+\end{proposition}
+\begin{proof}
+$F_x=f'(x+y)-f'(x)$、$F_y=f'(x+y)-f'(y)$，故方程组恰为 $F=F_x=F_y=0$。
+约化平面超曲面在点处正则等价于梯度非零；实点处由隐函数定理即为光滑实曲线。
+特征零域是完美域，有限型超曲面在 $\R$ 上光滑等价于复化后无几何奇点，故应检查所有复解。
+\end{proof}
+这里“实点代数正则”是精确的梯度条件。如果“光滑”仅指点集作为嵌入流形的光滑性，一般不能忽略约化和实代数结构后直接断言与任意所给方程的梯度条件等价。
+
+\begin{example}[实点全部光滑但代数簇不光滑]\label{geo:ex:smoothcounter}
+取
+\[
+ f(t)=(t^2+1)^3+1=t^6+3t^4+3t^2+2.
+\]
+$f(0)=2$，故 $F=D_f$ 在 $\C$ 上不可约。
+对实数 $t$，
+\[
+ f''(t)=30t^4+36t^2+6>0,
+\]
+所以 $f'$ 严格递增。若实数 $x,y$ 满足梯度为零，则
+$f'(x+y)=f'(x)=f'(y)$ 强制 $x+y=x=y$，即 $x=y=0$。
+但 $F(0,0)=-2\ne0$，所以曲线无实奇点。
+它有实点，因为 $F(0,0)<0$ 而 $F(t,t)>0$ 对充分大的实数 $t$ 成立。
+
+另一方面，$f(i)=f(-i)=1$、$f(0)=2$，且 $f'(i)=f'(-i)=f'(0)=0$。
+所以 $(i,-i)$ 与 $(-i,i)$ 都是复奇点。于是实点集是一条非空光滑实曲线，但对应的实代数簇不光滑。
+\end{example}
+
+
+\chapter{乘法 Cauchy 关系：基础与拓扑}\label{ch:mult}
+乘法缺陷对函数变量非线性。本章先给出全域解及保持相关集的变换，再说明实、复相关域具有不同的拓扑行为。
+\section{乘法缺陷的全域解与不变变换}\label{geo:sec:multiplicative}
+本节使用不同的缺陷
+\[
+ M_f(x,y)=f(x+y)-f(x)f(y),\qquad X_M(f)=Z(M_f).
+\]
+它一般不是关于 $f$ 的线性差，也不是第\ref{lin:sec:compact}节的紧算子：乘积项带有两个函数值之间的交互。
+
+\subsection{全域解与保持相关集的变换}
+\begin{proposition}[全域解的代数形式]
+设 $G$ 为阿贝尔群，$S$ 为含幺交换环。方程 $M_f=0$ 的全部解是零函数，以及如下函数：
+选非零幂等元 $e\in S$，再选群同态
+$\chi:G\to(eS)^\times$，并将其视为 $S$-值函数。
+\end{proposition}
+\begin{proof}
+令 $e=f(0)$，则 $e^2=e$、$f(x)=ef(x)$、$f(x)f(-x)=e$。
+故 $e=0$ 时 $f=0$；否则 $f(x)$ 都是以 $e$ 为单位元的环 $eS$ 中的单位，原方程就是群同态条件。反向显然。
+\end{proof}
+当 $G$ 为实向量空间、$S=\R$ 时，非零解满足 $f(x)=f(x/2)^2>0$，故全部解为 $0$ 或 $e^A$，$A$ 为任意加性函数。
+当 $G=S=\Q$ 时，非零解只有 $1$：对任意素数 $p$ 与正整数 $m$，
+$v_p(f(x))=m v_p(f(x/m))$，所以每个赋值为零，结合正性得 $f(x)=1$。
+
+若 $\chi:G\to S^\times$ 为群同态，则
+\[
+ M_{\chi f}(x,y)=\chi(x+y)M_f(x,y),
+\]
+从而相关集不变。域值且 $f$ 处处非零时，还可通分得到
+\[
+ M_{1/f}(x,y)=-\frac{M_f(x,y)}{f(x+y)f(x)f(y)},
+\]
+所以 $X_M(1/f)=X_M(f)$。
+
+\section{乘法相关域的实复拓扑差异}\label{geo:sec:topology}
+这里“区域”专指欧氏拓扑中的非空开连通集；不假设原函数连续。
+
+\begin{lemma}[区间上的局部乘法分离]\label{geo:lem:pexider}
+设 $U,T\subseteq\R$ 为非空开区间，且 $H(s+t)=F(s)G(t)$ 对 $s\in U,t\in T$ 成立。
+则或者 $F\equiv0$ 或 $G\equiv0$ 且 $H\equiv0$；或者存在唯一加性函数 $A:\R\to\R$ 及非零实常数 $a,b$，使
+\[
+ F(s)=ae^{A(s)},\quad G(t)=be^{A(t)},\quad H(u)=ab e^{A(u)}.
+\]
+\end{lemma}
+\begin{proof}
+假设 $F,G$ 均不恒零，取 $F(s_0)G(t_0)\ne0$。
+小 $h$ 满足 $F(s_0+h)G(t_0-h)=H(s_0+t_0)\ne0$，故两函数在这些点附近非零。
+定义 $c(h)=G(t_0+h)/G(t_0)$。比较同一和 $s+h+t_0=s+(t_0+h)$，得
+\[
+ F(s+h)=c(h)F(s)
+\]
+对小 $h$ 及 $s,s+h\in U$ 成立。
+在 $s_0$ 附近重复平移，得到局部乘法律 $c(h+k)=c(h)c(k)$，
+故 $c(h)=c(h/2)^2>0$，$a_0(h)=\log c(h)$ 局部可加。
+
+对任意 $t\in\R$，取充分大正整数 $m$，令 $A(t)=m a_0(t/m)$。
+不同的 $m$ 可用公倍细分比较，局部加性保证定义与选择无关；同时细分两个数及其和，得到 $A$ 全局可加。
+把区间内的任意位移分成有限个足够小的等长段，即得
+$F(s)=F(s_0)e^{A(s-s_0)}$。
+交换两个变量并比较小位移，得到 $G$ 具有同一 $A$，随后得到 $H$ 的形式。
+若两种表示给出同一 $F$，其加性指数之差在 $U-U$ 上为零；该集含零邻域，故加性迫使该差处处为零。常数亦唯一。
+\end{proof}
+
+\begin{theorem}[实区域必为星形集]\label{geo:thm:topreal}
+若 $f:\R\to\R$ 且 $X=X_M(f)$ 为区域，则 $X$ 为星形集，故可缩且 $\pi_1(X)=0$。
+\end{theorem}
+\begin{proof}
+在 $X$ 内每个开矩形上应用引理\ref{geo:lem:pexider}，知乘积 $f(x)f(y)$ 或处处为零，或处处非零。
+于是 $X_0=\{(x,y)\in X:f(x)f(y)=0\}$ 及其补集都在 $X$ 中开。
+连通性迫使其中一个为空。
+
+若乘积处处非零，则 $f$ 无零点，因为 $f(z)=0$ 会使 $(0,z)\in X_0$。
+记 $I=\operatorname{pr}_1X=\operatorname{pr}_2X$、$J=\{x+y:(x,y)\in X\}$，二者均为开区间。
+用相交开矩形链连接 $X$ 的任意两点；相邻矩形的坐标区间相交，由局部表示唯一性，同一加性函数与常数可以拼接。
+因此 $f=ae^A$ 于第一投影、$f=be^A$ 于第二投影。
+两个投影同为 $I$，故 $a=b$；并有 $f=a^2e^A$ 于 $J$。
+从而
+\[
+ X=(I\times I)\cap\{(x,y):x+y\in J\},
+\]
+这是一凸集。
+
+若乘积处处为零，令 $Z=f^{-1}(0)$。
+一方面 $x+y\in Z$ 对 $(x,y)\in X$ 成立；另一方面 $z\in Z$ 时 $(0,z)\in X$，所以 $Z$ 恰为和映射的像，因而是开区间。
+此时
+\[
+ X=\{x\in Z,x+y\in Z\}\ \cup\ \{y\in Z,x+y\in Z\}.
+\]
+这两个集合均非空、开且凸，连通性迫使二者相交。
+任取交中的一点为星心，即见并集星形。
+星形集的直线收缩给出可缩性及基本群结论。
+\end{proof}
+
+\begin{theorem}[复区域可实现任意有限秩自由群]
+对每个 $r\ge0$，存在只取 $2,3,4$ 三个值的函数 $f_r:\C\to\C$，使 $X_M(f_r)$ 为区域且
+$\pi_1(X_M(f_r))\cong F_r$，其中 $F_r$ 为秩 $r$ 的自由群。
+\end{theorem}
+\begin{proof}
+取圆盘 $B=D(3,1)$。
+在 $D(6,1)$ 内删去 $r$ 个两两不交且完全位于内部的小闭圆盘，所得区域记作 $A$；
+可使所删圆盘均在 $D(6,3/4)$ 内。于是 $A\cap B=\varnothing$ 且 $A/2\subset B$。
+定义 $f_r=2$ 于 $B$、$f_r=4$ 于 $A$、其余处为 $3$。
+值集 $\{2,3,4\}$ 中唯一仍属于该集合的二元乘积是 $2\cdot2=4$，故
+\[
+ X_M(f_r)=\{(x,y)\in B\times B:x+y\in A\}.
+\]
+它是开集。令 $z=x+y$，同伦
+\[
+ H_t(x,y)=\bigl((1-t)x+tz/2,(1-t)y+tz/2\bigr)
+\]
+保持和为 $z$，由 $B$ 凸且 $z/2\in B$，始终留在该集合内。
+它给出到 $\{(z/2,z/2):z\in A\}\cong A$ 的强变形收缩。
+因此该集合路径连通；而有 $r$ 个洞的圆盘与 $r$ 个圆的楔和同伦等价，基本群为 $F_r$。
+\end{proof}
+
+
+\chapter{实参数仿射族与一致点子群}\label{ch:affine}
+本章的参数遍历全部实数，且不要求函数连续。逐点二次多项式把同域条件转化为符号约束，进而刻画一致点子群及其整数倍商。
+\section{设定与主要结论}
+
+全文设 $n\ge1$，$G=(\R^n,+)$，参数 $\lambda$ 遍历\textbf{全部实数}。记
+\[
+ P_u(x,y)=u(x+y)-u(x)u(y),\qquad X(u)=Z(P_u).
+\]
+研究假设为
+\begin{equation}\label{grp:H}
+ f\ne g,\qquad X\bigl(\lambda f+(1-\lambda)g\bigr)
+ \text{ 与 }\lambda\in\R\text{ 无关}.
+\end{equation}
+记 $d=f-g$、$h_\lambda=g+\lambda d$、$E=Z(d)$。这里
+$pE=\{pe:e\in E\}$，$E/pE$ 自然是 $\Fp$ 向量空间。
+
+\begin{theorem}[一致点子群与素数商]\label{grp:main}
+在假设 \eqref{grp:H} 下：
+\begin{enumerate}
+\item $f(0)=g(0)=1$，$E$ 是 $G$ 的真加法子群；
+\item $\chi=f|_E=g|_E:E\to\R^\times$ 是群同态，且
+\begin{equation}\label{grp:covariance}
+ d(x+e)=\chi(e)d(x)\qquad(e\in E,\ x\in G);
+\end{equation}
+\item 对每个素数 $p$，
+\begin{equation}\label{grp:primeclass}
+ \boxed{\quad E/pE\cong 0\quad\text{或}\quad\Z/p\Z.\quad}
+\end{equation}
+更精确地，
+\begin{equation}\label{grp:signclass}
+ 2E=\ker(\sgn\circ\chi)=\{e\in E:\chi(e)>0\}.
+\end{equation}
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[可实现子群的完整判据]\label{grp:converse}
+给定真加法子群 $E_0<G$，以下两项等价：
+\begin{enumerate}
+\item 存在满足 \eqref{grp:H} 的 $f,g:G\to\R$，使
+$E_0=\{x:f(x)=g(x)\}$；
+\item 对每个素数 $p$，$\rk_{\Fp}(E_0/pE_0)\le1$。
+\end{enumerate}
+构造可以使共同零点集恰为
+\begin{equation}\label{grp:modelzero}
+ X(h_\lambda)=(E_0\times G)\cup(G\times E_0)
+ \qquad(\lambda\in\R).
+\end{equation}
+\end{theorem}
+
+定理 \ref{grp:converse} 分类的是可出现的\textbf{一致点子群}；它不声称每个函数对本身都必须具有本讲义逆构造中的三角函数形式。
+
+\begin{theorem}[独立素数取值与素数幂商]\label{grp:powersmain}
+在假设 \eqref{grp:H} 下，对每个素数 $p$ 和 $k\ge1$，
+\begin{equation}\label{grp:powerclassification}
+ E/p^kE\cong
+ \begin{cases}
+ 0,&E/pE=0,\\
+ \Z/p^k\Z,&E/pE\ne0.
+ \end{cases}
+\end{equation}
+第二种情形的同构可以同时选取，使自然投影
+$E/p^{k+1}E\to E/p^kE$ 对应于模 $p^k$ 的约化。
+此外，对任意素数集合 $\mathcal P$，存在同一个满足 \eqref{grp:H} 的函数对，
+使 \eqref{grp:powerclassification} 中的第二种情形恰好在 $p\in\mathcal P$ 时出现。
+\end{theorem}
+
+独立性的构造见第 \ref{grp:independencesection} 节；
+素数幂商及过渡映射的证明见第 \ref{grp:powerssection} 节。
+差函数不变号的等价判据见推论 \ref{grp:signrigidity}。
+
+\section{逐点参数多项式与子群性质}
+
+对固定 $(x,y)$ 展开：
+\begin{equation}\label{grp:poly}
+\begin{split}
+ P_{h_\lambda}(x,y)
+ ={}&P_g(x,y)\\
+ &+\lambda\bigl(d(x+y)-g(x)d(y)-g(y)d(x)\bigr)\\
+ &-\lambda^2d(x)d(y).
+\end{split}
+\end{equation}
+
+\begin{lemma}[逐点二择一]\label{grp:dichotomy}
+对每个 $(x,y)$，多项式 $\lambda\mapsto P_{h_\lambda}(x,y)$
+或者恒为零，或者在 $\R$ 上没有零点。因而：
+\begin{enumerate}
+\item 若 $d(x)d(y)=0$，则 \eqref{grp:poly} 的一次项系数为零；
+\item 若 $d(x)d(y)\ne0$，则对全部 $\lambda\in\R$，
+\begin{equation}\label{grp:strictsign}
+ d(x)d(y)P_{h_\lambda}(x,y)<0.
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+一个参数处为零等价于 $(x,y)\in X(h_\lambda)$；由零点集不变性，它便在每个参数处为零。第一项成立是因为非恒定实一次多项式一定有实根。
+第二项中二次项系数非零，所以多项式不能恒为零。无实根的实二次多项式恒与其首项系数同号，而首项系数为 $-d(x)d(y)$。
+\end{proof}
+
+\begin{proof}[定理 \ref{grp:main} 的前两项]
+在 $(0,0)$ 处有
+\[
+ P_{h_\lambda}(0,0)=h_\lambda(0)\bigl(1-h_\lambda(0)\bigr).
+\]
+若 $d(0)\ne0$，则 $h_\lambda(0)$ 遍历 $\R$，上述多项式有实根但不能恒为零，矛盾。因此 $d(0)=0$。
+取 $y$ 使 $d(y)\ne0$。在 $(0,y)$ 处，由一次项系数为零得到
+$(1-g(0))d(y)=0$，故 $f(0)=g(0)=1$。
+
+若 $e\in E$，由引理 \ref{grp:dichotomy} 的第一项立即得到
+\[
+ d(x+e)=g(e)d(x)=\chi(e)d(x).
+\]
+若 $\chi(e)=0$，则平移的满射性迫使 $d\equiv0$，与 $f\ne g$ 矛盾。因此 $\chi(e)\ne0$。
+
+因为 $0\in E$，对 $e_1,e_2\in E$，上式给出
+$d(e_1+e_2)=0$。又
+$0=d(0)=\chi(e)d(-e)$，故 $-e\in E$。这证明 $E$ 是加法子群；$d\not\equiv0$ 说明它为真子群。
+
+最后固定 $x$ 使 $d(x)\ne0$，计算
+\[
+ \chi(e_1+e_2)d(x)
+ =d(x+e_1+e_2)
+ =\chi(e_2)\chi(e_1)d(x).
+\]
+约去 $d(x)$，得到 $\chi(e_1+e_2)=\chi(e_1)\chi(e_2)$。
+\end{proof}
+
+\begin{lemma}[相反点的符号]\label{grp:oppositesign}
+对 $x\notin E$，
+\begin{equation}\label{grp:opposite}
+ d(x)d(-x)<0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+因 $E$ 为子群，$-x\notin E$。取参数 $\lambda$ 使 $h_\lambda(x)=0$，则
+$P_{h_\lambda}(x,-x)=h_\lambda(0)=1$。
+代入 \eqref{grp:strictsign} 即得结论。
+\end{proof}
+
+\begin{corollary}[差函数的不变号刚性]\label{grp:signrigidity}
+设 $f,g:G\to\R$，且
+$X(\lambda f+(1-\lambda)g)$ 与全部实参数 $\lambda$ 无关；
+此处允许 $f=g$。将“不变号”理解为处处非负或处处非正，则
+\begin{equation}\label{grp:signiff}
+ \boxed{\quad f-g\text{ 不变号}\quad\Longleftrightarrow\quad f=g.\quad}
+\end{equation}
+等价地，若处处 $f\ge g$ 或处处 $f\le g$，则必有 $f=g$。
+\end{corollary}
+
+\begin{proof}
+若 $f=g$，则 $f-g\equiv0$，显然不变号。
+反之，若 $f\ne g$，就满足 \eqref{grp:H}。
+任选 $x\notin E$，根据引理 \ref{grp:oppositesign}，
+\[
+ (f(x)-g(x))(f(-x)-g(-x))<0.
+\]
+因此 $f-g$ 同时取得严格正值和严格负值，不可能不变号。
+\end{proof}
+
+特别地，当对所有素数 $p$ 都有 $E/pE=0$ 时，\eqref{grp:signiff} 仍然成立。
+证明只使用相反点符号关系，不需要该素数商条件。
+
+\section{素数 \texorpdfstring{$2$}{2}：符号同态给出精确分类}
+
+\begin{proposition}\label{grp:two}
+有 $2E=\{e\in E:\chi(e)>0\}$，因而
+\[
+ E/2E\cong\chi(E)\big/\bigl(\chi(E)\cap\R_{>0}\bigr)
+ \cong0\ \text{或}\ \Z/2\Z.
+\]
+\end{proposition}
+
+\begin{proof}
+若 $e=2a$、$a\in E$，则 $\chi(e)=\chi(a)^2>0$。
+反过来，设 $e\in E$ 且 $e\notin2E$，令 $x=e/2$。于是 $x\notin E$，而
+$-x=x-e$。由 \eqref{grp:covariance}，
+\[
+ d(-x)=\chi(-e)d(x)=\frac{d(x)}{\chi(e)}.
+\]
+由 \eqref{grp:opposite} 得
+$d(x)^2/\chi(e)<0$，即 $\chi(e)<0$。因此正值元素恰为 $2E$。
+符号同态 $\sgn\circ\chi:E\to\{1,-1\}$ 的核正是 $2E$，结论随即成立。
+\end{proof}
+
+换言之，$E/2E=0$ 当且仅当 $\chi(E)\subset\R_{>0}$；
+若 $\chi$ 在 $E$ 上出现负值，则 $E/2E\cong\Z/2\Z$。
+
+\section{奇素数：有限商的严格排序}
+
+奇素数的证明不需要正则性，也不需要把 $E$ 当作实线性子空间。
+关键在于：对一个有限奇数阶商，可以消去 $\chi$ 的平移因子，随后各非零陪集的实数值集合必然严格排序。
+
+\begin{lemma}[有限奇数阶子群必为循环群]\label{grp:finiteodd}
+在假设 \eqref{grp:H} 下，$G/E$ 的任意有限奇数阶子群 $K$ 都是循环群。
+\end{lemma}
+
+\begin{proof}
+设 $H$ 为 $K$ 在 $G$ 中的逆像，即 $H/E=K$。
+若 $K=0$，结论显然。否则取 $K$ 的指数 $m$；$m$ 是奇数，且 $mH\subset E$。
+定义
+\[
+ a(x)=\sqrt[m]{\chi(mx)}\quad(x\in H),
+\]
+其中取唯一实 $m$ 次根。由于实数上的奇次幂是单射，$a$ 是
+$H\to\R^\times$ 的群同态，并且 $a(e)=\chi(e)$（$e\in E$）。
+
+在 $H$ 上归一化：
+\[
+ F(x)=\frac{f(x)}{a(x)},\qquad
+ G_1(x)=\frac{g(x)}{a(x)},\qquad
+ D(x)=F(x)-G_1(x).
+\]
+因为 $a(x+y)=a(x)a(y)$，
+\[
+ P_{\lambda F+(1-\lambda)G_1}(x,y)
+ =\frac{P_{h_\lambda}(x,y)}{a(x)a(y)}.
+\]
+故归一化后的仿射族仍满足零点集不变性。同时，
+\[
+ D(x+e)=D(x),\qquad F(e)=G_1(e)=1 \quad(e\in E).
+\]
+因此 $D$ 是 $K=H/E$ 上的函数；它在零陪集上为零，在其余陪集上非零。
+对 $x\notin E$，记
+\[
+ r(x)=\frac{G_1(x)}{D(x)},\qquad
+ R_b=\{r(x):x+E=b\}\quad(0\ne b\in K).
+\]
+$r$ 本身未必在陪集上为常数；下面的证明允许这一点。
+
+\textbf{第一步：任意两个非零陪集的值域严格分离。}
+对 $x,y,x+y\notin E$，在归一化后的族中取参数
+$t=-r(x)$，使 $G_1(x)+tD(x)=0$。由引理 \ref{grp:dichotomy}，
+\begin{equation}\label{grp:ordering}
+ D(x)D(y)D(x+y)\bigl(r(x+y)-r(x)\bigr)<0.
+\end{equation}
+取参数 $t=-r(y)$，同样得到
+\begin{equation}\label{grp:ordering2}
+ D(x)D(y)D(x+y)\bigl(r(x+y)-r(y)\bigr)<0.
+\end{equation}
+
+给定不同的非零陪集 $b,c$，任取 $u+E=b$、$v+E=c$。
+在 \eqref{grp:ordering} 中令 $x=v$、$y=u-v$。因为 $b,c,b-c$ 都非零，得到
+\[
+ \sgn(r(u)-r(v))
+ =-\sgn\bigl(D(c)D(b-c)D(b)\bigr).
+\]
+右边只取决于陪集，不取决于 $u,v$。于是或者 $R_b$ 的每个元素都大于
+$R_c$ 的每个元素，或者全部小于。
+这些非空集合因而构成一个严格全序。记 $R_b>R_c$ 表示前一种情况。
+
+\textbf{第二步：最大陪集生成全部有限商。}
+由于 $K$ 有限，可取非零陪集 $b_*$，使 $R_{b_*}$ 在上述全序中最大。
+若存在 $c\notin\langle b_*\rangle$，则 $c$ 和 $b_*+c$ 都非零，且都不同于 $b_*$。
+取 $x+E=b_*$、$y+E=c$。最大性给出 $r(x+y)<r(x)$；
+由 \eqref{grp:ordering}、\eqref{grp:ordering2} 的符号一致性，又有 $r(x+y)<r(y)$。
+所以
+\[
+ R_{b_*+c}<R_c.
+\]
+对 $c+jb_*$ 重复应用，所有这些陪集仍在 $\langle b_*\rangle$ 之外。
+若 $q$ 是 $b_*$ 的阶，便得到
+\[
+ R_c>R_{c+b_*}>\cdots>R_{c+qb_*}=R_c,
+\]
+矛盾。因此 $K=\langle b_*\rangle$，即 $K$ 为循环群。
+\end{proof}
+
+\begin{proposition}[奇素数商]\label{grp:oddp}
+对每个奇素数 $p$，$\rk_{\Fp}(E/pE)\le1$。
+\end{proposition}
+
+\begin{proof}
+记 $(G/E)[p]=\{z\in G/E:pz=0\}$。存在自然同构
+\begin{equation}\label{grp:piso}
+ \begin{aligned}
+ E/pE&\longrightarrow(G/E)[p],\\
+ e+pE&\longmapsto e/p+E.
+ \end{aligned}
+\end{equation}
+它的核为零：$e/p\in E$ 等价于 $e\in pE$；它也满射，因为
+$x+E\in(G/E)[p]$ 时 $px\in E$，而 $(px)/p=x$。
+
+若 $E/pE$ 的维数至少为 $2$，则 $(G/E)[p]$ 包含
+一个同构于 $(\Z/p\Z)^2$ 的子群。该子群有限、奇数阶、非循环，与引理
+\ref{grp:finiteodd} 矛盾。
+\end{proof}
+
+结合命题 \ref{grp:two} 和命题 \ref{grp:oddp}，定理 \ref{grp:main} 全部得证。
+
+\section{可实现子群：逆命题的证明}
+
+以下证明同时说明 \eqref{grp:primeclass} 已是完整限制。
+
+\begin{lemma}[圆群嵌入判据]\label{grp:circlelemma}
+设 $A$ 为基数不超过 $\cfrak=\lvert\R\rvert$ 的可除阿贝尔群。
+若对每个素数 $p$ 有 $\rk_{\Fp}A[p]\le1$，则 $A$ 可以作为抽象群嵌入圆群 $\Circle$。
+\end{lemma}
+
+\begin{proof}
+记 $T_A$ 为 $A$ 的挠子群。它是可除群：若 $nt=0$ 且 $ku=t$，则
+$nku=0$，故所取的根 $u$ 仍是挠元。
+按素数分解，有
+$T_A=\bigoplus_p(T_A)_p$。
+
+若 $(T_A)_p\ne0$，则 $A[p]$ 恰为一个 $p$ 阶循环群。
+取生成元 $t_1$，并逐次取 $pt_{j+1}=t_j$，使 $t_j$ 的阶为 $p^j$。
+归纳证明每个被 $p^j$ 杀掉的元素都属于 $\langle t_j\rangle$：
+若 $p^ju=0$，则 $p^{j-1}u=kt_1$，从而
+$u-kt_j$ 被 $p^{j-1}$ 杀掉，再用归纳假设。
+因此
+\[
+ (T_A)_p=\bigcup_{j\ge1}\langle t_j\rangle
+ \cong C_{p^\infty},
+\]
+其中 $C_{p^\infty}$ 是 Prüfer $p$ 群。所以
+$T_A\cong\bigoplus_{p\in\mathcal P}C_{p^\infty}$，可嵌入 $\Q/\Z$。
+
+可除阿贝尔群具有同态延拓性质，故 $T_A$ 是 $A$ 的直和项：
+\[
+ A=T_A\oplus V.
+\]
+这里 $V$ 为无挠可除群，因此是 $\Q$ 向量空间，且
+$\rk_\Q V\le\cfrak$。延拓性质的简短证明见附录\ref{app:divisible}；这是标准的
+可除群单射性结论，参见文献\cite{stacks}。
+
+取 Hamel 直和分解 $\R=\Q\oplus W$。有 $\rk_\Q W=\cfrak$，而
+\[
+ \Circle=\R/\Z\cong(\Q/\Z)\oplus W.
+\]
+将 $T_A$ 嵌入第一项，将 $V$ 作为 $\Q$ 向量空间嵌入第二项，即得结论。
+\end{proof}
+
+\begin{proof}[定理 \ref{grp:converse}]
+必要性已由定理 \ref{grp:main} 证明。现设 $E_0<G$ 满足全部素数商条件，
+令 $A=G/E_0$。因为 $G$ 可除，其商 $A$ 也可除；由
+\eqref{grp:piso} 的同样论证，
+$A[p]\cong E_0/pE_0$。且 $\lvert A\rvert\le\cfrak$。
+由引理 \ref{grp:circlelemma}，取单射同态 $\iota:A\to\Circle$。
+定义
+\[
+ \phi(x)=\iota(x+E_0),\qquad
+ \theta(x)=\phi(x/2)\quad(x\in G).
+\]
+于是 $\theta:G\to\Circle$ 为群同态，$2\theta(x)=\phi(x)$。设
+\[
+ C(x)=\cos(2\pi\theta(x)),\qquad
+ S(x)=\sin(2\pi\theta(x)),
+\]
+它们与圆群代表元的选取无关。因为 $\iota$ 单射，
+\begin{equation}\label{grp:sinzero}
+ S(x)=0
+ \iff 2\theta(x)=0\ \text{于 }\Circle
+ \iff x\in E_0.
+\end{equation}
+现在取
+\[
+ f=C,\qquad g=C+S.
+\]
+由 $E_0\ne G$ 和 \eqref{grp:sinzero}，确有 $f\ne g$。
+对任意 $t\in\R$，加法公式给出
+\begin{equation}\label{grp:trigdefect}
+ P_{C+tS}(x,y)=-(1+t^2)S(x)S(y).
+\end{equation}
+而 $\lambda f+(1-\lambda)g=C+(1-\lambda)S$。
+由于 $1+(1-\lambda)^2>0$，其零点集与 $\lambda$ 无关，
+并且恰为 \eqref{grp:modelzero}。又 $f=g$ 当且仅当 $S=0$，即一致点集恰为 $E_0$。
+\end{proof}
+
+\section{例子与不同素数的独立实现}\label{grp:independencesection}
+
+\subsection{每个素数商都非零：一个连续例子}
+对 $x=(x_1,\ldots,x_n)$，取
+\[
+ f(x)=\cos x_1,\qquad g(x)=\cos x_1+\sin x_1.
+\]
+由 \eqref{grp:trigdefect}，假设成立，且
+\[
+ E=\pi\Z\times\R^{n-1},\qquad
+ E/pE\cong\Z/p\Z\quad\text{对每个素数 }p.
+\]
+此处 $\chi(\pi k,x_2,\ldots,x_n)=(-1)^k$，
+正值元素恰好对应 $k$ 为偶数，与 \eqref{grp:signclass} 一致。
+
+\subsection{每个素数商都为零}
+取一个满射的 $\Q$ 线性映射 $\ell:G\to\Q$ 和一个无理数 $\alpha$，令
+\[
+ f(x)=\cos(2\pi\alpha\ell(x)),\qquad
+ g(x)=f(x)+\sin(2\pi\alpha\ell(x)).
+\]
+由于 $\ell(x)\in\Q$ 且 $\alpha$ 无理，
+$\sin(2\pi\alpha\ell(x))=0$ 当且仅当 $\ell(x)=0$。
+因此 $E=\ker\ell$ 是真 $\Q$ 线性子空间，$pE=E$ 对每个素数成立。
+$\ell$ 的选取通常依赖 Hamel 基；本例不要求连续性。
+
+\subsection{任意指定的素数集合}
+\begin{theorem}[素数取值的同时独立实现]\label{grp:independencetheorem}
+对任意素数集合 $\mathcal P$（允许为空集或无限集），存在满足
+\eqref{grp:H} 的同一个函数对 $f,g:G\to\R$，使
+\begin{equation}\label{grp:independent}
+ E/pE\cong
+ \begin{cases}
+ \Z/p\Z,&p\in\mathcal P,\\
+ 0,&p\notin\mathcal P.
+ \end{cases}
+\end{equation}
+可以使共同零点集为 $(E\times G)\cup(G\times E)$。
+\end{theorem}
+
+\begin{proof}
+当 $\mathcal P=\varnothing$ 时，上一例给出 $E=\ker\ell$ 和所需函数对。
+现设 $\mathcal P\ne\varnothing$。定义有理数的加法子群
+\[
+ M_{\mathcal P}
+ =\left\{\frac ab\in\Q:
+   b\ge1,\ \gcd(a,b)=1,\
+   b\text{ 不含 }\mathcal P\text{ 中的素因子}\right\}.
+\]
+它也就是只允许在 $\mathcal P$ 之外的素数作分母的局部化
+$\Z[q^{-1}:q\text{ 为素数且 }q\notin\mathcal P]$。
+取满射的 $\Q$ 线性映射 $\ell:G\to\Q$，选 $u$ 使 $\ell(u)=1$，
+并记 $W=\ker\ell$。则
+\begin{equation}\label{grp:localizedE}
+ G=\Q u\oplus W,\qquad
+ E_{\mathcal P}=\ell^{-1}(M_{\mathcal P})
+              =M_{\mathcal P}u\oplus W.
+\end{equation}
+由于 $\mathcal P\ne\varnothing$，$M_{\mathcal P}\ne\Q$，所以
+$E_{\mathcal P}$ 是真子群。$W$ 是 $\Q$ 向量空间，因此
+\[
+ E_{\mathcal P}/pE_{\mathcal P}
+ \cong M_{\mathcal P}/pM_{\mathcal P}.
+\]
+若 $p\notin\mathcal P$，$M_{\mathcal P}$ 中的元素都可在该群中除以 $p$，
+故该商为零。若 $p\in\mathcal P$，分母 $b$ 都与 $p$ 互素，同态
+\[
+ M_{\mathcal P}\longrightarrow\Fp,\qquad
+ a/b\longmapsto a\,b^{-1}\pmod p
+\]
+良定且满射。其核恰为 $pM_{\mathcal P}$，所以商同构于 $\Fp$。
+这已在群层面同时实现了全部指定取值。
+
+下面明确实现相应的函数对。利用
+\[
+ \Q/\Z=\bigoplus_p C_{p^\infty}
+\]
+取到指定主分量之和 $A_{\mathcal P}=\bigoplus_{p\in\mathcal P}C_{p^\infty}$
+的投影 $\pi_{\mathcal P}$，定义
+\[
+ \phi(x)=\pi_{\mathcal P}\bigl(\ell(x)+\Z\bigr)
+ \in A_{\mathcal P}\subset\Circle.
+\]
+若 $a/b$ 是既约分数，则 $a/b+\Z$ 在 $\Q/\Z$ 中的阶为 $b$，
+其 $p$ 主分量非零当且仅当 $p\mid b$。
+故 $\pi_{\mathcal P}(a/b+\Z)=0$ 恰好等价于 $a/b\in M_{\mathcal P}$。
+于是 $\ker\phi=E_{\mathcal P}$。
+令 $\theta(x)=\phi(x/2)$，并取
+\[
+ f(x)=\cos(2\pi\theta(x)),\qquad
+ g(x)=f(x)+\sin(2\pi\theta(x)).
+\]
+因为 $\sin(2\pi\theta(x))=0$ 当且仅当 $\phi(x)=0$，
+一致点集恰为 $E_{\mathcal P}$。由 \eqref{grp:trigdefect}，
+这对函数满足 \eqref{grp:H}，且共同零点集具有所述形式。
+\end{proof}
+
+因此，$E/2E$ 非零并不迫使任何奇素数商非零；同样，
+某个奇素数商非零也不迫使 $E/2E$ 非零。
+
+\section{素数幂商由首层决定}\label{grp:powerssection}
+
+\subsection{无挠群的初等提升引理}
+
+\begin{lemma}\label{grp:torsionfreepowers}
+设 $A$ 为无挠阿贝尔群，$p$ 为素数。
+\begin{enumerate}
+\item 若 $A/pA=0$，则 $A/p^kA=0$ 对每个 $k\ge1$ 成立。
+\item 若 $A/pA\cong\Z/p\Z$，取 $a\in A$ 使 $a+pA$ 为生成元。
+则同一个 $a$ 对每个 $k\ge1$ 都给出同构
+\begin{equation}\label{grp:uniformgenerator}
+ \begin{aligned}
+ \Psi_k:\Z/p^k\Z&\longrightarrow A/p^kA,\\
+ t+p^k\Z&\longmapsto ta+p^kA.
+ \end{aligned}
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+若 $A=pA$，迭代即得 $A=p^kA$，第一项成立。
+第二项中，首层生成元的条件意味着 $A=\Z a+pA$。
+反复代入得到
+\[
+ A=\Z a+p(\Z a+pA)=\Z a+p^2A
+   =\cdots=\Z a+p^kA.
+\]
+所以 $\Psi_k$ 满射，$a+p^kA$ 的阶整除 $p^k$。
+它的阶不能整除 $p^{k-1}$：否则存在 $b\in A$ 使
+$p^{k-1}a=p^kb$。无挠性允许约去 $p^{k-1}$，得到 $a=pb$，
+与 $a+pA\ne0$ 矛盾。因此它的阶恰为 $p^k$，$\Psi_k$ 是同构。
+\end{proof}
+
+本问题的 $E$ 是 $\R^n$ 的加法子群，因而无挠。
+将定理 \ref{grp:main} 的首层分类代入引理 \ref{grp:torsionfreepowers}，
+立即得到 \eqref{grp:powerclassification}。
+特别地，非零首层不可能在更高层停止增长。
+
+\subsection{连同自然过渡映射一起的确定性}
+
+自然投影记为
+\[
+ \rho_k:E/p^{k+1}E\longrightarrow E/p^kE,\qquad
+ x+p^{k+1}E\longmapsto x+p^kE.
+\]
+若 $E/pE\ne0$，选 $e\in E$ 使 $e+pE$ 为生成元，并用
+\eqref{grp:uniformgenerator} 同时定义全部 $\Psi_k$。
+则
+\[
+ \rho_k\circ\Psi_{k+1}
+ =\Psi_k\circ\operatorname{red}_{p^k},
+\]
+其中 $\operatorname{red}_{p^k}:\Z/p^{k+1}\Z\to\Z/p^k\Z$ 为约化映射。
+因此逆系统
+\[
+ \cdots\longrightarrow E/p^3E\longrightarrow E/p^2E
+ \longrightarrow E/pE
+\]
+同构于全部为零的系统，或
+\[
+ \cdots\longrightarrow\Z/p^3\Z\longrightarrow\Z/p^2\Z
+ \longrightarrow\Z/p\Z
+\]
+的标准约化系统。这就是“序列只由 $k=1$ 的取值决定”的精确含义。
+此处的决定是在\textbf{同构意义下}；非零情形中，同构的选取依赖生成元 $e$。
+
+此外，另有自然单射
+\[
+ j_k:E/p^kE\longrightarrow E/p^{k+1}E,\qquad
+ x+p^kE\longmapsto px+p^{k+1}E.
+\]
+其单射性同样来自无挠性：$px=p^{k+1}y$ 蕴含 $x=p^ky$。
+在上述同构下，$j_k$ 对应 $t\mapsto pt$。
+因而
+\begin{equation}\label{grp:padiclimit}
+ \varprojlim_k E/p^kE\cong
+ \begin{cases}
+ 0,&E/pE=0,\\
+ \Z_p,&E/pE\ne0,
+ \end{cases}
+ \qquad
+ \varinjlim_{k,j_k} E/p^kE\cong
+ \begin{cases}
+ 0,&E/pE=0,\\
+ C_{p^\infty},&E/pE\ne0.
+ \end{cases}
+\end{equation}
+其中 $\Z_p$ 是 $p$ 进整数环的加法群，第一项在逆极限拓扑下也是拓扑群同构。
+
+由前节的独立性构造，对任意 $\mathcal P$ 可用同一个函数对同时实现
+\[
+ E/p^kE\cong
+ \begin{cases}
+ \Z/p^k\Z,&p\in\mathcal P,\\
+ 0,&p\notin\mathcal P
+ \end{cases}
+ \qquad\text{对全部素数 }p\text{ 和全部 }k\ge1.
+\]
+这完成了定理 \ref{grp:powersmain} 的证明。
+
+\subsection{与商群挠元的自然对应}
+
+对每个 $k\ge1$，\eqref{grp:piso} 推广为自然同构
+\[
+ \Phi_{p,k}:E/p^kE\longrightarrow(G/E)[p^k],\qquad
+ e+p^kE\longmapsto e/p^k+E.
+\]
+它在自然投影 $\rho_k$ 下对应于商群中的乘 $p$ 映射：
+\[
+ \Phi_{p,k}\circ\rho_k=p\,\Phi_{p,k+1}.
+\]
+而单射 $j_k$ 则对应
+$(G/E)[p^k]\subset(G/E)[p^{k+1}]$ 的自然包含。
+这也解释了为何首层非零时，高层必定逐级形成 Prüfer $p$ 群中的循环子群。
+
+\Needspace{12\baselineskip}
+\subsection{任意整数倍商的统一公式}
+
+\begin{corollary}\label{grp:integerquotients}
+令 $\mathcal P=\{p:E/pE\ne0\}$。对任意正整数 $m$，设
+\[
+ m_{\mathcal P}=\prod_{\substack{p\mid m\\p\in\mathcal P}}p^{v_p(m)}
+ \qquad(\text{空积为 }1).
+\]
+则
+\begin{equation}\label{grp:integerclass}
+ E/mE\cong\bigoplus_{\substack{p\mid m\\p\in\mathcal P}}
+ \Z/p^{v_p(m)}\Z\cong\Z/m_{\mathcal P}\Z.
+\end{equation}
+因此 $E$ 的每个整数倍商都是有限循环群，全部这些商的同构类型只由
+$\mathcal P$ 决定。
+\end{corollary}
+
+\begin{proof}
+若正整数 $a,b$ 互素，Bezout 恒等式给出
+$aE+bE=E$ 和 $aE\cap bE=abE$，故中国剩余定理给出
+$E/(ab)E\cong E/aE\oplus E/bE$。
+例如对交集，若 $x=au=bv$ 且 $ra+sb=1$，则
+$x=ra\,x+sb\,x=ab(rv+su)$。
+按 $m$ 的素因子分解反复应用，再用 \eqref{grp:powerclassification}，
+即可得到第一处同构。第二处同构是通常的整数中国剩余定理。
+\end{proof}
+
+\begin{remark}[无挠性是提升结论的关键]
+素数幂商的提升只使用无挠性和首层分类，不需要额外的函数性质。
+若删去无挠性，首层便不足以决定高层。例如
+$A_r=\Z/p^r\Z$ 对所有 $r\ge1$ 都有 $A_r/pA_r\cong\Z/p\Z$，
+但 $A_r/p^kA_r\cong\Z/p^{\min(k,r)}\Z$，其高层行为随 $r$ 改变。
+\end{remark}
+
+\section{假设边界与进一步的群结构}
+
+\begin{remark}[参数必须遍历全体实数]
+若只要求 $\lambda\in[0,1]$，子群结论便可能失效。
+例如取常函数 $f=-1$、$g=-2$，则
+$h_\lambda=-2+\lambda\in[-2,-1]$，其缺陷恒非零，故
+$X(h_\lambda)=\varnothing$ 与参数无关，但 $E=\varnothing$ 不是子群。
+\end{remark}
+
+\begin{remark}[$f\ne g$ 必不可少]
+若 $f=g$，参数不变性自动成立，且 $E=G$、$E/pE=0$；
+但不再能推出 $f(0)=1$ 或 $f|_E$ 为非零乘法特征。
+\end{remark}
+
+\begin{corollary}[商群的抽象结构]
+在假设 \eqref{grp:H} 下，存在基数 $\kappa\le\cfrak$ 和素数集合 $\mathcal P$，使
+\[
+ G/E\cong
+ \Q^{(\kappa)}
+ \oplus\bigoplus_{p\in\mathcal P}C_{p^\infty},
+ \qquad
+ \mathcal P=\{p:E/pE\ne0\}.
+\]
+这里 $\Q^{(\kappa)}$ 表示 $\kappa$ 个 $\Q$ 的直和。
+因而 $G/E$ 的每个有限子群都是循环群。
+\end{corollary}
+
+\begin{proof}
+套用引理 \ref{grp:circlelemma} 证明中对可除群的分解即可。
+有限子群只涉及有限多个素数，每个素数主分量都是循环群；
+这些主分量的阶两两互素，它们的直和仍为循环群。
+\end{proof}
+
+
+\section{复数参数的完全刚性}\label{grp:complexsection}
+
+本节将定义域、值域和参数域同时改为复数：
+$f,g:\C^n\to\C$，$\lambda\in\C$，并允许 $f=g$。
+对 $u:\C^n\to\C$，相应地定义
+\[
+ P_u(x,y)=u(x+y)-u(x)u(y),\qquad
+ X(u)=\{(x,y)\in\C^n\times\C^n:P_u(x,y)=0\}.
+\]
+
+\begin{theorem}[复数情形的等价判据]\label{grp:complexrigidity}
+对任意函数 $f,g:\C^n\to\C$，
+\begin{equation}\label{grp:complexiff}
+ \boxed{\quad f=g\quad\Longleftrightarrow\quad
+ X\bigl(\lambda f+(1-\lambda)g\bigr)
+ \text{ 与 }\lambda\in\C\text{ 无关}.\quad}
+\end{equation}
+此结论不需要连续性、可测性或解析性。
+\end{theorem}
+
+\begin{proof}
+若 $f=g$，所有仿射组合都等于 $f$，零点集自然与参数无关。
+反之，设零点集与全部复参数无关，记 $d=f-g$。
+若存在 $x\in\C^n$ 使 $d(x)\ne0$，考虑参数多项式
+\begin{equation}\label{grp:complexdiagonal}
+\begin{split}
+ Q_x(\lambda)
+ &:=P_{g+\lambda d}(x,x)\\
+ &=g(2x)+\lambda d(2x)
+   -\bigl(g(x)+\lambda d(x)\bigr)^2\\
+ &=P_g(x,x)
+   +\lambda\bigl(d(2x)-2g(x)d(x)\bigr)
+   -\lambda^2d(x)^2.
+\end{split}
+\end{equation}
+其二次项系数为 $-d(x)^2\ne0$，故它是二次复多项式，必有复根
+$\lambda_0$。于是 $(x,x)\in X(g+\lambda_0d)$。
+由零点集不变性，$(x,x)\in X(g+\lambda d)$ 对全部 $\lambda\in\C$
+都成立，即 $Q_x$ 恒为零，与其二次项系数非零矛盾。
+所以 $d\equiv0$，亦即 $f=g$。
+\end{proof}
+
+\begin{remark}[复参数的必要性]
+若只把定义域和值域改为复数，而参数仍限制在 $\R$，
+则定理 \ref{grp:complexrigidity} 的等价结论不成立。
+例如对 $z=(z_1,\ldots,z_n)\in\C^n$，取
+\[
+ f(z)=\cos z_1,\qquad g(z)=\cos z_1+\sin z_1.
+\]
+两者不同，但加法公式给出
+\[
+ P_{\lambda f+(1-\lambda)g}(z,w)
+ =-\bigl(1+(1-\lambda)^2\bigr)\sin z_1\sin w_1.
+\]
+对全部实参数，前面的系数非零，因此零点集相同。
+若允许复参数，$\lambda=1+i$ 或 $1-i$ 时该系数为零，
+零点集成为整个 $\C^n\times\C^n$。
+\end{remark}
+
+
+\chapter{整函数乘法缺陷：分类总表与基础}\label{ch:entire}
+从本章起，函数均为复整函数。下文的 $P_f$ 即第7章的 $M_f$，$X(f)=X_M(f)$。先给出任意维数的总分类和两个极端情形的证明；非平凡情形依赖随后两章。
+\section{主要结果}\label{an:sec:classification}
+固定整数 $n\ge1$。对 $f\in\OO(\C^n)$，定义
+\[
+ P_f(x,y)=f(x+y)-f(x)f(y),\qquad X(f)=Z(P_f).
+\]
+本讲义研究由 $X(f)=X(g)$ 定义的等价关系。零集相等仅指集合相等。
+不可约性均在复解析意义下理解：解析集不能表示为两个真闭解析子集之并。
+记
+\[
+ \En=\{ce^L:c\in\C,\ L\in(\C^n)^*\}.
+\]
+$c=0$ 时包括恒零函数。线性泛函均为复线性，仿射函数指常数加线性泛函。
+第10章专门讨论 $n=1$，本章及第11章适用于任意维数。
+
+\begin{theorem}[零集等价分类]\label{an:thm:main}
+设 $f,g\in\OO(\C^n)$。所有满足 $X(f)=X(g)$ 的情形如下。
+
+\textbf{(A) 共同零集为空。} 充要条件是
+\begin{equation}\label{an:eq:emptyclass}
+ f=ce^L,\qquad g=de^M,\qquad c,d\notin\{0,1\},
+ \quad L,M\in(\C^n)^*.
+\end{equation}
+
+\textbf{(B) 共同零集为全空间。} 充要条件是
+\begin{equation}\label{an:eq:fullclass}
+ f,g\in\{0\}\cup\{e^L:L\in(\C^n)^*\},
+\end{equation}
+两个函数在此集合中独立选取。
+
+\textbf{(C) 共同零集非空且为真子集。} 此时 $f,g\notin\En$，且恰有下列四种关系之一。
+所有出现的 $L,M,B,\ell$ 均为复线性泛函。
+\begin{enumerate}[label=\textbf{\Roman*.},leftmargin=2.2em]
+\item \textbf{线性指数倍：}
+\begin{equation}\label{an:eq:typeI}
+ g=e^L f,\qquad f\notin\En.
+\end{equation}
+\item \textbf{无零点倒数对偶：}
+\begin{equation}\label{an:eq:typeII}
+ f=e^H,\qquad g=e^{L-H},
+\end{equation}
+其中 $H\in\OO(\C^n)$ 非仿射；等价地，$fg=e^L$，两函数无零点且不属于 $\En$。
+\item \textbf{二指数族：}
+\begin{equation}\label{an:eq:typeIII}
+ \begin{aligned}
+ f(z)&=e^{L(z)}\bigl(\cosh B(z)+c\sinh B(z)\bigr),\\
+ g(z)&=e^{M(z)}\bigl(\cosh B(z)+d\sinh B(z)\bigr),
+ \end{aligned}
+\end{equation}
+其中 $B\ne0$，$c,d\notin\{1,-1\}$，$c\ne d$。共同零集为
+\begin{equation}\label{an:eq:gridclass}
+ X(f)=X(g)=Z\bigl(\sinh B(x)\sinh B(y)\bigr).
+\end{equation}
+\item \textbf{一次退化族：}
+\begin{equation}\label{an:eq:typeIV}
+ f(z)=e^{L(z)}(1+c\ell(z)),\qquad
+ g(z)=e^{M(z)}(1+d\ell(z)),
+\end{equation}
+其中 $\ell\ne0$，$cd(c-d)\ne0$。共同零集为
+\begin{equation}\label{an:eq:axesclass}
+ X(f)=X(g)=Z\bigl(\ell(x)\ell(y)\bigr).
+\end{equation}
+\end{enumerate}
+所有上述形式都确实满足相应的零集条件。
+当 $n=1$ 时，取 $B(z)=\beta z$、$\ell(z)=z$，III、IV 的零集分别成为
+$(\frac{\pi i}{\beta}\Z\times\C)\cup(\C\times\frac{\pi i}{\beta}\Z)$ 和 $Z(xy)$。
+\end{theorem}
+
+\begin{theorem}[不可约零集的刚性]\label{an:thm:irr-main}
+设 $f\in\OO(\C^n)$，$\varnothing\ne X(f)\ne\C^{2n}$，且 $X(f)$ 不可约。
+则 $f$ 必有零点，$P_f$ 的零除子约化，并且对任意 $g\in\OO(\C^n)$，
+\begin{equation}\label{an:eq:irrequiv}
+ X(g)=X(f)\quad\Longleftrightarrow\quad
+ g=e^L f\quad\text{对某个 }L\in(\C^n)^*.
+\end{equation}
+$L$ 唯一；此时 $g$ 也有零点，$P_g$ 也约化，且
+\begin{equation}\label{an:eq:irredunit}
+ \frac{P_g(x,y)}{P_f(x,y)}=e^{L(x)+L(y)}.
+\end{equation}
+当 $n=1$ 时必有 $f(0)\ne1$；当 $n\ge2$ 时，$f(0)=1$ 也可能成立。
+\end{theorem}
+
+常函数包含在(A)(B)中；若要求两函数非常数，则(A)中需 $L,M\ne0$，
+(B)中需排除恒零与恒一函数。
+
+\paragraph{证明结构。}
+第\ref{an:sec:basic}、\ref{an:sec:empty-full}节建立基本恒等式、局部约化性与极端零集分类。
+第\ref{an:sec:onevar-local}至第\ref{an:sec:finish}节证明一元分类，
+第\ref{an:sec:highdim}节将其推广到任意维数。
+第\ref{an:sec:irreducible}节证明不可约情形，
+第\ref{an:sec:consequences}节给出等价类、刚性推论与例子。
+
+
+
+
+
+\section{任意维数的基本恒等式与解析引理}\label{an:sec:basic}
+\subsection{轴、指数倍与反射恒等式}
+\begin{lemma}[基本恒等式]\label{an:lem:identities}
+对任意 $f\in\OO(\C^n)$ 和 $L\in(\C^n)^*$，有
+\begin{align}
+ P_f(x,0)&=(1-f(0))f(x),\label{an:eq:axis}\\
+ P_{e^Lf}(x,y)&=e^{L(x)+L(y)}P_f(x,y),\label{an:eq:gauge}\\
+ P_f(x+y,-y)+f(-y)P_f(x,y)
+ &=f(x)\bigl(1-f(y)f(-y)\bigr).\label{an:eq:reflection}
+\end{align}
+如果 $f$ 无零点，则
+\begin{equation}\label{an:eq:reciprocal}
+ P_{e^L/f}(x,y)
+ =-\frac{e^{L(x)+L(y)}}{f(x+y)f(x)f(y)}P_f(x,y).
+\end{equation}
+\end{lemma}
+\begin{proof}
+逐项展开即可。式\eqref{an:eq:gauge}表明分别乘以线性指数不改变零集；
+式\eqref{an:eq:reciprocal}给出无零点倒数对偶的充分性。
+\end{proof}
+
+\subsection{Picard 推论、乘法方程与倍增方程}
+\begin{lemma}[沿复直线的 Picard 推论]\label{an:lem:picard}
+若 $H\in\OO(\C^m)$ 的值域遗漏两个不同复数，则 $H$ 为常数。
+\end{lemma}
+\begin{proof}
+对任意 $w\in\C^m$，函数 $t\mapsto H(tw)$ 是一元整函数，
+并遗漏同样的两个值。由小 Picard 定理
+\cite{vojta}，它为常数。
+代入 $t=0,1$ 得 $H(w)=H(0)$。$w$ 任意，故结论成立。
+\end{proof}
+
+\begin{lemma}[全纯乘法方程]\label{an:lem:character}
+整函数 $F:\C^n\to\C$ 满足
+\begin{equation}\label{an:eq:character}
+ F(x+y)=F(x)F(y)\qquad(x,y\in\C^n)
+\end{equation}
+当且仅当 $F\equiv0$，或 $F=\e^L$ 且 $L\in(\C^n)^*$。
+\end{lemma}
+\begin{proof}
+若 $F\not\equiv0$，代入 $y=0$ 得 $F(0)=1$；
+代入 $y=-x$ 还得 $F(x)F(-x)=1$，故 $F$ 无零点。
+对\eqref{an:eq:character}的 $y_j$ 求导，再令 $y=0$，得到
+\[
+ \partial_jF(x)=a_jF(x),\qquad a_j=\partial_jF(0),
+ \qquad 1\leq j\leq n.
+\]
+令 $L(z)=\sum_j a_jz_j$，$G(z)=\e^{-L(z)}F(z)$。
+则 $\partial_jG=0$ 对所有 $j$ 成立，所以 $G$ 为常数。
+由 $G(0)=1$ 得 $F=\e^L$。
+反向直接使用 $L(x+y)=L(x)+L(y)$；恒零函数也满足方程。
+\end{proof}
+
+\begin{lemma}[倍增方程的多变量形式]\label{an:lem:dilation}
+若 $U\in\OO(\C^n)$ 满足
+\[
+ U(2z)=U(z)^2\qquad(z\in\C^n),
+\]
+则 $U\equiv0$ 或 $U=\e^L$，其中 $L\in(\C^n)^*$。
+\end{lemma}
+\begin{proof}
+在原点有 $U(0)=U(0)^2$，故 $U(0)=0$ 或 $1$。
+若 $U(0)=0$，固定 $z$，反复使用方程得到
+\[
+ U(z)=U(z/2^k)^{2^k}.
+\]
+当 $k$ 充分大时，由连续性有 $|U(z/2^k)|\leq1/2$。
+于是 $|U(z)|\leq2^{-2^k}$，令 $k\to\infty$ 得 $U(z)=0$。
+
+若 $U(0)=1$，则 $U$ 无零点：否则 $U(b)=0$ 会推出
+$U(b/2^k)=0$，与连续性矛盾。
+对倍增方程求偏导并消去因子 $2$，得
+\[
+ \partial_jU(2z)=U(z)\partial_jU(z).
+\]
+因此整函数 $q_j=(\partial_jU)/U$ 满足 $q_j(2z)=q_j(z)$。
+反复缩小变量得 $q_j(z)=q_j(z/2^k)\to q_j(0)$，故
+$\partial_jU=a_jU$，其中 $a_j=q_j(0)=\partial_jU(0)$。
+如引理\ref{an:lem:character}末段，$U=\e^{\sum_j a_jz_j}$。
+\end{proof}
+
+\subsection{函数零点处的缺陷局部约化}
+非零全纯函数芽的零除子记录各不可约因子出现的指数；
+每个不可约因子均只出现一次时，称该芽约化。
+局部单位指在所在点取值非零的全纯函数芽。
+解析集芽的局部不可约分支指其有限不可约分解中的成员；
+全局不可约性不要求每一点的解析集芽不可约。
+Weierstrass 准备定理与收敛幂级数环的唯一分解给出以下整除推论：
+若函数芽 $P$ 约化，且 $Q$ 在 $Z(P)$ 上为零，则 $P\mid Q$；
+若 $P,Q$ 都约化且零集芽相同，则 $Q/P$ 是局部单位。
+这些局部事实见\cite[\S\,5.5--5.8]{glutsyuk}、\cite[\S\S6.2,6.4,6.6]{lebl}。
+
+\begin{lemma}[任意维数零点处的局部约化]\label{an:lem:local-reduced}
+若 $f\in\OO(\C^n)$ 不恒为零且 $f(a)=0$，则 $P_f$ 在 $(a,0)$ 处的芽约化。
+特别地，在一元情形，若 $m=\ord_a f$、$c=f(0)\ne0$，
+其最低次齐次项为
+\begin{equation}\label{an:eq:tangent}
+ \alpha\bigl((s+t)^m-cs^m\bigr),\qquad \alpha\ne0,
+ \quad x=a+s,\ y=t,
+\end{equation}
+并有 $m$ 条不同的切线。
+\end{lemma}
+\begin{proof}
+选 $w\ne0$，使
+$\varphi(s)=f(a+sw)$ 与 $\psi(t)=f(tw)$ 均不恒为零。
+可通过避开 $f$ 在 $a$ 和 $0$ 处首个非零齐次项的零集做到。
+在二维切片 $(x,y)=(a+sw,tw)$ 上，缺陷变为
+\[
+ Q(s,t)=\varphi(s+t)-\varphi(s)\psi(t),\qquad\varphi(0)=0.
+\]
+先证明切片芽 $Q$ 约化。
+
+写 $\varphi(s)=\alpha s^m A_0(s)$，
+$A_0(0)=1$、$\alpha\ne0$、$m\geq1$。
+若 $c=\psi(0)\ne0$，最低次齐次项为
+$\alpha((s+t)^m-cs^m)$，具有 $m$ 个互异的一次因子。
+重复芽因子会使最低次齐次项也具有重复因子，故不可能。
+
+若 $\psi(0)=0$，写
+$\psi(t)=\gamma t^r B_0(t)$，$\gamma\ne0$、$r\geq1$、$B_0(0)=1$。
+令 $u=s+t$；$Q(s,u-s)$ 的 Weierstrass 多项式关于 $u$
+次数为 $m$。代入 $s=\zeta^m$、$u=\zeta^{m+r}v$，并除以
+$\alpha\zeta^{m(m+r)}$，所得全纯式在 $\zeta=0$ 时为
+\[
+ v^m-\gamma(-1)^r.
+\]
+它有 $m$ 个互异非零根。隐函数定理在充分小的 $\zeta\ne0$
+时给出 $m$ 个互异的 $u$ 根，故 Weierstrass 多项式的判别式
+不恒为零，不含重复因子。
+
+因此切片芽 $Q$ 非恒零且约化。如果 $P_f$ 的原芽含重复因子，
+该因子限制到切片后仍是非零非单位芽，其平方仍整除 $Q$，
+矛盾。
+\end{proof}
+
+\subsection{两种例外族的显式缺陷}
+对 $f=e^L(\cosh B+c\sinh B)$，双曲函数加法公式给出
+\begin{equation}\label{an:eq:twoexpdefect}
+ P_f(x,y)=(1-c^2)e^{L(x)+L(y)}\sinh B(x)\sinh B(y).
+\end{equation}
+对 $f=e^L(1+c\ell)$，直接展开给出
+\begin{equation}\label{an:eq:lineardefect}
+ P_f(x,y)=-c^2e^{L(x)+L(y)}\ell(x)\ell(y).
+\end{equation}
+因此定理\ref{an:thm:main}中III、IV的零集公式在任意维数均成立。
+
+\section{极端零集分类与限制判据}\label{an:sec:empty-full}
+\begin{proposition}[单函数的两种极端零集]\label{an:prop:empty-full}
+对任意 $f\in\OO(\C^n)$，有
+\begin{align}
+ X(f)=\varnothing
+ &\Longleftrightarrow f=ce^L,\quad c\notin\{0,1\},\quad L\in(\C^n)^*;\label{an:eq:emptysingle}\\
+ X(f)=\C^{2n}
+ &\Longleftrightarrow f\equiv0\ \text{或}\ f=e^L,\quad L\in(\C^n)^*.\label{an:eq:fullsingle}
+\end{align}
+非恒零代表的参数唯一，且
+\begin{equation}\label{an:eq:parameters}
+ c=f(0),\qquad L(z)=\frac{\dd f_0(z)}{f(0)}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+若 $X(f)=\varnothing$，由\eqref{an:eq:axis}及 $P_f(0,0)\ne0$，
+得 $c=f(0)\notin\{0,1\}$，且 $f$ 无零点。
+对固定 $y$，整函数
+\[
+ R_y(x)=\frac{f(x+y)}{f(x)f(y)}
+\]
+既不取 $0$，也不取 $1$。引理\ref{an:lem:picard}使其为常数，
+代入 $x=0$ 得 $R_y=1/c$。所以 $f/c$ 满足乘法方程，
+由引理\ref{an:lem:character}得 $f=ce^L$。
+反之，此时
+\begin{equation}\label{an:eq:defectexp}
+ P_f(x,y)=c(1-c)e^{L(x)+L(y)}
+\end{equation}
+处处非零。
+
+$X(f)=\C^{2n}$ 等价于 $P_f\equiv0$，引理\ref{an:lem:character}给出恒零或 $e^L$，
+反向显然。对非恒零代表在原点取值、求微分得到\eqref{an:eq:parameters}及唯一性。
+\end{proof}
+分别应用于 $f,g$ 即证明定理\ref{an:thm:main}的(A)(B)。同时得到
+\begin{equation}\label{an:eq:complement}
+ \varnothing\ne X(f)\ne\C^{2n}\quad\Longleftrightarrow\quad f\notin\En.
+\end{equation}
+
+\subsection{只检验轴与对角线的两个判据}
+令 $S=\C^n\times\{0\}$、$\Delta=\{(z,z):z\in\C^n\}$。
+\begin{proposition}[两个极端零集的限制检验]\label{an:prop:tests}
+对任意 $f\in\OO(\C^n)$，有
+\begin{align}
+ X(f)=\varnothing
+ &\Longleftrightarrow
+ X(f)\cap S=\varnothing\ \text{且}\ X(f)\cap\Delta=\varnothing;
+ \label{an:eq:testempty}\\
+ X(f)=\C^{2n}
+ &\Longleftrightarrow \Delta\subseteq X(f).
+ \label{an:eq:testfull}
+\end{align}
+\end{proposition}
+\begin{proof}
+式\eqref{an:eq:testempty}的正向显然。
+反向中，轴切片条件与\eqref{an:eq:axis}给出
+$c=f(0)\notin\{0,1\}$ 及 $f$ 无零点。
+故
+\[
+ R(z)=\frac{f(2z)}{f(z)^2}
+\]
+是整函数且不取 $0$。对角线条件使它也不取 $1$。
+引理\ref{an:lem:picard}给出 $R\equiv R(0)=1/c$。
+于是 $U=f/c$ 满足 $U(2z)=U(z)^2$ 且 $U(0)=1$。
+由引理\ref{an:lem:dilation}，$f=c\e^L$；再由
+\eqref{an:eq:defectexp}，$X(f)=\varnothing$。
+
+式\eqref{an:eq:testfull}的正向同样显然。
+反向中，$\Delta\subseteq X(f)$ 就是 $f(2z)=f(z)^2$。
+引理\ref{an:lem:dilation}给出 $f\equiv0$ 或 $f=\e^L$，
+所以 $X(f)=\C^{2n}$。
+\end{proof}
+
+
+\chapter{一元整函数分类的证明}\label{ch:onevar}
+本章只讨论一元整函数。局部约化性控制零点重数，稀疏共享值引理将零点计数与增长连接起来；有零点的情形再分为共同零点与完全不交两支。
+\section{一元分类的局部工具}\label{an:sec:onevar-local}
+本节至第\ref{an:sec:finish}节均令 $n=1$。以下命题是高维分类的基础。
+\begin{proposition}[一元非平凡零集分类]\label{an:thm:onevar}
+设 $f,g\in\OO(\C)$，且 $\varnothing\ne X(f)=X(g)\ne\C^2$。
+则 $f,g$ 满足形式I--IV中的恰一类，其中
+$L(z)=az$、$M(z)=bz$、$B(z)=\beta z$；IV中可吸收系数使 $\ell(z)=z$。
+反之，这四类都满足上述非平凡共同零集条件。
+\end{proposition}
+命题\ref{an:thm:onevar}的证明见第\ref{an:sec:finish}节。
+
+\subsection{亚纯倍增方程与零点切片}
+\begin{lemma}[倍增方程]\label{an:lem:doubling}
+若非恒零亚纯函数 $R$ 满足
+\[
+ R(2z)=R(z)^2,
+\]
+则 $R=e^{az}$，其中 $a\in\C$。
+\end{lemma}
+\begin{proof}
+在原点写 Laurent 首项 $R(z)=cz^m+\cdots$，其中 $m\in\Z$、$c\ne0$。
+比较两边的阶数和系数，得到 $m=0$、$c=1$。
+若 $R$ 在某个 $b\ne0$ 处有零点或极点，方程将依次在 $b/2,b/4,\ldots$ 处产生同类点，
+与原点附近 $R$ 全纯且不为零矛盾。
+故 $R=e^h$，可取 $h(0)=0$。于是
+$h(2z)-2h(z)\in2\pi i\Z$，并由原点值知其恒为零。
+比较幂级数只留下 $h(z)=az$。
+\end{proof}
+
+\begin{lemma}[零点切片与稠密性]\label{an:lem:slices}
+设 $f\not\equiv0$ 且 $P_f\not\equiv0$。
+\begin{enumerate}[label=(\roman*)]
+\item 若 $f(a)=0$，则 $P_f(a,y)=f(a+y)$。
+因此，若 $f,g$ 有共同零点且 $X(f)=X(g)$，则 $Z(f)=Z(g)$。
+\item 在 $X(f)$ 中满足 $f(x)f(y)\ne0$ 的点稠密。
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+第一点直接代入。
+对第二点，例外点必须满足
+\[
+ f(x)f(y)=0,\qquad f(x+y)=0.
+\]
+由于一元整函数的零点集离散，该集合在 $\C^2$ 中局部有限。
+而非恒零二元全纯函数的非空零集为纯一维解析集，没有孤立分支，故结论成立。
+\end{proof}
+
+平面不可约曲线芽可取局部全纯参数，见\cite[\S\,5.8.1]{glutsyuk}。
+
+\subsection{零点重数、原点值与共同临界点}
+\begin{lemma}[相同零点重数与原点归一化]\label{an:lem:quotient}
+设 $\varnothing\ne X(f)=X(g)\ne\C^2$，两者均有零点。
+\begin{enumerate}[label=(\roman*)]
+\item 若 $f(0)\ne1$，则 $g(0)\ne1$，$Z(f)=Z(g)$，$f(0)=g(0)$，并且
+\[
+ g=e^hf,\qquad h\in\OO(\C),\quad h(0)=0.
+\]
+\item 若 $f(0)=g(0)=1$ 且两者有共同零点，则仍可写成上述形式。
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+若 $f(0)\ne1$，由 \eqref{an:eq:axis}，整条 $y=0$ 不包含于 $X(f)$，故 $g(0)\ne1$；
+比较该轴上的零集得 $Z(f)=Z(g)$。
+第二种情形的零点集相同则由引理\ref{an:lem:slices}得到。
+在任一共同零点 $(a,0)$ 处，两个缺陷均由引理\ref{an:lem:local-reduced}约化，故其商为局部单位。
+限制到 $x=a$，得 $f(a+y)$ 与 $g(a+y)$ 的零点重数相同。
+因此 $g/f$ 延拓成无零点整函数。
+
+由 $Z(f)=Z(g)$，两者原点值同时非零或同时为零。
+若同时非零，在共同零点处两缺陷的初始齐次式成比例；
+比较\eqref{an:eq:tangent}中的 $t^m$ 系数与 $s^m$ 系数，得 $f(0)=g(0)$；
+于是 $(g/f)(0)=1$。原点值同为 $1$ 时这也是直接的。
+
+剩下 $f(0)=g(0)=0$。设两者在原点的共同阶数为 $r$，首项分别为 $\alpha z^r$、$\beta z^r$。
+代入 $x=t,y=-t+t^2v$，有
+\[
+ P_f(t,-t+t^2v)
+ =\alpha t^{2r}\bigl(v^r-(-1)^r\alpha+O(t)\bigr).
+\]
+除去 $t^{2r}$ 后的解析式在 $t=0$ 的各根都为单根。
+隐函数定理将每个极限根延伸为小的 $t\ne0$ 上的根；
+两缺陷在这些点有相同零集，故极限根组也相同：
+$Z(v^r-(-1)^r\alpha)=Z(v^r-(-1)^r\beta)$。
+两者均为首一多项式且各有 $r$ 个不同根，所以 $\alpha=\beta$。
+于是仍有 $(g/f)(0)=1$。
+取整函数对数并调整 $2\pi i\Z$ 中的常数，便可令 $h(0)=0$。
+\end{proof}
+
+\begin{lemma}[导数零点与周期群]\label{an:lem:critical-period}
+设 $f(0)=g(0)=1$，$f'(0)=g'(0)=0$，$f,g$ 非常数，且 $X(f)=X(g)$。
+则
+\begin{equation}\label{an:eq:critical}
+ Z(f')=Z(g').
+\end{equation}
+此外，任意非常数整函数的通常周期群为 $\{0\}$ 或 $\tau\Z$，其中 $\tau\ne0$。
+\end{lemma}
+\begin{proof}
+函数 $P_f/y$ 整，且在 $y=0$ 上等于 $f'(x)$。
+若 $f'(a)=0$，其在 $(a,0)$ 处的零集必有一条不等于 $y=0$ 的分支：
+否则所有分支都是该轴，从而 $P_f/y$ 在一段轴上恒为零，迫使 $f'\equiv0$。
+这个非轴分支也属于 $X(g)$，沿其趋近 $(a,0)$ 可得 $(P_g/y)(a,0)=0$，即 $g'(a)=0$。
+交换两者得 \eqref{an:eq:critical}。
+
+通常周期群是闭加法子群。若有趋于零的非零周期，差商给出函数导数恒为零；故它离散。
+复平面中的离散加法子群秩至多为 $2$，而秩为 $2$ 的周期使整函数在基本平行四边形上有界，
+再由 Liouville 定理使其常值。所以只可能为上述两类。
+\end{proof}
+
+\section{值分布工具：稀疏共享值与同半径增长估计}\label{an:sec:tools}
+\subsection{记号与所用标准定理}
+对亚纯函数 $F$，以 $N(r,a;F)$ 表示按重数计的 $a$ 点积分计数，
+以 $\bN(r,a;F)$ 表示不计重数的计数，并记
+\[
+ T(r,F)=m(r,F)+N(r,\infty;F).
+\]
+对离散集 $D\subseteq\C$，定义
+\begin{equation}\label{an:eq:setcount}
+ N_D(r)=\mathbf1_{\{0\in D\}}\log r+
+ \sum_{\substack{z\in D\\0<|z|\le r}}\log\frac r{|z|},\qquad r\ge1.
+\end{equation}
+因此 $N_{Z(F)}(r)=\bN(r,0;F)$。
+符号 $\le_{\rm exc}$、$=_{\rm exc}$ 表示可删去一个有限线性测度的半径集合。
+固定倍数的半径变换仍只产生有限线性测度例外集；有限次使用时取并集即可。
+
+特征函数满足乘积、商和和式的通常估计，例如
+\[
+ T(r,FG),\ T(r,F+G)\le T(r,F)+T(r,G)+O(1).
+\]
+对固定 Möbius 变换 $M$，有 $T(r,M(F))=T(r,F)+O(1)$。
+本讲义使用下列标准形式 \cite{halburd,vojta}：
+\begin{align}
+ T(r,1/F)&=T(r,F)+O(1),\qquad N(r,a;F)\le T(r,F)+O(1),\label{an:eq:FMT}\\
+ m\left(r,\frac{F'}F\right)&\excle
+ O\bigl(\log^+T(r,F)+\log r\bigr),\label{an:eq:LLD}\\
+ T(r,F)&\excle \bN(r,0;F)+\bN(r,1;F)+\bN(r,\infty;F)
+ +O\bigl(\log^+T(r,F)+\log r\bigr).\label{an:eq:SMT}
+\end{align}
+若 $F$ 有限阶，则 \eqref{an:eq:LLD} 的右端为 $O(\log r)$，且无需例外集（\cite[定理7]{halburd}）。
+若 $F$ 为超越亚纯函数，则 $\log r=o(T(r,F))$。
+另使用小 Picard 定理：非常数整函数至多遗漏一个复数值。
+
+\subsection{稀疏三值共享引理}
+\begin{lemma}[不计重数的稀疏共享]\label{an:lem:sharing}
+设 $U,V$ 为非常数亚纯函数，$\TT(r)=T(r,U)+T(r,V)$。
+假设在离散集 $D$ 之外有
+\[
+ U(z)=1\quad\Longleftrightarrow\quad V(z)=1,
+\]
+并且
+\begin{equation}\label{an:eq:sharing-small}
+ \bN(r,0;U)+\bN(r,\infty;U)+\bN(r,0;V)+\bN(r,\infty;V)+N_D(r)
+ \exceq o(\TT(r)),\qquad \log r=o(\TT(r)).
+\end{equation}
+则 $U=V$ 或 $UV=1$。
+\end{lemma}
+\begin{proof}
+下文所有 $o(\TT)$ 都按上述例外集约定理解。
+记 $L_U=U'/U$、$L_V=V'/V$。
+若 $F=U$ 或 $V$ 在 $z_0$ 有阶数为 $k$ 的零点或极点，
+则 $F'/F$ 在该点的主部为 $k/(z-z_0)$ 或 $-k/(z-z_0)$。
+因此 $L_U,L_V$ 的极点都是简单极点，其计数恰是原函数零点与极点的约化计数之和。
+由 \eqref{an:eq:LLD} 和 \eqref{an:eq:sharing-small}，
+\begin{equation}\label{an:eq:logder-small}
+ T(r,L_U)+T(r,L_V)=o(\TT(r)).
+\end{equation}
+对 $F=U,V$，记
+\[
+ \mathcal C_F=\{z:F\text{ 在 }z\text{ 全纯},\ F(z)\ne0,\ F'(z)=0\}.
+\]
+这些临界点是 $L_F$ 的零点，故
+\begin{equation}\label{an:eq:sharing-critical}
+ \begin{aligned}
+ N_{\mathcal C_U}(r)+N_{\mathcal C_V}(r)
+ &\le N(r,0;L_U)+N(r,0;L_V)\\
+ &\le T(r,L_U)+T(r,L_V)+O(1)=o(\TT).
+ \end{aligned}
+\end{equation}
+特别地，重 $1$ 点属于相应的 $\mathcal C_F$，其约化计数也满足同一估计。
+
+考虑
+\begin{equation}\label{an:eq:Psi}
+ \Psi=\frac{U''}{U'}-\frac{2U'}{U-1}
+       -\frac{V''}{V'}+\frac{2V'}{V-1}.
+\end{equation}
+对 $U-1,V-1$ 使用对数导数引理，并利用
+\[
+ \frac{U''}{U'}=\frac{U'}U+\frac{L_U'}{L_U}
+\]
+及对应的 $V$ 式，可得 $m(r,\Psi)=o(\TT)$。
+若 $L_U$ 或 $L_V$ 为非零常数，相应的最后一项为零。
+
+式 \eqref{an:eq:Psi} 的各项都是亚纯函数的对数导数，故其极点至多为简单极点。
+逐项检查可能的来源如下。
+\begin{enumerate}[label=(\roman*)]
+\item $U,V$ 的零点与极点：它们的约化计数之和由
+\eqref{an:eq:sharing-small}控制，为 $o(\TT)$。
+\item 函数值有限且不为 $0,1$ 的临界点：只有 $F''/F'$ 可能出现极点，
+这些点属于 $\mathcal C_U\cup\mathcal C_V$，由\eqref{an:eq:sharing-critical}控制。
+\item 重 $1$ 点：$F''/F'$ 与 $F'/(F-1)$ 都可能出现极点，
+但这些点仍属于 $\mathcal C_U\cup\mathcal C_V$，不需要另加计数项。
+\item $D$ 中的 $1$ 点：共享条件在此不作要求，但每点至多给 $\Psi$
+贡献一个简单极点，故总贡献不超过 $N_D(r)=o(\TT)$。
+\item $D$ 之外双方都是单 $1$ 点的位置：下面的展开说明该点可去，且 $\Psi$ 在该点为零。
+\end{enumerate}
+对最后一种情况，在 $z_0$ 处令 $t=z-z_0$，写成
+\[
+ U=1+at+bt^2+\cdots,\qquad a\ne0,
+\]
+则
+\[
+ \frac{U''}{U'}=\frac{2b}{a}+O(t),\qquad
+ \frac{2U'}{U-1}=\frac2t+\frac{2b}{a}+O(t).
+\]
+因此两项之差为 $-2/t+O(t)$；$V$ 有同样的主部和零常数项。
+相减后 $\Psi$ 在 $z_0$ 解析且 $\Psi(z_0)=0$。
+若一方为单 $1$ 点而另一方为重 $1$ 点，则已由第(iii)项计入。
+上述清单给出完整的极点计数上界
+\begin{align}\label{an:eq:sharing-polecount}
+ N(r,\infty;\Psi)\le{}&
+ \sum_{F\in\{U,V\}}\bigl(\bN(r,0;F)+\bN(r,\infty;F)\bigr)\notag\\
+ &+N_{\mathcal C_U}(r)+N_{\mathcal C_V}(r)+N_D(r)=o(\TT).
+\end{align}
+结合已得的 $m(r,\Psi)=o(\TT)$，有 $T(r,\Psi)=o(\TT)$。
+
+假定 $\Psi\not\equiv0$。记 $J$ 为 $D$ 之外双方都是单 $1$ 点的集合。
+由 $J\subseteq Z(\Psi)$ 和第一主定理，
+\[
+ N_J(r)\le N(r,0;\Psi)\le T(r,\Psi)+O(1)=o(\TT).
+\]
+在 $D$ 之外，一个 $U$ 或 $V$ 的 $1$ 点要么属于 $J$，
+要么至少一方为重 $1$ 点。因此对 $F=U,V$ 均有
+\[
+ \bN(r,1;F)\le N_J(r)+N_{\mathcal C_U}(r)+N_{\mathcal C_V}(r)+N_D(r)
+ =o(\TT).
+\]
+把\eqref{an:eq:SMT}分别用于 $U,V$ 后相加，结合\eqref{an:eq:sharing-small}，
+得到 $\TT(r)\le o(\TT(r))$，矛盾。
+所以 $\Psi\equiv0$。
+
+由于
+\[
+ \Psi=\frac{\bigl(U'/(U-1)^2\bigr)'}{U'/(U-1)^2}
+       -\frac{\bigl(V'/(V-1)^2\bigr)'}{V'/(V-1)^2},
+\]
+两个非零亚纯函数的比值为常数 $c\ne0$，即
+\[
+ \frac{U'}{(U-1)^2}=c\frac{V'}{(V-1)^2}.
+\]
+于是 $\bigl(1/(U-1)-c/(V-1)\bigr)'=0$，存在常数 $d$ 使
+\[
+ \frac1{U-1}=\frac c{V-1}+d.
+\]
+故 $U=M(V)$，其中 $M$ 是满足 $M(1)=1$ 的 Möbius 变换。
+固定 Möbius 变换满足 $T(r,U)=T(r,V)+O(1)$。
+若 $M^{-1}(0)$ 或 $M^{-1}(\infty)$ 不是 $0,\infty$，
+则 $V$ 对三个不同值的约化计数都为 $o(T(r,V))$，再次与第二主定理矛盾。
+故 $M$ 置换 $\{0,\infty\}$；结合 $M(1)=1$，只能有 $M(w)=w$ 或 $M(w)=1/w$。
+\end{proof}
+
+\begin{samepage}
+\begin{corollary}\label{an:cor:zero-free-share}
+若无零点的非常数整函数 $U,V$ 满足 $Z(U-1)=Z(V-1)$，则 $U=V$ 或 $UV=1$。
+\end{corollary}
+\begin{proof}
+无零点的非常数整函数不可能是多项式，故两者都是超越整函数。
+引理\ref{an:lem:sharing}中取 $D=\varnothing$ 即可。
+\end{proof}
+\end{samepage}
+
+\begin{corollary}[对角线判据]\label{an:cor:diagonal}
+设 $f,g$ 为非恒零整函数，其中至少一者有零点。
+令
+\[
+ U(z)=\frac{f(2z)}{f(z)^2},\qquad V(z)=\frac{g(2z)}{g(z)^2},
+ \qquad \TT=T(r,U)+T(r,V).
+\]
+若 $X(f)=X(g)$，$U,V$ 非常数，且
+\begin{equation}\label{an:eq:diagcriterion}
+ N_{Z(f)}(r)+N_{Z(f)}(2r)+N_{Z(g)}(r)+N_{Z(g)}(2r)
+ \exceq o(\TT(r)),\qquad \log r=o(\TT(r)),
+\end{equation}
+则 $g/f=e^{az}$ 或 $fg=e^{az}$。
+在至少一者有零点时，后一种关系不可能。
+\end{corollary}
+\begin{proof}
+在 $f(z)f(2z)g(z)g(2z)=0$ 之外，$U,V$ 共享 $1$；
+它们的零极点与这个例外集的计数都由 \eqref{an:eq:diagcriterion} 控制。
+引理\ref{an:lem:sharing}给出 $U=V$ 或 $UV=1$，分别对 $g/f$ 或 $fg$ 使用引理\ref{an:lem:doubling}。
+若整函数 $f$ 有零点，则 $f(2z)/f(z)^2$ 必非常数：
+若其等于常数 $c$，必有 $c\ne0$，而 $cf$ 满足倍增方程，矛盾。
+\end{proof}
+
+\subsection{指数函数的 Fourier 与尺度估计}
+\begin{lemma}[同半径增长控制]\label{an:lem:scale}
+设 $h(0)=h'(0)=0$，$h\not\equiv0$，并令
+\[
+ Q(z)=h(2z)-2h(z),\qquad W(r)=T(r,e^Q).
+\]
+则 $Q\not\equiv0$。存在 $\nu\ge2$、$c>0$ 使 $W(r)\ge cr^\nu$，并且
+\begin{align}
+ T(r,e^{h(2z)})&\le5W(r),\label{an:eq:scaleT}\\
+ T(r,h')+T(2r,h')&\exceq o(W(r)).\label{an:eq:scaledderivative}
+\end{align}
+\end{lemma}
+\begin{proof}
+若整函数 $v(0)=0$，则 $\operatorname{Re}v$ 的圆周均值为零，故
+\[
+ T(r,e^v)=\frac1{4\pi}\int_0^{2\pi}|\operatorname{Re}v(re^{i\theta})|\,d\theta.
+\]
+若 $v(z)=\sum_{k\ge1}v_kz^k$，比较第 $k$ 个 Fourier 系数得
+\begin{equation}\label{an:eq:fourierlower}
+ T(r,e^v)\ge\frac{|v_k|r^k}{4}.
+\end{equation}
+$Q$ 的首个非零系数等于 $h$ 的对应系数乘以 $2^\nu-2$，其中 $\nu\ge2$，因而得到所需下界。
+
+由于 $Q(0)=Q'(0)=0$，Poisson 核减去零阶、一阶项后满足
+\[
+ \left|P_\rho(t)-1-2\rho\cos t\right|
+ \le2\sum_{k\ge2}\rho^k=\frac{2\rho^2}{1-\rho}.
+\]
+卷积并取 $L^1$ 均值，得当 $0<\rho\le1/2$ 时
+\begin{equation}\label{an:eq:contraction}
+ T(\rho r,e^Q)\le4\rho^2W(r).
+\end{equation}
+迭代 $h(2z)=Q(z)+2h(z)$，并使用 $h(z)=O(z^2)$，有局部一致收敛恒等式
+\[
+ h(2z)=\sum_{j=0}^{\infty}2^jQ(z/2^j).
+\]
+结合 \eqref{an:eq:contraction} 和整函数指数特征函数的次可加性，
+\[
+ T(r,e^{h(2z)})
+ \le W(r)+4\sum_{j\ge1}2^{-j}W(r)=5W(r).
+\]
+最后，在半径 $2r$ 对 $e^h$ 应用 \eqref{an:eq:LLD}：
+\[
+ T(2r,h')=m(2r,h')\excle O(\log^+W(r)+\log r)=o(W(r)).
+\]
+$T(r,h')\le T(2r,h')$ 给出另一项。
+\end{proof}
+
+\begin{remark}[零点计数的排除判据]\label{an:rem:sparse-use}
+设 $f,g$ 为非恒零整函数，$X(f)=X(g)$、$Z(f)\ne\varnothing$，且 $g=e^hf$，
+其中 $h(0)=h'(0)=0$、$h\not\equiv0$。
+令 $U=f(2z)/f(z)^2$、$V=g(2z)/g(z)^2$、$Q=h(2z)-2h(z)$，则
+\[
+ W(r)=T(r,e^Q)\le T(r,U)+T(r,V)+O(1).
+\]
+由引理\ref{an:lem:scale}，$W(r)\ge cr^2$ 对充分大的 $r$ 成立。
+又 $Z(g)=Z(f)$，$U,V$ 均非常数。因此，若
+\[
+ N_{Z(f)}(r)+N_{Z(f)}(2r)\exceq o(W(r)),
+\]
+推论\ref{an:cor:diagonal}的全部条件便成立，推出 $g/f=e^{az}$，
+与归一化后的非零 $h$ 矛盾。
+\end{remark}
+
+\section{一元无零点与原点值不为一的情形}\label{an:sec:zerofree}
+\subsection{双方无零点及混合情形的排除}
+\begin{proposition}[双方均无零点]\label{an:prop:zero-free}
+设 $\varnothing\ne X(f)=X(g)\ne\C^2$，且 $f,g$ 都无零点。
+则 $g=e^{az}f$ 或 $fg=e^{az}$。
+\end{proposition}
+\begin{proof}
+写 $f=e^F,g=e^G$。由命题\ref{an:prop:empty-full}，$F,G$ 都非仿射。
+设
+\[
+ R_f(x,y)=\frac{f(x+y)}{f(x)f(y)},\qquad
+ R_g(x,y)=\frac{g(x+y)}{g(x)g(y)}.
+\]
+$R_f(\cdot,y)$ 为常数，当且仅当 $F'(x+y)=F'(x)$，即 $y$ 是非常数整函数 $F'$ 的周期。
+由引理\ref{an:lem:critical-period}的周期结论，这样的 $y$ 构成离散集；$g$ 同理。
+故对离散集之外的每个 $y$，两个无零点整函数 $R_f(\cdot,y),R_g(\cdot,y)$ 都非常数，并共享 $1$。
+推论\ref{an:cor:zero-free-share}给出
+\[
+ (R_g-R_f)(R_gR_f-1)=0.
+\]
+此恒等式对所有 $(x,y)$ 延拓成立。
+二元整函数环无零因子，因此必有 $R_g=R_f$ 或 $R_gR_f=1$ 恒成立。
+前者使 $g/f$，后者使 $fg$ 满足整函数乘法 Cauchy 方程，均得到相应的归一化指数函数。
+\end{proof}
+
+\begin{proposition}[一方无零点、另一方有零点不可能]\label{an:prop:mixed}
+在 $\varnothing\ne X(f)=X(g)\ne\C^2$ 下，
+\[
+ Z(f)=\varnothing\quad\Longleftrightarrow\quad Z(g)=\varnothing.
+\]
+\end{proposition}
+\begin{proof}
+反设 $f=e^H$ 无零点，而 $Z(g)\ne\varnothing$。
+由 \eqref{an:eq:axis} 比较轴上零集，必有 $f(0)=g(0)=1$；可取 $H(0)=0$，且 $H$ 非仿射。
+对每个 $a\in Z(g)$，定义
+\[
+ A_a(z)=\frac{f(z)}{f(a)f(z-a)}.
+\]
+由于 $P_g(a,z-a)=g(z)$，共同零集给出
+\begin{equation}\label{an:eq:mixedone}
+ Z(A_a-1)=Z(g).
+\end{equation}
+每个 $A_a$ 都是无零点的非常数整函数：常数 $1$ 或其他常数分别会使右端为全平面或空集。
+固定 $a_0\in Z(g)$，推论\ref{an:cor:zero-free-share}给出 $A_a=A_{a_0}$ 或 $A_a=A_{a_0}^{-1}$。
+取对数导数，分别得到
+\[
+ H'(z-a)=H'(z-a_0),\qquad
+ H'(z-a)=2H'(z)-H'(z-a_0).
+\]
+设 $\Lambda$ 为 $H'$ 的周期群。第一式的解集是 $a_0+\Lambda$；
+第二式若有解 $a_1$，其全部解构成 $a_1+\Lambda$。
+由于 $H'$ 非常数，$\Lambda$ 为 $\{0\}$ 或循环离散群，故
+\[
+ N_{Z(g)}(r)=O(r).
+\]
+
+对角线上的 $U=f(2z)/f(z)^2=e^{H(2z)-2H(z)}$ 非常数。
+其指数的首个非零项次数至少为 $2$，由 \eqref{an:eq:fourierlower}，$T(r,U)\ge cr^2$。
+$V=g(2z)/g(z)^2$ 也非常数；其零极点和共享 $1$ 的例外集仅有 $O(r)$ 的约化计数。
+推论\ref{an:cor:diagonal}得到 $g/f=e^{az}$ 或 $fg=e^{az}$，两者都与 $g$ 有零点矛盾。
+\end{proof}
+
+\subsection{有零点且原点值不为一的刚性}\label{an:sec:nonnormal}
+\begin{theorem}[非归一化原点值的刚性]\label{an:thm:nonnormal}
+设非恒零整函数 $f$ 有零点，$f(0)\ne1$，且 $X(f)=X(g)$。
+则 $g=e^{az}f$。
+\end{theorem}
+\begin{proof}
+此时 $X(f)$ 非空且不为全空间。
+由引理\ref{an:lem:quotient}，可写成 $g=e^hf$，$h(0)=0$，并有 $f(0)=g(0)=c\ne1$。
+再将 $g$ 乘以 $e^{-h'(0)z}$，可假设 $h'(0)=0$。
+
+取任意 $a\in Z(f)$。在 $X(f)$ 的一般点上，
+\[
+ e^{h(x+y)-h(x)-h(y)}=1.
+\]
+由引理\ref{an:lem:slices}的稠密性，此式在整个 $X(f)$ 上成立。
+在 $(a,0)$ 处，指数中的函数值为零，故在它的充分小邻域内，
+$\Delta h=h(x+y)-h(x)-h(y)$ 在 $X(f)$ 上恒为零。
+由局部约化性，存在局部全纯函数 $B$，使
+\[
+ \Delta h=B P_f.
+\]
+限制到 $y=0$，左边恒为零，而 $P_f(x,0)=(1-c)f(x)$ 不恒为零，故 $B(x,0)=0$。
+写 $B=yC$，再对 $y$ 求导并令 $y=0$，得到
+\[
+ h'(x)=(1-c)C(x,0)f(x).
+\]
+对每个零点均成立，因此在一元整函数环中
+\begin{equation}\label{an:eq:fdivh}
+ f\mid h'.
+\end{equation}
+
+若 $h\not\equiv0$，令 $W=T(r,e^{h(2z)-2h(z)})$。
+由 \eqref{an:eq:fdivh}、第一主定理及引理\ref{an:lem:scale}，
+\[
+ N_{Z(f)}(r)+N_{Z(f)}(2r)
+ \le T(r,h')+T(2r,h')+O(1)=_{\rm exc}o(W(r)).
+\]
+说明\ref{an:rem:sparse-use}和对角线判据给出矛盾。
+故归一化后的 $h=0$；恢复去掉的一次项便得结论。
+\end{proof}
+
+\section{归一化且有共同零点时的刚性}\label{an:sec:common-zero}
+\begin{theorem}[共同零点刚性]\label{an:thm:common-zero}
+设 $f(0)=g(0)=1$，$X(f)=X(g)$，且 $Z(f)\cap Z(g)\ne\varnothing$。
+则 $g=e^{az}f$。
+\end{theorem}
+\begin{proof}
+由引理\ref{an:lem:quotient}，$Z(f)=Z(g)$，零点重数也相同，且 $g=e^hf$、$h(0)=0$。
+分别去掉 $f,g$ 的线性指数因子，可进一步假设
+\begin{equation}\label{an:eq:common-norm}
+ f'(0)=g'(0)=0,\qquad h'(0)=0.
+\end{equation}
+反设 $h\not\equiv0$，记 $\mu=\ord_0h\ge2$。
+与上一节相同，在每个 $(a,0)$、$a\in Z(f)$ 的邻域内有
+\begin{equation}\label{an:eq:common-div}
+ P_f\mid\Delta h.
+\end{equation}
+
+\subsection*{第一步：零点阶数至多为 $\mu-1$}
+设 $m=\ord_a f$。若 $m\ge \mu$，则由 \eqref{an:eq:common-div}，
+$\Delta h(a+s,t)$ 的 $\mu$ 次齐次部分在 $m>\mu$ 时必须为零，在 $m=\mu$ 时必须是
+$((s+t)^\mu-s^\mu)$ 的常数倍。
+该齐次部分为
+\[
+ \frac{h^{(\mu)}(a)}{\mu!}\bigl((s+t)^\mu-s^\mu\bigr)
+ -\frac{h^{(\mu)}(0)}{\mu!}t^\mu.
+\]
+由于 $\mu\ge2$，两个显示的齐次多项式线性无关，故将迫使 $h^{(\mu)}(0)=0$，矛盾。
+所以
+\begin{equation}\label{an:eq:common-multbound}
+ \ord_a f\le M:=\mu-1\qquad(a\in Z(f)).
+\end{equation}
+
+\subsection*{第二步：一个辅助亚纯函数}
+由引理\ref{an:lem:critical-period}，$Z(f')=Z(g')$。定义
+\begin{equation}\label{an:eq:Vcommon}
+ V=\frac{g'}{e^hf'}=1+h'\frac f{f'}.
+\end{equation}
+$V$ 非常数：若 $V=1$，则 $h'=0$；若 $V=c\ne1$，则
+$f'/f=h'/(c-1)$ 是整函数，与 $f$ 有零点矛盾。
+
+$V$ 的零点和极点都包含于 $Z(h')$。
+事实上，在 $f$ 的零点处，$f/f'$ 为零，故 $V$ 可去且等于 $1$；
+在其他位置，$V$ 的零极点只可能来自 $f',g'$ 的共同零点，
+而 $g'=e^h(f'+h'f)$ 迫使那里 $h'=0$。
+另外
+\begin{equation}\label{an:eq:Vfacts}
+ Z(V-1)\subseteq Z(f)\cup Z(h').
+\end{equation}
+若 $a$ 为 $f$ 的 $m$ 重零点，则
+\begin{equation}\label{an:eq:Vatroot}
+ V(a)=1,\qquad V'(a)=\frac{h'(a)}m.
+\end{equation}
+
+\subsection*{第三步：一般辅助函数分支}
+考虑
+\[
+ H_j=h'-j\frac{V'}V,\qquad 1\le j\le M.
+\]
+先假设所有 $H_j$ 都不恒为零。
+由 \eqref{an:eq:Vatroot}，每个 $m$ 重零点 $a$ 都是 $H_m$ 的零点。
+记 $N_f(r)=N_{Z(f)}(r)$，则
+\begin{equation}\label{an:eq:Hjcount}
+ N_f(r)\le\sum_{j=1}^M T(r,H_j)+O(1).
+\end{equation}
+由于 $V'/V$ 的极点都是简单极点，且其位置包含于 $Z(h')$，对数导数引理给出
+\[
+ T\left(r,\frac{V'}V\right)\excle
+ T(r,h')+O\bigl(\log^+T(r,V)+\log r\bigr).
+\]
+故
+\begin{equation}\label{an:eq:Nhcontrol1}
+ N_f(r)\excle 2M T(r,h')+
+ O_M\bigl(\log^+T(r,V)+\log r\bigr).
+\end{equation}
+对 $V$ 应用第二主定理，结合其零极点位置及 \eqref{an:eq:Vfacts}，得到
+\[
+ T(r,V)\excle N_f(r)+2T(r,h')+
+ O\bigl(\log^+T(r,V)+\log r\bigr).
+\]
+将 \eqref{an:eq:Nhcontrol1} 代入，并吸收 $\log^+T(r,V)$ 项，便有
+\begin{equation}\label{an:eq:common-count}
+ N_f(r)\excle O_M\bigl(T(r,h')+\log r\bigr).
+\end{equation}
+
+令 $W(r)=T(r,e^{h(2z)-2h(z)})$。
+在 $r$ 和 $2r$ 处使用 \eqref{an:eq:common-count}，再由引理\ref{an:lem:scale}，得到
+\[
+ N_f(r)+N_f(2r)=_{\rm exc}o(W(r)).
+\]
+说明\ref{an:rem:sparse-use}与对角线判据产生矛盾，排除了这一分支。
+
+\subsection*{第四步：恒等辅助函数分支}
+剩下某个 $H_j\equiv0$，即
+\begin{equation}\label{an:eq:exceptionODE}
+ h'=j\frac{V'}V.
+\end{equation}
+因左边整，$V$ 不可能有零点或极点，故 $V$ 是无零点整函数。
+结合 \eqref{an:eq:Vcommon} 并积分，得到非零常数 $C,D$，使
+\begin{equation}\label{an:eq:exceptionform}
+ f=C(1-V^{-1})^j,\qquad g=D(V-1)^j.
+\end{equation}
+这些恒等式先在去掉零点的开集上由对数导数得到，再全纯延拓到全平面。
+
+若 $a$ 是 $V-1$ 的 $\ell$ 重零点，则 $f$ 在 $a$ 处阶数为 $j\ell$；
+由 \eqref{an:eq:exceptionODE}，$h(z)-h(a)$ 在 $a$ 处首项次数为 $\ell$。
+于是 $\Delta h(a+s,t)$ 的消失阶数至多为 $\ell$：
+$\ell=1$ 时看一次项（使用 $h'(0)=0$），$\ell\ge2$ 时看 $s^{\ell-1}t$ 项。
+而 \eqref{an:eq:common-div} 要求消失阶数至少 $j\ell$。
+故 $j\ge2$ 不可能，只能 $j=1$。
+
+记 $t_0=V(0)$。由 $f(0)=g(0)=1$，$t_0\ne0,1$，且
+\begin{equation}\label{an:eq:exceptionaffine}
+ f=\frac{t_0(V-1)}{(t_0-1)V},\qquad
+ g=\frac{V-1}{t_0-1},\qquad
+ \frac1f=\frac1{t_0g}+1-\frac1{t_0}.
+\end{equation}
+在 $X$ 的一般点，将最后一个仿射关系代入两条乘法等式，得到
+\[
+ (g(x)-1)(g(y)-1)=0.
+\]
+由引理\ref{an:lem:slices}及连续性，此式在整个 $X$ 上成立。
+集合 $Z(g-1)$ 离散，且 $X$ 为纯一维解析集；因而每个局部分支必须包含在其中一条直线上，
+再由一元恒等定理，这条直线全部属于 $X$。因此 $X$ 完全由水平、竖直直线组成。
+若 $\Lambda$ 为这些直线的参数集，则
+\[
+ X=(\Lambda\times\C)\cup(\C\times\Lambda),
+\]
+且每个 $\lambda\in\Lambda$ 都满足 $g(\lambda)=1$ 和 $g(z+\lambda)=g(z)$。
+反过来，$g$ 的每个通常周期都给出这样的直线，故 $\Lambda$ 正是 $g$ 的周期群。
+它为 $\{0\}$ 或循环离散群。
+取 $a\in Z(g)$，则 $a\notin\Lambda$；用竖直切片
+$P_g(a,y)=g(a+y)$，得到
+\[
+ Z(g)=a+\Lambda.
+\]
+所以 $N_f(r)=N_{Z(g)}(r)=O(r)$。
+由 $W(r)\ge cr^2$，再次适用对角线判据并得到矛盾。
+
+所有非零 $h$ 的可能性均被排除。因此归一化后 $h=0$，恢复线性指数因子即得结论。
+\end{proof}
+
+\section{零点集完全不交：局部重数、增长与计数}\label{an:sec:disjoint}
+本节用同一个局部重数与零点差计数论证处理有限和无限零点集。
+
+\begin{theorem}[不交零点集的完整分类]\label{an:thm:disjoint}
+设 $f(0)=g(0)=1$，$X(f)=X(g)$，且
+\[
+ A=Z(f)\ne\varnothing,\qquad B=Z(g)\ne\varnothing,\qquad A\cap B=\varnothing.
+\]
+则恰有如下两类：
+\begin{enumerate}[label=(\roman*)]
+\item $A,B$ 各为单点，函数属于一次退化族 \eqref{an:eq:typeIV}；
+\item $A,B$ 都无限，函数属于二指数族 \eqref{an:eq:typeIII}。
+\end{enumerate}
+特别地，不会出现一方有限而另一方无限的情形。
+\end{theorem}
+
+\subsection{归一化、零点阶数与零点差}
+分别去掉线性指数因子，先令
+\begin{equation}\label{an:eq:disjointnorm}
+ f'(0)=g'(0)=0,
+\end{equation}
+并记
+\[
+ \nu_f=\ord_0(f-1),\qquad \nu_g=\ord_0(g-1),\qquad \nu_f,\nu_g\ge2.
+\]
+
+\begin{lemma}[不交零点的阶数上界]\label{an:lem:disjoint-mult}
+有
+\begin{equation}\label{an:eq:disjointmult}
+ \ord_a f\le\nu_g-1\quad(a\in A),\qquad
+ \ord_b g\le\nu_f-1\quad(b\in B).
+\end{equation}
+\end{lemma}
+\begin{proof}
+设 $m=\ord_a f$，$\eta=\nu_g$。
+由引理\ref{an:lem:local-reduced}与共同零集，$P_f\mid P_g$ 在 $(a,0)$ 处局部成立。
+若 $m\ge \eta$，比较 $P_g(a+s,t)$ 的 $\eta$ 次齐次部分
+\[
+ \frac{g^{(\eta)}(a)}{\eta!}\bigl((s+t)^\eta-s^\eta\bigr)
+ -\frac{g(a)g^{(\eta)}(0)}{\eta!}t^\eta.
+\]
+局部整除迫使它为零或为 $((s+t)^\eta-s^\eta)$ 的常数倍，
+但 $\eta\ge2$ 且 $g(a)g^{(\eta)}(0)\ne0$，矛盾。
+故 $m<\eta$；另一式交换两者。
+\end{proof}
+
+令
+\begin{equation}\label{an:eq:R-J}
+ R_f(z)=f(z)f(-z)-1,\qquad R_g(z)=g(z)g(-z)-1,
+ \qquad J=Z(R_f)=Z(R_g).
+\end{equation}
+最后一个等号来自将 $X(f)=X(g)$ 限制到反对角线。
+
+\begin{lemma}[一致分离]\label{an:lem:separation}
+有 $A-A\subseteq J$、$B-B\subseteq J$。
+因此 $A,B$ 各自一致分离；按重数计的零点个数均为 $O(r^2)$。
+\end{lemma}
+\begin{proof}
+取 $a,a'\in A$，$d=a'-a$。
+共同零集在 $(a,d)$、$(a',-d)$ 处给出
+\[
+ g(a')=g(a)g(d),\qquad g(a)=g(a')g(-d).
+\]
+由于 $A\cap B=\varnothing$，相消得 $g(d)g(-d)=1$，即 $d\in J$。
+$B$ 的证明相同。
+
+$R_f$ 不恒为零，因为 $f$ 有零点。因此 $J$ 离散，$0\in J$ 是孤立点。
+存在 $\delta>0$，使 $J$ 中的非零元素模长均至少 $\delta$。
+于是 $A,B$ 中不同点的距离均至少 $\delta$，圆盘面积比较给出不计重数的 $O(r^2)$ 上界。
+再用 \eqref{an:eq:disjointmult} 即得按重数的同样上界。
+\end{proof}
+
+\subsection{从共同零集推出有限阶}
+\begin{lemma}[增长阶的上界]\label{an:lem:finiteorder}
+在本节的假设下，
+\begin{equation}\label{an:eq:finiteorderbound}
+ T(r,f)+T(r,g)=O(r^2\log r).
+\end{equation}
+\end{lemma}
+\begin{proof}
+以 $m_a=\ord_af$，构造规范乘积
+\[
+ p(z)=\prod_{a\in A}\left[\left(1-\frac za\right)
+ \exp\left(\frac za+\frac{z^2}{2a^2}\right)\right]^{m_a},
+\]
+并对 $g$ 类似构造 $q$。
+由于按重数的零点个数为 $O(r^2)$，$\sum_a m_a|a|^{-3}<\infty$，故乘积局部一致收敛。
+将 $|a|\le2r$ 与 $|a|>2r$ 分开估计：前一部分由
+\[
+ \sum_{|a|\le2r}m_a\log(1+r/|a|)
+ +r\sum_{|a|\le2r}\frac{m_a}{|a|}
+ +\frac{r^2}2\sum_{|a|\le2r}\frac{m_a}{|a|^2}
+ =O(r^2\log r)
+\]
+控制；后一部分由
+$r^3\sum_{|a|>2r}m_a|a|^{-3}=O(r^2)$ 控制。
+所以
+\begin{equation}\label{an:eq:canonbound}
+ T(r,p)+T(r,q)=O(r^2\log r).
+\end{equation}
+写
+\[
+ f=e^Hp,\qquad g=e^Kq,\qquad H(0)=K(0)=0.
+\]
+若 $H$ 存在某个次数 $j\ge3$ 的非零系数，则 $H(2z)-2H(z)$ 的对应系数非零，
+由 \eqref{an:eq:fourierlower} 和 \eqref{an:eq:canonbound}，
+\[
+ T\left(r,\frac{f(2z)}{f(z)^2}\right)
+ \ge cr^j-O(r^2\log r).
+\]
+而对角线比值的全部零极点和共享值例外集的约化计数为 $O(r^2)$。
+推论\ref{an:cor:diagonal}遂给出 $g/f=e^{az}$ 或 $fg=e^{az}$，
+分别与零点集不交和零点集非空矛盾。
+因此 $H$ 为次数至多 $2$ 的多项式；$K$ 同理。
+结合 \eqref{an:eq:canonbound} 即得 \eqref{an:eq:finiteorderbound}。
+\end{proof}
+
+\subsection{乘法周期群及局部重数严格不等式}
+定义共同的乘法周期群
+\begin{equation}\label{an:eq:Lambda}
+ \Lambda=\{t:f(z+t)=f(z)f(t)\text{ 对所有 }z\}.
+\end{equation}
+它也等于 $\{t:\{t\}\times\C\subseteq X(f)\}$，因此 $f,g$ 的这个群相同。
+由定义可验证
+\begin{equation}\label{an:eq:Lambdafacts}
+ \Lambda\subseteq J,\qquad A+\Lambda=A,\qquad B+\Lambda=B.
+\end{equation}
+$\Lambda$ 为加法子群：在 $z=-t$ 处有 $f(t)f(-t)=1$，逆元与加法封闭性随即得到。
+由于 $J$ 离散，$\Lambda$ 离散。
+它不能有两个实线性无关的生成元 $\tau_1,\tau_2$：
+选择 $c\in\C$ 使 $\operatorname{Re}(c\tau_j)=\log|f(\tau_j)|$，
+则 $|e^{-cz}f(z)|$ 对两周期都不变，从而有界。
+Liouville 定理会使 $e^{-cz}f$ 为常数，与零点存在矛盾。
+所以
+\begin{equation}\label{an:eq:Lambdatypes}
+ \Lambda=\{0\}\quad\text{或}\quad\Lambda=\tau\Z\ (\tau\ne0).
+\end{equation}
+
+对 $d\in J$，记 $k_f(d)=\ord_dR_f$、$k_g(d)=\ord_dR_g$。
+\begin{lemma}[局部重数比较]\label{an:lem:local-compare}
+有
+\begin{align}
+ d\in(A-A)\setminus\Lambda&\Longrightarrow k_g(d)>k_f(d),\label{an:eq:strictA}\\
+ d\in(B-B)\setminus\Lambda&\Longrightarrow k_f(d)>k_g(d).\label{an:eq:strictB}
+\end{align}
+\end{lemma}
+\begin{proof}
+证明第一式。取 $a,a+d\in A$，在 $(a,d)$ 附近记
+\[
+ \mathcal P(x,y)=P_f(x,y),\qquad
+ \mathcal Q(x,y)=P_f(x+y,-y).
+\]
+由 \eqref{an:eq:reflection}，
+\begin{equation}\label{an:eq:localreflection}
+ \mathcal Q+f(-y)\mathcal P=-f(x)R_f(y).
+\end{equation}
+$\mathcal Q$ 在这里约化。事实上，若 $a,a+d$ 的零点阶数分别为 $m,\rho$，
+用局部坐标 $s=x-a$、$w=x+y-a-d$，它形如
+\[
+ s^mU(s)-w^{\rho}V(s,w),\qquad U(0)V(0,0)\ne0,
+\]
+这里利用了 $d\in J$ 从而 $f(-d)\ne0$。
+除以 $U$ 并作可逆解析坐标变换
+$w'=w(V/U)^{1/\rho}$，即化成 $s^m-(w')^\rho$，它没有重复不可约因子。
+
+变换 $(x,y)\mapsto(x+y,-y)$ 可逆，故 $\mathcal Q$ 与 $P_g(x+y,-y)$ 有相同零集芽。
+由约化性，
+\begin{equation}\label{an:eq:Qdivide}
+ \mathcal Q\mid P_g(x+y,-y)
+\end{equation}
+局部成立。
+
+取 $\mathcal P=0$ 在 $(a,d)$ 处的一条不可约分支，并用参数 $t$ 表示。
+$x$ 不可能恒为 $a$，否则 $f(a+y)=0$ 会迫使分支退化为点；
+$y$ 也不可能恒为 $d$，否则 $P_f(x,d)\equiv0$，即 $d\in\Lambda$。
+因此
+\[
+ \ell=\ord_t(y-d)>0,\qquad s_0=\ord_tf(x)>0
+\]
+均有限。
+在该分支上，\eqref{an:eq:localreflection} 给出
+\[
+ \ord_t\mathcal Q=s_0+k_f(d)\ell.
+\]
+对 $g$ 使用同一恒等式，并注意 $g(x)$ 在起点为单位，得到
+\[
+ \ord_tP_g(x+y,-y)=k_g(d)\ell.
+\]
+由 \eqref{an:eq:Qdivide}，$k_g(d)\ell\ge s_0+k_f(d)\ell$，故 $k_g(d)>k_f(d)$。
+交换 $f,g$ 即得第二式。
+\end{proof}
+
+\begin{corollary}[差集交与额外临界点]\label{an:cor:diffcritical}
+有
+\begin{align}
+ (A-A)\cap(B-B)&=\Lambda,\label{an:eq:diffintersect}\\
+ d\in\bigl((A-A)\cup(B-B)\bigr)\setminus\Lambda
+ &\Longrightarrow f'(d)=g'(d)=0.\label{an:eq:diffcritical}
+\end{align}
+这些 $d$ 处的 $f(d),g(d)$ 均不为零。
+\end{corollary}
+\begin{proof}
+\eqref{an:eq:diffintersect} 的一边由两种严格不等式不能同时成立得到，另一边由 \eqref{an:eq:Lambdafacts}。
+若 $k_f(d)\ne k_g(d)$，在 $(d,-d)$ 处有
+\[
+ \nabla P_f=\bigl(-f'(d)f(-d),-f(d)f'(-d)\bigr),
+\]
+这里使用 \eqref{an:eq:disjointnorm}。
+若此梯度非零，由 $Z(f')=Z(g')$ 及 $d\in J$，$\nabla P_g$ 也非零。
+两者便定义同一个光滑曲线芽，商为单位；限制到反对角线将给出 $k_f(d)=k_g(d)$，矛盾。
+故两梯度皆为零，特别有 \eqref{an:eq:diffcritical}。
+$d\in J$ 同时保证 $f(d)f(-d)=g(d)g(-d)=1$。
+\end{proof}
+
+\subsection{一个控制全部不交情形的计数不等式}
+令
+\[
+ L_f=f'/f,\qquad L_g=g'/g,\qquad S(r)=N_A(r)+N_B(r).
+\]
+若 $a\in A$ 的零点重数为 $k\ge1$，局部写成
+$f(z)=(z-a)^k u(z)$、$u(a)\ne0$，则
+\[
+ L_f(z)=\frac{k}{z-a}+\frac{u'(z)}{u(z)}.
+\]
+所以任意有限重零点都只给 $L_f$ 产生一阶极点；$L_g$ 同理。
+因而
+\[
+ N(r,\infty;L_f)=N_A(r),\qquad N(r,\infty;L_g)=N_B(r).
+\]
+这里右端为零点集合的约化计数，与 $f,g$ 的零点重数无关。
+由有限阶结论、对数导数引理和第一主定理，对所有充分大的 $r$，
+\begin{equation}\label{an:eq:uppercrit}
+ N(r,0;L_f)+N(r,0;L_g)\le S(r)+O(\log r).
+\end{equation}
+
+固定 $a\in A,b\in B$，记 $A_0=A-a$、$B_0=B-b$。
+由 \eqref{an:eq:diffintersect} 和周期不变性，
+\begin{equation}\label{an:eq:cosetintersect}
+ A_0\cap B_0=\Lambda,\qquad \Lambda\subseteq A_0,B_0.
+\end{equation}
+每个 $(A_0\cup B_0)\setminus\Lambda$ 中的点，至少给 $L_f,L_g$ 各贡献一个零点。
+对任意 $\lambda\in\Lambda$，乘法周期关系及其导数给出亚纯函数恒等式
+\[
+ L_f(\lambda+z)=L_f(z),\qquad L_g(\lambda+z)=L_g(z).
+\]
+由 $\nu_f,\nu_g$ 的定义，在原点有
+\[
+ f(z)=1+c_f z^{\nu_f}+O(z^{\nu_f+1}),\qquad c_f\ne0,
+ \quad L_f(z)=\nu_f c_f z^{\nu_f-1}+O(z^{\nu_f}).
+\]
+故 $L_f$ 在 $0$ 的零点阶数恰为 $\nu_f-1$；$L_g$ 同理。
+周期恒等式遂说明它们在每个 $\lambda\in\Lambda$ 的零点阶数
+分别恰为 $\nu_f-1,\nu_g-1$。
+因此
+\begin{align*}
+ N(r,0;L_f)+N(r,0;L_g)
+ \ge{}&2N_{A_0}(r)+2N_{B_0}(r)\\
+ &+(\nu_f+\nu_g-6)N_\Lambda(r).
+\end{align*}
+结合 \eqref{an:eq:uppercrit} 得
+\begin{equation}\label{an:eq:mastercount}
+ \boxed{\;
+ 2N_{A_0}(r)+2N_{B_0}(r)
+ +(\nu_f+\nu_g-6)N_\Lambda(r)
+ \le S(r)+O(\log r).\;}
+\end{equation}
+其中系数 $6$ 来自在 $\Lambda$ 上前两项已计入 $4$，实际应计入 $\nu_f+\nu_g-2$。
+
+\subsection{增长降阶与周期群的两种结局}
+由一致分离，$S(r)=O(r^2)$。
+固定 $1<\sigma<\sqrt2$。对于固定平移，除去有限多个点后，$|z-a|\le\sigma|z|$，所以
+\[
+ N_{A_0}(r)\ge N_A(r/\sigma)-O(\log r),
+\]
+对 $B_0$ 亦同。
+利用 $\nu_f+\nu_g\ge4$，\eqref{an:eq:mastercount} 推出
+\begin{equation}\label{an:eq:recurrence}
+ 2S(r/\sigma)\le S(r)+2N_\Lambda(r)+O(\log r).
+\end{equation}
+
+\paragraph{若 $\Lambda=\{0\}$。}
+此时 $N_\Lambda(r)=\log r$。
+将 \eqref{an:eq:recurrence} 改写并迭代，得到
+\[
+ S(r)\le2^{-k}S(\sigma^{k}r)
+ +C\sum_{j=1}^{k}2^{-j}\log(\sigma^jr).
+\]
+因为 $\sigma^2<2$ 且 $S(r)=O(r^2)$，令 $k\to\infty$ 得
+\begin{equation}\label{an:eq:finiteS}
+ S(r)=O(\log r).
+\end{equation}
+无限离散集 $D$ 总满足 $N_D(r)/\log r\to\infty$：取任意有限的 $M$ 个点，先让 $r\to\infty$，
+便得到该比值的下极限至少 $M$。
+所以 \eqref{an:eq:finiteS} 表明 $A,B$ 都有限。
+
+\paragraph{若 $\Lambda=\tau\Z$、$\tau\ne0$。}
+此时 $N_\Lambda(r)=O(r)$。同样迭代 \eqref{an:eq:recurrence}，得到
+\begin{equation}\label{an:eq:linearS}
+ S(r)=O(r).
+\end{equation}
+由于 $A,B$ 都对 $\Lambda$ 不变，它们各是若干陪集之并。
+每个固定陪集满足
+\begin{equation}\label{an:eq:cosetcount}
+ N_{a+\Lambda}(r)=\kappa r+O(\log r),\qquad \kappa=\frac2{|\tau|}.
+\end{equation}
+例如其圆盘计数为 $2r/|\tau|+O(1)$，积分即得该式。
+\eqref{an:eq:linearS} 因而迫使陪集个数有限；分别记为 $p_A,p_B\ge1$。
+将 \eqref{an:eq:cosetcount} 代入 \eqref{an:eq:mastercount}，比较一次项系数得
+\begin{equation}\label{an:eq:integer}
+ p_A+p_B+\nu_f+\nu_g\le6.
+\end{equation}
+另一方面，$p_A,p_B\ge1$、$\nu_f,\nu_g\ge2$，故只能
+\begin{equation}\label{an:eq:integer-equality}
+ p_A=p_B=1,\qquad \nu_f=\nu_g=2.
+\end{equation}
+由 \eqref{an:eq:disjointmult}，全部零点都是单零点。
+因此
+\begin{equation}\label{an:eq:singlecosets}
+ A=a+\tau\Z,\qquad B=b+\tau\Z.
+\end{equation}
+
+\subsection{循环周期群：恢复二指数函数}
+在 \eqref{an:eq:singlecosets} 下，定义
+\[
+ F_a(z)=\frac{e^{2\pi iz/\tau}-e^{2\pi ia/\tau}}
+ {1-e^{2\pi ia/\tau}}.
+\]
+因为 $0\notin A$，分母非零。它在原点取 $1$，零点恰为 $A$，且都为单零点。
+故 $f=e^QF_a$，可取 $Q(0)=0$。
+由 \eqref{an:eq:finiteorderbound} 与 $T(r,1/F_a)=O(r)$，有
+$T(r,e^Q)=O(r^2\log r)$；\eqref{an:eq:fourierlower} 遂表明 $Q$ 为次数至多 $2$ 的多项式。
+
+$F_a$ 是 $\tau$ 周期的，且 $\tau\in\Lambda$，所以
+\[
+ e^{Q(z+\tau)-Q(z)}=f(\tau)
+\]
+与 $z$ 无关。因此 $Q$ 的二次项为零，$f=e^{\alpha z}F_a$。
+同理 $g=e^{\gamma z}F_b$。
+令 $\beta=\pi i/\tau$，便化为
+\[
+ f=e^{uz}(\cosh\beta z+c\sinh\beta z),\qquad
+ g=e^{vz}(\cosh\beta z+d\sinh\beta z).
+\]
+有零点意味着 $c,d\ne\pm1$；两个陪集不交意味着 $c\ne d$。
+这就是二指数族。
+
+\subsection{平凡周期群：恢复一次退化函数}
+现在 $\Lambda=\{0\}$ 且 $A,B$ 有限。
+由 \eqref{an:eq:finiteorderbound}，取相同零点重数的多项式 $p,q$，并归一化为 $p(0)=q(0)=1$，
+可以写成
+\[
+ f=e^Hp,\qquad g=e^Kq,
+\]
+其中 $H,K$ 是次数至多 $2$ 的多项式，且 $H(0)=K(0)=0$。
+这里可先取整函数对数，再由 \eqref{an:eq:fourierlower} 确定次数上界。
+
+若 $H$ 的二次项非零，则对角线上的 $f(2z)/f(z)^2$ 具有至少 $cr^2-O(\log r)$ 的特征函数，
+而全部零极点和共享值例外集都只有 $O(\log r)$ 计数。
+对角线判据给出矛盾。$K$ 同理，故 $H,K$ 都线性。
+于是 $L_f,L_g$ 是在无穷远处有有限极限的有理函数，因而
+\[
+ m(r,L_f)+m(r,L_g)=O(1).
+\]
+这将 \eqref{an:eq:uppercrit} 与 \eqref{an:eq:mastercount} 中的误差加强成 $O(1)$。
+
+令 $p_A=|A|$、$p_B=|B|$。
+有限集合的积分计数为其元素个数乘以 $\log r$ 再加 $O(1)$，而 $N_\Lambda(r)=\log r$。
+在加强后的 \eqref{an:eq:mastercount} 中比较 $\log r$ 系数，再次得到
+\[
+ p_A+p_B+\nu_f+\nu_g\le6.
+\]
+所以仍有 \eqref{an:eq:integer-equality}，并且所有零点都为单零点。
+因此 $p,q$ 都是原点取 $1$ 的一次多项式，得到
+\[
+ f=e^{uz}(1+cz),\qquad g=e^{vz}(1+dz),\qquad cd\ne0.
+\]
+零点集不交恰意味着 $c\ne d$。
+恢复最初去掉的指数因子仅改变 $u,v$。定理\ref{an:thm:disjoint}得证。
+\hfill$\square$
+
+\section{一元分类的拼合}\label{an:sec:finish}
+\begin{proof}[命题\ref{an:thm:onevar}的证明]
+空零集与全空间已由命题\ref{an:prop:empty-full}处理。
+现设 $\varnothing\ne X(f)=X(g)\ne\C^2$。
+
+若一方无零点，命题\ref{an:prop:mixed}保证另一方也无零点；
+命题\ref{an:prop:zero-free}给出I或II。II中写 $f=e^H$，
+非平凡性保证 $H$ 非仿射。
+若双方都有零点且 $f(0)\ne1$，定理\ref{an:thm:nonnormal}给出I。
+若 $f(0)=1$，整条轴属于共同零集，由\eqref{an:eq:axis}必有 $g(0)=1$。
+此时有共同零点则定理\ref{an:thm:common-zero}给出I；
+没有共同零点则定理\ref{an:thm:disjoint}给出III或IV。
+
+反向，I、II分别由\eqref{an:eq:gauge}、\eqref{an:eq:reciprocal}验证；
+III、IV由\eqref{an:eq:twoexpdefect}、\eqref{an:eq:lineardefect}验证。
+参数条件与命题\ref{an:prop:empty-full}保证非平凡性。
+四类的互斥性由第\ref{an:sec:parameters}节中显式函数零集的比较可得。
+\end{proof}
+
+
+\chapter{高维拼合、不可约刚性与推论}\label{ch:highdim}
+直线限制提供一元候选，但不能单独推出全空间分类。本章使用指数倍关系的拼合与全局微分关系完成高维证明，并处理不可约零集及多项式推论。
+\section{从一元分类到任意维数}\label{an:sec:highdim}
+本节令 $n\ge1$，由命题\ref{an:thm:onevar}证明定理\ref{an:thm:main}的(C)。
+直线限制给出候选形式；指数倍拼合与二、三阶齐次项的微分关系给出全局结论。
+
+\subsection{直线限制与归一化表示}
+对 $v\in\C^n$，记 $f_v(t)=f(tv)$。将两个变量同时限制在
+直线 $\C v$ 上，立即得到
+\[
+ X(f)=X(g)\quad\Longrightarrow\quad X(f_v)=X(g_v).
+\]
+这里结论针对每个方向成立。若 $f_v$ 不恒为零且有零点，
+其缺陷零集非空且非全空间；由一元分类，$g_v$ 也有零点，
+并且只能是线性指数倍、二指数族或一次退化族。
+若两个限制都无零点，非平凡情形则只能是线性指数倍
+或无零点倒数对偶。这些断言均直接来自命题\ref{an:thm:onevar}。
+
+\begin{lemma}[含零点的直线方向形成非空开集]\label{an:lem:directions}
+若 $f\not\equiv0$ 有零点，则存在非空开集 $V\subseteq\C^n$，
+使每个 $v\in V$ 对应的 $f_v$ 都不恒为零且有零点。
+\end{lemma}
+\begin{proof}
+若 $f(0)=0$，选 $v_0$ 使 $f(v_0)\ne0$；其充分小邻域内
+所有 $f_v$ 都不恒为零，且在 $t=0$ 为零。
+若 $f(0)\ne0$，选零点 $a\ne0$，则 $f_a(1)=0$ 而
+$f_a(0)\ne0$。取围住 $t=1$ 的小圆，使 $f_a$ 在圆周上无零点。
+当 $v$ 足够接近 $a$ 时，$f_v$ 在圆周上一致接近 $f_a$；
+Rouch\'e 定理保证圆内仍有零点。
+\end{proof}
+
+设 $\varphi,\psi\in\OO(\C)$ 满足
+\[
+ X(\varphi)=X(\psi),\quad
+ \varphi(0)=\psi(0)=1,\quad \varphi'(0)=\psi'(0)=0,
+\]
+且 $\varphi$ 有零点、$\varphi\ne\psi$。
+命题\ref{an:thm:onevar}排除II；I在此归一化下迫使 $\varphi=\psi$，故亦被排除。
+III、IV可统一表示为
+\begin{equation}\label{an:eq:Fbeta}
+ \varphi=F_{\beta,p},\quad \psi=F_{\beta,q},\qquad
+ F_{\beta,p}(t)=
+ \begin{cases}
+ e^{-pt}\bigl(\cosh\beta t+\frac p\beta\sinh\beta t\bigr),&\beta\ne0,\\
+ e^{-pt}(1+pt),&\beta=0,
+ \end{cases}
+\end{equation}
+其中 $p\ne q$、$\beta^2-p^2\ne0$、$\beta^2-q^2\ne0$。
+直接展开可得
+\begin{equation}\label{an:eq:Fjets}
+ F_{\beta,p}''(0)=\beta^2-p^2,\qquad
+ F_{\beta,p}'''(0)=-2p(\beta^2-p^2).
+\end{equation}
+
+\subsection{指数倍拼合与归一化微分关系}
+
+\begin{lemma}[直线上指数倍关系的全局拼合]\label{an:lem:gaugegluing}
+设 $f,g\in\OO(\C^n)$ 均不恒为零。若存在非空方向开集 $V$，
+使每个 $v\in V$ 上 $f_v$ 不恒为零，且对某个 $a_v\in\C$ 有
+\[
+ g(tv)=\e^{a_vt}f(tv)\quad(t\in\C),
+\]
+则存在 $L\in(\C^n)^*$，使 $g=\e^L f$。
+\end{lemma}
+\begin{proof}
+在原点作齐次 Taylor 展开 $f=\sum_j f_j$、$g=\sum_j g_j$。
+设两个展开首个非零项的次数分别为 $m,k$。
+在 $V$ 中避开 $f_mg_k=0$ 后，比较 $t$ 的最低次项得到
+$k=m$、$g_m(v)=f_m(v)$，故多项式恒等 $g_m=f_m$。
+再比较下一项得到
+\[
+ a_v=\frac{g_{m+1}(v)-f_{m+1}(v)}{f_m(v)}.
+\]
+右边定义一次齐次有理函数（允许恒零）
+\begin{equation}\label{an:eq:rationalgauge}
+ a(z)=\frac{g_{m+1}(z)-f_{m+1}(z)}{f_m(z)}.
+\end{equation}
+取 $t=1$，$g=\e^a f$ 在上述非空开集成立。
+域 $\Omega=\{f_m\ne0\}$ 连通：其任意两点所在的复仿射直线
+上，$f_m$ 仅有有限个零点，可以用避开这些点的路径连接。
+所以恒等定理给出 $g=\e^a f$ 在 $\Omega$ 上成立。
+
+若 $a$ 有极点，取其极点除子的一个不可约分量 $E$。
+在 $E$ 的一般光滑点 $p$ 附近可取以 $p$ 为原点的局部坐标 $w$，使
+\[
+ E=\{w_1=0\},\qquad
+ a=w_1^{-q}b(w),\quad f_m=w_1^{s}v(w),\quad f=w_1^{k}u(w),
+\]
+其中 $q,s\ge1$、$k\ge0$，且 $b(p)v(p)u(p)\ne0$。
+这里取 $p$ 避开其他零、极点分量及除去 $E$ 因子后的零集，
+因而各余因子均为单位。
+在这些坐标中取横截 $E$ 的解析圆盘 $\iota(t)=(t,0,\ldots,0)$。
+缩小圆盘后，其穿孔部分包含于 $\Omega$，且 $f\circ\iota=t^k(u\circ\iota)$ 不恒为零，故
+\[
+ \e^{a\circ\iota}=
+ \frac{g\circ\iota}{f\circ\iota}\qquad(0<|t|<\varepsilon).
+\]
+右端在整个圆盘上亚纯，而 $a\circ\iota$ 在 $0$ 有阶数 $q$ 的极点，
+其指数在 $0$ 有本性奇点，矛盾。
+等价地，若该指数亚纯，其对数导数在 $0$ 至多有单极点，
+却等于具有 $q+1\ge2$ 阶极点的 $(a\circ\iota)'$。
+因此 $a$ 无极点；既约有理表达式的分母为常数，$a$ 为多项式。
+由一次齐次性，$a=L$ 是线性泛函（包括 $L=0$）。最后用恒等定理将
+$g=\e^L f$ 延拓至全部 $\C^n$。
+\end{proof}
+
+\begin{lemma}[归一化后的微分关系]\label{an:lem:wedge}
+设 $f,g$ 非常数，$f(0)=g(0)=1$、$\dd f(0)=\dd g(0)=0$，
+并且 $X(f)=X(g)$。则
+\begin{equation}\label{an:eq:wedge}
+ \dd f\wedge\dd g=0.
+\end{equation}
+\end{lemma}
+\begin{proof}
+在 $(z,0)$ 处，两个缺陷的全微分分别是
+\[
+ \dd P_f|_{(z,0)}=(0,\dd f(z)),\qquad
+ \dd P_g|_{(z,0)}=(0,\dd g(z)).
+\]
+在 $\dd f(z)$、$\dd g(z)$ 均非零的稠密开集上，两缺陷
+各自定义光滑超曲面；零集相同使它们的切空间相同，故
+$\dd f(z)$ 与 $\dd g(z)$ 成比例。式\eqref{an:eq:wedge}
+的每个系数都是整函数，恒等定理遂给出全局结论。
+\end{proof}
+
+\begin{proof}[定理\ref{an:thm:main}的(C)的证明]
+\subsection{充分性}
+I、II由\eqref{an:eq:gauge}、\eqref{an:eq:reciprocal}成立，
+III、IV由\eqref{an:eq:twoexpdefect}、\eqref{an:eq:lineardefect}成立。
+I要求 $f\notin\En$；II的非仿射条件及III、IV的非退化参数使函数不属于 $\En$。
+故\eqref{an:eq:complement}保证共同零集非空且不为全空间。
+四类互不重叠的详细说明见第\ref{an:sec:parameters}节。
+
+\subsection{必要性：无零点情形及混合情形}
+以下假定共同零集非空且为真子集，故 $f,g\notin\En$。
+若一个函数有零点而另一个无零点，用引理\ref{an:lem:directions}
+选取前者有零点的一元限制。限制的缺陷零集非平凡，
+一元分类排除这种混合情形。因此 $f,g$ 或者都无零点，
+或者都有零点。
+
+先设二者无零点。因 $\C^n$ 单连通，可写 $f=\e^F$、$g=\e^G$。
+去掉对数的仿射部分，令
+\[
+ A(z)=F(z)-F(0)-\dd F(0)[z],\qquad
+ C(z)=G(z)-G(0)-\dd G(0)[z].
+\]
+由于 $f\notin\En$，$A\not\equiv0$。选 $A$ 的一个非零齐次项，
+在其非零的方向开集 $V$ 上，$F(tv)$ 非仿射。
+一元无零点分类说明，对每个 $v\in V$，恒有
+$C(tv)=A(tv)$ 或 $C(tv)=-A(tv)$。
+取 $t=1$ 得
+\[
+ (C-A)(C+A)=0\quad\text{在 }V\text{ 上}.
+\]
+恒等定理及整函数环无零因子给出全局的 $C=A$ 或 $C=-A$。
+在前一种情形，非仿射方向只能属于一元第一类，故
+$g(0)=f(0)$，进而 $g=\e^L f$。
+在后一种情形，同样只能属于一元第二类，故
+$f(0)g(0)=1$，进而 $fg=\e^L$。分别得到I、II。
+
+\subsection{必要性：有零点且原点值不为一}
+现设 $f$ 有零点且 $f(0)\ne1$。
+取引理\ref{an:lem:directions}给出的非空方向开集 $V$。
+对每个 $v\in V$，$f_v$ 有零点且不恒为零，故一元分类适用。
+无零点倒数对偶因 $f_v$ 有零点被排除；二指数族与一次退化族
+均要求 $f_v(0)=1$，也被排除。于是
+\[
+ g(tv)=\e^{a_vt}f(tv)\quad(t\in\C,\ v\in V).
+\]
+引理\ref{an:lem:gaugegluing}直接给出 $g=\e^L f$，得到I。
+
+\subsection{必要性：有零点且原点值为一}
+设 $f(0)=1$。由轴切片相等也有 $g(0)=1$。
+乘以各自的线性指数因子后，可假定
+\begin{equation}\label{an:eq:normalized}
+ f(0)=g(0)=1,\qquad\dd f(0)=\dd g(0)=0.
+\end{equation}
+若归一化的两函数相等，恢复因子即得I。
+以下假定 $f\ne g$。将引理\ref{an:lem:directions}给出的开集，
+再去掉 $f-g$ 某个非零齐次项的零集，得到非空开集 $V$，
+使 $f_v$ 有零点且 $f_v\ne g_v$。
+在每个 $v\in V$ 上，一元分类因而给出
+\[
+ f_v=F_{\beta_v,p_v},\qquad
+ g_v=F_{\beta_v,q_v},\qquad p_v\ne q_v.
+\]
+定义齐次多项式
+\[
+ A(v)=f_v''(0),\quad B(v)=f_v'''(0),\quad
+ C(v)=g_v''(0),\quad D(v)=g_v'''(0).
+\]
+$A,C$ 为二次齐次多项式，$B,D$ 为三次齐次多项式（允许恒零），
+且 $A,C$ 在 $V$ 上均非零。
+由式\eqref{an:eq:Fjets}，在 $V$ 上
+\begin{equation}\label{an:eq:pqjets}
+ p_v=-\frac{B(v)}{2A(v)},\qquad
+ q_v=-\frac{D(v)}{2C(v)},\qquad
+ p_v^2+A(v)=q_v^2+C(v)=\beta_v^2.
+\end{equation}
+
+\paragraph{微分关系使二阶项与三阶差只依赖一个线性方向。}
+引理\ref{an:lem:wedge}给出 $\dd f\wedge\dd g=0$。
+因为
+\[
+ f=1+\frac12 A+\frac16 B+\cdots,\qquad
+ g=1+\frac12 C+\frac16 D+\cdots,
+\]
+比较微分形式系数的次数2和3，分别得到
+\begin{equation}\label{an:eq:homogeneouswedge}
+ \dd A\wedge\dd C=0,\qquad
+ \dd A\wedge\dd D+\dd B\wedge\dd C=0.
+\end{equation}
+令 Euler 向量场 $\mathcal R=\sum_j z_j\partial/\partial z_j$。
+对第一式作内乘，并用 $\mathcal R A=2A$、$\mathcal R C=2C$，得
+\[
+ 2A\dd C-2C\dd A=0.
+\]
+所以有理函数 $C/A$ 为常数，记作 $\lambda\ne0$，即 $C=\lambda A$。
+将 $C=\lambda A$ 代入式\eqref{an:eq:homogeneouswedge}的第二式，得到
+\[
+ \dd A\wedge\dd T=0,\qquad T=D-\lambda B.
+\]
+因为 $T/(2\lambda A)=p_v-q_v\ne0$ 在 $V$ 上，$T\not\equiv0$。
+再次用 Euler 向量场收缩，得到
+\[
+ 2A\dd T-3T\dd A=0,
+ \qquad \dd\!\left(\frac{T^2}{A^3}\right)=0.
+\]
+于是存在 $k\ne0$，使 $T^2=kA^3$。
+在唯一分解环 $\C[z_1,\ldots,z_n]$ 中，对每个不可约因子，
+$A$ 的重数必须为偶数。因 $\deg A=2$、$\deg T=3$，故
+\[
+ A=\alpha_0\ell^2,\qquad T=\delta_0\ell^3
+\]
+其中 $\ell\ne0$ 为线性泛函，$\alpha_0\delta_0\ne0$。
+多项式环的唯一分解可参见\cite[附录D，定理D.6]{lebl}。
+因而
+\begin{equation}\label{an:eq:rlinear}
+ r=\frac{T}{2\lambda A}
+\end{equation}
+是非零线性泛函，并可记 $A=\alpha r^2$，
+$\alpha\ne0$；在 $V$ 上有 $p_v-q_v=r(v)$。
+
+\paragraph{恢复两个例外族。}
+代入式\eqref{an:eq:pqjets}得到
+\[
+ 2p_vr(v)-r(v)^2=(\lambda-1)A(v).
+\]
+因此
+\begin{equation}\label{an:eq:pqlinear}
+ p_v=\kappa r(v),\qquad q_v=(\kappa-1)r(v),\qquad
+ \kappa=\frac{1+(\lambda-1)\alpha}{2}.
+\end{equation}
+令 $\gamma=\kappa^2+\alpha$；则 $\beta_v^2=\gamma r(v)^2$。
+若 $\gamma\ne0$，取 $\beta^2=\gamma$，得到在 $V$ 上
+\[
+ \begin{aligned}
+ f(z)&=\e^{-\kappa r(z)}
+   \left(\cosh(\beta r(z))+\frac{\kappa}{\beta}\sinh(\beta r(z))\right),\\
+ g(z)&=\e^{-(\kappa-1)r(z)}
+   \left(\cosh(\beta r(z))+\frac{\kappa-1}{\beta}\sinh(\beta r(z))\right).
+ \end{aligned}
+\]
+这里 $F_{\beta,p}$ 只依赖 $\beta^2$，所以不需要在方向空间上
+选择一致的平方根。两边均为整函数，恒等定理给出全局等式。
+由于 $A,C\ne0$，$\kappa/\beta$、$(\kappa-1)/\beta$ 都不为
+$\pm1$，且二者不同。恢复先前去掉的线性指数因子即得III。
+
+若 $\gamma=0$，同理全局有
+\[
+ f(z)=\e^{-\kappa r(z)}(1+\kappa r(z)),\qquad
+ g(z)=\e^{-(\kappa-1)r(z)}(1+(\kappa-1)r(z)).
+\]
+$A,C\ne0$ 使 $\kappa(\kappa-1)\ne0$；恢复指数因子即得IV。
+以上穷尽了(C)的全部情形；结合第\ref{an:sec:empty-full}节的(A)(B)，
+定理\ref{an:thm:main}成立。
+\end{proof}
+
+\section{不可约零集与缺陷零除子}\label{an:sec:irreducible}
+\subsection{层集分解、除子重数与不可约定理}
+\begin{lemma}[无零点函数的非平凡零集可约]\label{an:lem:zerofree}
+若 $f\in\OO(\C^n)$ 无零点且
+$\varnothing\ne X(f)\ne\C^{2n}$，则 $X(f)$ 可约。
+\end{lemma}
+\begin{proof}
+写成 $f=\e^H$，令
+$D(x,y)=H(x+y)-H(x)-H(y)$。则
+\[
+ P_f=\e^{H(x)+H(y)}(\e^D-1),\qquad
+ X(f)=\bigcup_{k\in\mathbb Z}Z(D-2\pi i k).
+\]
+若 $D$ 为常数，零集只能为空或为全空间，故 $D$ 非常数。
+它在某条复直线上的限制非常数；由小 Picard 定理，至少两个
+不同的 $2\pi i k$ 层集非空。选一个这样的值 $b=2\pi i k_0$，
+并令 $E_b(t)=(\e^t-1)/(t-b)$。在 $t=b$ 的奇点可去且
+$E_b(b)=1$。于是
+\[
+ X(f)=Z(D-b)\cup Z(E_b(D)),
+\]
+右边是两个非空且互不相交的真闭解析子集，证明可约性。
+\end{proof}
+
+\begin{lemma}[不可约超曲面上零除子的重数]\label{an:lem:divisor-multiplicity}
+设 $W\subseteq\C^d$ 为域，$F\in\OO(W)$ 不恒为零，
+且 $X=Z(F)$ 非空并不可约。
+则存在同一个整数 $m\ge1$，使在每个 $p\in X$ 处，若
+\[
+ X_p=X_{p,1}\cup\cdots\cup X_{p,r}
+\]
+是局部不可约分解，$h_j$ 是定义 $X_{p,j}$ 的不可约函数芽，便有
+\begin{equation}\label{an:eq:branch-multiplicity}
+ F=u\prod_{j=1}^{r}h_j^{m},\qquad u\text{ 为局部单位}.
+\end{equation}
+特别地，若 $F$ 在 $X$ 的任一点约化，则 $m=1$，$F$ 在整个 $W$ 上的零除子约化。
+\end{lemma}
+\begin{proof}
+非恒零全纯函数的非空零集为纯余维一解析集。
+由不可约性，$X_{\mathrm{reg}}$ 连通\cite[习题6.7.3]{lebl}。
+在正则点附近，$X$ 可由局部坐标 $w_1=0$ 定义，
+唯一分解给出 $F=w_1^m v$，其中 $v$ 为单位。
+因而法向零点阶数在 $X_{\mathrm{reg}}$ 上局部恒定，
+由连通性取同一个值 $m$。
+
+固定任意 $p\in X$，局部唯一分解\cite[定理6.4.2]{lebl}给出
+\[
+ F=u\prod_{j=1}^{r}h_j^{m_j},\qquad m_j\ge1.
+\]
+缩小代表邻域后，对每个 $j$，分支 $Z(h_j)$ 的正则点稠密，
+而其奇异点集及与其他 $Z(h_i)$ 的交集都是该分支的真解析子集。
+因此可在任意靠近 $p$ 的位置选取点 $q_j$，使
+\[
+ h_j(q_j)=0,\qquad \dd h_j(q_j)\ne0,\qquad
+ h_i(q_j)\ne0\quad(i\ne j).
+\]
+在 $q_j$ 的邻域，$X$ 只有这一条光滑局部分支，故 $q_j\in X_{\mathrm{reg}}$；
+其他因子都是单位，$F$ 沿该分支的法向零点阶数恰为 $m_j$。
+正则部分上的恒定重数给出 $m_j=m$，对每个 $j$ 均成立，证明\eqref{an:eq:branch-multiplicity}。
+若某一点的芽约化，则该点的所有指数为 $1$，从而 $m=1$。
+\end{proof}
+
+\begin{proof}[定理\ref{an:thm:irr-main}的证明]
+由引理\ref{an:lem:zerofree}，$f$ 必有零点。
+引理\ref{an:lem:divisor-multiplicity}应用于 $F=P_f$，说明
+其零除子为 $m[X(f)]$，且奇点处每一局部分支的指数同样等于 $m$。
+取 $f$ 的任一零点 $a$。引理\ref{an:lem:local-reduced}说明
+$P_f$ 在 $(a,0)$ 处约化，故 $m=1$，整个零除子约化。
+
+若 $X(g)=X(f)$，定理\ref{an:thm:main}的第二类因
+$f$ 有零点被排除。第三、四类的共同零集，分别由
+式\eqref{an:eq:gridclass}、\eqref{an:eq:axesclass}分成两个非空真闭解析子集，
+与不可约性矛盾。所以只能是 $g=\e^L f$。
+反向由式\eqref{an:eq:gauge}成立，同时给出式\eqref{an:eq:irredunit}，
+以及 $g$ 有零点、$P_g$ 约化。
+若 $L_1,L_2$ 给出同一 $g$，在 $f\ne0$ 的开集上有
+$\e^{L_1-L_2}=1$；延拓后在原点求导得 $L_1=L_2$。
+
+当 $n=1$ 时，若 $f(0)=1$，则 $X(f)$ 包含两条不同的一维坐标轴。
+非平凡零集本身为纯一维；不可约一维解析集不能包含两个不同的一维闭解析子集。
+因此 $f(0)\ne1$。
+\end{proof}
+
+\subsection{高维中原点值为一的不可约例子}
+当 $n\geq2$ 时，取
+\begin{equation}\label{an:eq:originoneexample}
+ f(z)=1+z_1z_2.
+\end{equation}
+有 $f(0)=1$，并且
+\[
+ P_f(x,y)=x_1y_2+x_2y_1-x_1x_2y_1y_2
+         =y_1(1-x_1y_2)x_2+x_1y_2.
+\]
+先考虑 $n=2$，记 $X_2=Z(P_f)\subseteq\C^4$。
+因为 $P_f$ 非恒零，$X_2$ 为纯 $3$ 维解析集。
+在 $y_1(1-x_1y_2)\ne0$ 的开集上，$X_2$ 的部分记为 $G$，它是图像
+\[
+ x_2=-\frac{x_1y_2}{y_1(1-x_1y_2)}.
+\]
+其底空间为 $\C^*\times\bigl(\C^2\setminus\{x_1y_2=1\}\bigr)$，
+连通：在第二因子中，可先沿避开唯一禁点的路径令 $x_1$ 变为
+$0$，再令 $y_2$ 变为 $0$。
+在 $G$ 上，$\partial P_f/\partial x_2=y_1(1-x_1y_2)\ne0$，
+所以 $G\subseteq(X_2)_{\mathrm{reg}}$ 是连通复流形。
+在图像以外，$y_1(1-x_1y_2)=0$，零集方程迫使 $x_1y_2=0$，继而 $y_1=0$。
+因此未被该图像覆盖的部分恰为
+\[
+ \{y_1=0,\ x_1y_2=0\},
+\]
+它是两个 $2$ 维线性子空间之并，故 $\dim(X_2\setminus G)=2$。
+
+正则点仅属于一个全局不可约分量，而且这个分量在正则部分上局部不变。
+由于 $G$ 连通，存在单一不可约分量 $Y_0$ 包含 $G$。
+若有另一个不可约分量 $Y_1$，纯维性给出 $\dim Y_1=3$，
+因而 $Y_1$ 不可能包含在 $2$ 维的 $X_2\setminus G$ 中，必须与 $G$ 相交。
+交点于是同时属于 $Y_0,Y_1$，与其为正则点矛盾。
+故 $X_2$ 只有一个不可约分量，复解析不可约。
+
+对于 $n>2$，有 $X(f)=X_2\times\C^{2n-4}$。
+其图像部分 $G\times\C^{2n-4}$ 仍为连通正则开集，
+零集为纯 $2n-1$ 维，而补集维数为 $2n-2$。
+同一分量论证证明 $X(f)$ 不可约。
+因此\eqref{an:eq:originoneexample}在每个 $n\ge2$ 时均满足 $f(0)=1$ 且 $X(f)$ 不可约。
+
+多变量时轴切片维数为 $n$，小于缺陷超曲面的维数 $2n-1$（$n>1$），
+轴切片的存在与不可约性相容。
+
+\section{等价类、刚性推论与例子}\label{an:sec:consequences}
+\subsection{类型的互斥性与参数}\label{an:sec:parameters}
+II中双方无零点，III、IV中双方有零点，因此II与III、IV不同。
+若II同时属于I，则 $e^{2H}$ 是线性指数，取对数微分迫使 $H$ 仿射，矛盾。
+III中函数零集分别为
+\[
+ \left\{e^{2B(z)}=\frac{c-1}{c+1}\right\},\qquad
+ \left\{e^{2B(z)}=\frac{d-1}{d+1}\right\}.
+\]
+参数映射 $c\mapsto(c-1)/(c+1)$ 单射，所以 $c\ne d$ 使两零集不交。
+IV的两个零集为不同的仿射超平面 $\{\ell=-1/c\}$、$\{\ell=-1/d\}$，同样不交。
+它们均不能属于I。III的零集为无穷个平行超平面，IV仅有一个，二者亦不重叠。
+
+III的参数有对称冗余：$B\mapsto-B$、$c,d\mapsto-c,-d$ 不改变函数。
+若非零线性泛函 $B,B'$ 给出相同网格，
+取使 $\sinh B(y)\sinh B'(y)\ne0$ 的 $y$，可得 $Z(\sinh B)=Z(\sinh B')$。
+该集合中过原点的唯一超平面确定 $\ker B$，
+所以另一表示 $B'$ 必为 $aB$；纤维层集相等又要求 $a\pi i\Z=\pi i\Z$，故 $a=\pm1$。
+IV中 $\ell$ 可乘任意非零常数并将其吸收入 $c,d$。
+
+\subsection{固定零集的全部代表}
+记 $[f]_X=\{g:X(g)=X(f)\}$。定理\ref{an:thm:main}等价于以下六种等价类。
+\begin{enumerate}[label=(\roman*)]
+\item 空零集：$[f]_X=\{ce^L:c\notin\{0,1\},\ L\in(\C^n)^*\}$。
+\item 全空间：$[f]_X=\{0\}\cup\{e^L:L\in(\C^n)^*\}$。
+\item $f$ 无零点且零集非平凡：
+\[
+ [f]_X=\{e^L f:L\in(\C^n)^*\}\cup\{e^L/f:L\in(\C^n)^*\}.
+\]
+\item 对固定非零线性泛函 $\ell$，若 $X(f)=Z(\ell(x)\ell(y))$，则
+\[
+ [f]_X=\{e^L(1+c\ell):L\in(\C^n)^*,\ c\ne0\}.
+\]
+\item 对固定非零线性泛函 $B$，若 $X(f)=Z(\sinh B(x)\sinh B(y))$，则
+\[
+ [f]_X=\{e^L(\cosh B+c\sinh B):L\in(\C^n)^*,\ c\ne\pm1\}.
+\]
+\item 其余有零点且零集非平凡的函数：$[f]_X=\{e^L f:L\in(\C^n)^*\}$。
+\end{enumerate}
+为核验(iv)、(v)，分别选取一个已知的该族代表，并对任意同零集函数应用主定理。
+若落入I，仍是同族；其余允许类型及显式零集公式也只能给出所列族。
+上面的参数唯一性排除了额外线性方向。
+
+\subsection{零除子与刚性判据}
+\begin{corollary}[缺陷零除子相同]\label{an:cor:unitquotient}
+若 $\varnothing\ne X(f)=X(g)\ne\C^{2n}$，则
+$P_g/P_f$ 延拓为 $\C^{2n}$ 上处处不为零的整函数。
+特别地，两个缺陷具有相同的零除子。
+\end{corollary}
+\begin{proof}
+四类分别由式\eqref{an:eq:gauge}、\eqref{an:eq:reciprocal}、
+\eqref{an:eq:twoexpdefect}、\eqref{an:eq:lineardefect}给出单位商。
+\end{proof}
+
+\begin{corollary}[归一化 Hessian 的刚性判据]\label{an:cor:hessian}
+设 $f$ 有零点且 $f(0)=1$。令 $\widetilde f(z)=\e^{-\dd f(0)[z]}f(z)$。
+若 $\widetilde f$ 在原点的复 Hessian 的秩不等于1，则
+$X(g)=X(f)$ 当且仅当 $g=\e^L f$ 对某个 $L\in(\C^n)^*$ 成立。
+\end{corollary}
+\begin{proof}
+第二类因 $f$ 有零点被排除；第三、四类归一化后均有非零
+秩一二阶项，所以亦被排除。只剩第一类。
+\end{proof}
+
+\begin{corollary}[共同函数零点的刚性]\label{an:cor:common-high}
+若 $\varnothing\ne X(f)=X(g)\ne\C^{2n}$ 且 $Z(f)\cap Z(g)\ne\varnothing$，
+则 $g=e^L f$，其中 $L\in(\C^n)^*$。
+\end{corollary}
+\begin{proof}
+II没有函数零点，III、IV中函数零点集完全不交，故只能属于I。
+\end{proof}
+
+\begin{corollary}[非横竖超平面分量的刚性]\label{an:cor:nonaxis}
+设 $f$ 有零点且 $\varnothing\ne X(f)\ne\C^{2n}$。
+若 $X(f)$ 有一个不可约分量不属于
+$H\times\C^n$ 或 $\C^n\times H$ 的形式，其中 $H$ 为仿射超平面，
+则 $X(g)=X(f)$ 当且仅当 $g=e^L f$ 对某个 $L\in(\C^n)^*$ 成立。
+\end{corollary}
+\begin{proof}
+II因 $f$ 有零点被排除；III、IV的全部不可约分量均为所述横竖超平面。
+所以只剩I，反向由\eqref{an:eq:gauge}。
+\end{proof}
+
+\begin{corollary}[任意维数的多项式情形]\label{an:cor:polynomial}
+对非常数多项式 $p,q\in\C[z_1,\ldots,z_n]$，
+\[
+ X(p)=X(q)\quad\Longleftrightarrow\quad
+ \left[p=q\right]\ \text{或}\
+ \left[p=1+c\ell,\ q=1+d\ell,\ cd\ne0\right].
+\]
+第二种情形中 $\ell\in(\C^n)^*$ 为非零线性泛函，$c,d\in\C$。
+\end{corollary}
+\begin{proof}
+非常数多项式在某条一般复直线上为非常数，故有零点。
+II因无零点被排除；III在一般直线上有无限零点，也不可能是多项式。
+I中，若 $L\ne0$，选取 $p_v,q_v$ 均不恒零且 $L(v)\ne0$ 的方向，
+则 $q_v/p_v=e^{tL(v)}$ 同时为有理函数和非平凡指数，矛盾；故 $p=q$。
+IV中同样在一般直线上排除非零外部线性指数，得到所述形式。
+反向由\eqref{an:eq:lineardefect}。
+\end{proof}
+
+\subsection{各类型与不可约情形的例子}
+对任意 $n\ge1$，下表的函数只依赖 $z_1$，缺陷相应只依赖 $x_1,y_1$。
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.16\textwidth}p{0.31\textwidth}p{0.43\textwidth}@{}}
+\toprule
+类型 & 函数对 & 共同零集 \\
+\midrule
+空零集 & $2e^{z_1},\ 3e^{2z_1}$ & $\varnothing$ \\
+全空间 & $0,\ e^{z_1}$ & $\C^{2n}$ \\
+倒数对偶 & $e^{z_1^2},\ e^{-z_1^2}$ & $\bigcup_{k\in\Z}\{x_1y_1=\pi i k\}$ \\
+二指数族 & $\cos z_1,\ \cos z_1+\sin z_1$ & $Z(\sin x_1\sin y_1)$ \\
+一次退化族 & $1+z_1,\ 1+2z_1$ & $Z(x_1y_1)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+此外，$f(z)=z_1$ 的缺陷为 $x_1+y_1-x_1y_1$，
+其零集是不可约曲线 $\{(x_1-1)(y_1-1)=1\}$ 与 $\C^{2n-2}$ 的乘积。
+其全部代表恰为 $e^Lz_1$。
+当 $n\ge2$ 时，第\ref{an:sec:irreducible}节的 $f=1+z_1z_2$
+给出 $f(0)=1$ 且零集不可约的例子；其全部代表恰为 $e^L(1+z_1z_2)$。
+
+\subsection{直线限制的两个反例}
+\paragraph{有限条坐标直线不足以判定空零集。}
+当 $n\geq2$ 时，取 $f(z)=2\e^{z_1z_2}$。
+它在每条坐标直线 $\C e_j$ 上都恒等于 $2$，故这些一元限制
+各自的缺陷零集都为空。然而
+\[
+ P_f(x,y)=2\e^{x_1x_2+y_1y_2}
+ \bigl(\e^{x_1y_2+x_2y_1}-2\bigr),
+\]
+在 $x=(\log2,0,\ldots,0)$、$y=(0,1,0,\ldots,0)$ 处为零。
+所以沿直线的论证必须涵盖所有所需方向，不能只检查
+$n$ 条坐标直线。命题\ref{an:prop:tests}中的 $S,\Delta$
+均为完整的 $n$ 维集合。
+
+\paragraph{稠密方向上的一元零集相等不能代替全空间条件。}
+取 $n=2$，令
+\[
+ Q(z)=z_1^2+z_2^2,\qquad
+ C(q)=\sum_{k\geq0}\frac{q^k}{(2k)!},\qquad
+ S(q)=\sum_{k\geq0}\frac{q^k}{(2k+1)!},
+\]
+并定义两个整函数
+\[
+ f(z)=C(Q(z)),\qquad g(z)=C(Q(z))+z_1S(Q(z)).
+\]
+当 $v_1v_2Q(v)\ne0$ 时，取 $\beta^2=Q(v)$，有
+\[
+ f_v(t)=\cosh\beta t,\qquad
+ g_v(t)=\cosh\beta t+\frac{v_1}{\beta}\sinh\beta t.
+\]
+这些限制全部满足一元第三类，故在一个稠密方向开集上
+$X(f_v)=X(g_v)$。然而取
+$x=(1/2,i/2)$、$y=-x$，则 $Q(x)=Q(y)=0$，而
+\[
+ P_f(x,y)=0,\qquad
+ P_g(x,y)=1-\frac32\cdot\frac12=\frac14.
+\]
+所以 $X(f)\ne X(g)$。稠密方向上的一元零集相等，仍不足以推出全空间零集相等。
+定理\ref{an:thm:main}的高维证明还使用了归一化后的全局微分关系
+$\dd f\wedge\dd g=0$。
+
+
+\chapter{结论边界与后续研究}\label{ch:questions}
+\section{已建立的结论及其适用范围}
+\begin{longtable}{@{}p{.22\textwidth}p{.37\textwidth}p{.32\textwidth}@{}}
+\toprule 对象 & 已建立的结论 & 关键限制 \\\midrule
+\endhead
+紧标量线性差 & 有限相容性、解空间、存在唯一性 & 任意函数；完整代数对偶。\\
+无限维向量值差 & 模同态延拓与双对偶判据 & 一般算子系数不能仅检验有限子系统。\\
+完全线性自然族 & 唯一有限支集模板 & 须对全部空间和全部线性映射自然。\\
+低支撑模板 & 常数、加性、二次项或轨道字符的完整分类 & 特征零、秩二、总支撑至多四点。\\
+加法多项式缺陷 & 复不可约性、可实现性和光滑判据 & 一元一般多项式；高维二次型另作分类。\\
+实仿射同域族 & 一致点子群的可实现性和整数倍商 & $\R^n\to\R$；参数遍历全部 $\R$。\\
+整函数乘法缺陷 & 相等零集的分类与不可约刚性 & $\C^n$ 上整函数；不可约性为复解析意义。\\
+\bottomrule
+\end{longtable}
+核的分类并不意味着每个非齐次右端均可实现；初值唯一化始终以可解性为前提。
+同样，整函数分类不能直接用于任意函数，相关集的相等也不能替换成某些切片上的相等。
+
+\section{线性理论中的下一步问题}
+\begin{enumerate}
+\item 对更高支撑的秩二模板，若每个方向均出现多个支点，如何恢复方向合并函数与原函数之间的耦合？单点方向消元定理仍可使用，但它不覆盖所有构型。
+\item 对已经分类齐次核的模板，能否将全部非齐次有限行关系压缩为简洁的余循环恒等式？一般关系空间判据本身不是有限列表算法。
+\item 高阶广义多项式的允许成分，能否用带对称群作用的多重张量代数商统一描述？超越参数所产生的幂零结构与高阶形式导子有何关系？
+\item 对一般无限维值域，哪些附加条件保证模同态延拓障碍自动消失？标量系数和有限维值域已给出两种不同的充分条件。
+\end{enumerate}
+
+\section{相关集方向中保留的问题}
+\begin{enumerate}
+\item 加法 Cauchy 缺陷的高维一般多项式：本讲义已处理二次型，但未给出任意高次的不可约性及可实现代数集分类。
+\item 乘法多项式相关集的进一步几何：函数乘积与相关集交的关系、平移后相关集的同构类型，以及规定次数的超曲面实现问题，尚需分别研究。
+\item 有理函数与较小定义域：若函数仅在加法子群上给定，或允许亚纯极点，需要先明确缺陷的定义域和零集约定，不能直接套用整函数定理。
+\item 本讲义已分类实同域仿射族的可实现一致点子群，但没有分类产生同一子群的全部函数对。三角函数构造给出实现，不表示每一对函数均具有该形式。
+\end{enumerate}
+
+\section{两个可继续比较的结构}
+线性理论以自由空间中的行关系为核心：先确定像的相容条件，再由余核对偶确定自由度。
+乘法相关集的整函数理论则先由零集恢复局部重数和归一化关系，再将局部信息提升为全局分类。
+两条路线共同强调：必须保留函数类、参数域与自然性假设，才有可比较的存在性、唯一性和刚性结论。
+本讲义尚未把二者统一为一般 $P$-相关算子的分类理论。
+
+\appendix
+\titleformat{\chapter}[display]{\Huge\bfseries\color{MidnightBlue}}{\large 附录\thechapter}{8pt}{}
+\chapter{可除群同态的延拓}\label{app:divisible}
+
+
+
+设 $J$ 为可除阿贝尔群，$B_0\subset B$，并给定同态
+$u:B_0\to J$。按定义域包含关系对所有延拓排序，利用 Zorn 引理取最大延拓
+$u_1:B_1\to J$。若 $B_1\ne B$，取 $b\in B\setminus B_1$。
+
+若不存在正整数 $m$ 使 $mb\in B_1$，则可把 $b$ 送到 $0$，
+将同态延拓到 $B_1+\Z b$。
+否则取最小的这样的 $m$，由可除性取 $j\in J$ 使
+$mj=u_1(mb)$，并定义
+\[
+ u_2(c+kb)=u_1(c)+kj.
+\]
+因为 $\{k\in\Z:kb\in B_1\}=m\Z$，该定义良定。
+两种情形都与最大性矛盾，所以 $B_1=B$。
+
+特别地，对可除子群 $J\subset B$，将恒等映射 $J\to J$ 延拓到
+$r:B\to J$，便得到收缩映射，从而 $B=J\oplus\ker r$。
+这就是正文使用的直和分裂。该标准结论亦见\cite{stacks}。
+
+
+\chapter{整理依据与使用说明}\label{app:sources}
+\section{草稿之间的合并关系}
+本版按内容依赖重新编排，不沿用各草稿独立的章节和定理编号。
+重复定义、例题、摘要及结尾说明只保留一次。主要来源如下。
+\begin{longtable}{@{}p{.45\textwidth}p{.46\textwidth}@{}}
+\toprule 已有材料 & 在本讲义中的位置 \\\midrule
+\endhead
+《紧线性差与自然函数方程：详细汇报》（2026年10月9日） & 第1章的基本定义及第2--5章。\\
+《XP-算子研究草稿》（2026年10月9日修订） & 第6章及第7章的基础与拓扑结果；重复线性内容以详细汇报为准。\\
+《$P$ 相关算子与三类函数问题：基本定义与初等例题草稿》（2026年10月8日） & 第1章的常值、周期、乘法与复合方程例题；Cauchy、Jensen及二次模型并入后续章节。\\
+《乘法 Cauchy 关系：函数解、相关域拓扑与仿射族刚性》（2026年10月8日） & 与总草稿核对后并入第7--8章，避免重复。\\
+《仿射族的缺陷零点集不变性：一致点子群与整数倍商的完整分类》（2026年10月7日） & 第8章及附录A。\\
+《整函数乘法缺陷零集的相等性：任意维数的分类与刚性》（2026年10月7日完整版） & 第9--11章；一元分类稿与高维稿已包含于此。\\
+《X-算子的性质》 & 所取版本与上一项的整函数完整版内容一致，合并处理。\\
+\bottomrule
+\end{longtable}
+本版新增前言、记号表、章间衔接和研究问题清单；
+统一交叉引用，并把圆群记号与线性算子记号分开。
+标准文献用于支持明确列出的背景工具；不将草稿的分类结果归作这些文献中的现成定理。
+
+\section{编译与后续修订}
+源文件使用 UTF-8 编码，推荐在 VS Code 中选择 XeLaTeX，连续编译三次，或运行
+\begin{verbatim}
+latexmk -xelatex XP_operator_research_lecture.tex
+\end{verbatim}
+无需外部图片、\texttt{.bib} 文件或其他 \texttt{.tex} 输入。
+字体按 Noto Sans CJK SC、Fandol、SimSun 的可用性选择。
+Windows 上安装完整 TeX Live 或 MiKTeX 的中文支持后即可编译。
+正文含目录、PDF书签、定理与公式交叉引用；后续增补应继续保持函数类和参数域的明确约定。
+
+\backmatter
+
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{参考文献}
+
+\raggedright
+
+\bibitem{KissVarga}
+G. Kiss and A. Varga.
+\textit{Existence of nontrivial solutions of linear functional equations}.
+Aequationes Mathematicae \textbf{88} (2014), 151--162.
+\url{https://doi.org/10.1007/s00010-013-0212-z}.
+
+\bibitem{KissLaczkovich}
+G. Kiss and M. Laczkovich.
+\textit{Linear functional equations, differential operators and spectral synthesis}.
+Aequationes Mathematicae \textbf{89} (2015), 301--328.
+\url{https://doi.org/10.1007/s00010-014-0269-3}.
+
+\bibitem{Laczkovich2018}
+M. Laczkovich.
+\textit{A characterization of generalized exponential polynomials in terms of decomposable functions}.
+arXiv:1812.06434 (2018).
+\url{https://arxiv.org/abs/1812.06434}.
+
+\bibitem{stacks}
+The Stacks Project，
+\emph{Injective abelian groups}，Tag 01D6，Lemma 15.55.1。
+\url{https://stacks.math.columbia.edu/tag/01D6}。
+
+
+
+\bibitem{halburd}
+Rod Halburd.
+\emph{Complex Analysis: Chapter 2, Logarithmic Derivatives and the Second Main Theorem}.
+LTCC 课程讲义，第 7--13 页，尤其定理 7、引理 10 和第二主定理。
+\url{https://www.homepages.ucl.ac.uk/~ucahrha/LTCC/CA-LTCC-2012-2.pdf}。
+
+\bibitem{vojta}
+Paul Vojta.
+\emph{CIME Lecture Notes}, Lecture 1, \S\,1; Lecture 4, \S\,3.
+小 Picard 定理、Nevanlinna 特征函数、一、二主定理及对数导数估计。
+\url{https://math.berkeley.edu/~vojta/cime/cimebeamer.pdf}。
+
+\bibitem{glutsyuk}
+A.~A. Glutsyuk.
+\emph{Several Complex Variables}.
+HSE，2023/2024 春季学期讲义，2024 年 5 月 15 日版本，\S\,5.5--5.8。
+Weierstrass 准备、局部因子分解、零集芽及平面曲线参数化。
+\url{https://math.hse.ru/data/2024/05/15/2124198402/lektsii-24.pdf}。
+
+\bibitem{lebl}
+Ji\v r\'i Lebl.
+\emph{Tasty Bits of Several Complex Variables}.
+\S\S6.2,6.4,6.7 and Appendix D.
+Weierstrass 准备、局部唯一分解、解析集不可约性及多项式唯一分解。
+\url{https://www.jirka.org/scv/scv.pdf}。
+\end{thebibliography}
+\end{document}
